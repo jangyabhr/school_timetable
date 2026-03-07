@@ -97,7 +97,7 @@ FLOATING_EXCLUDED_DAYS = [TUESDAY, SATURDAY]
 
 # Lab subjects may only START on these periods so the consecutive
 # second period does not overflow the day (max start = PERIODS_PER_DAY - 2)
-LAB_ALLOWED_START_PERIODS = list(range(PERIODS_PER_DAY - 1))  # 0–6
+LAB_ALLOWED_START_PERIODS = list(range(2, PERIODS_PER_DAY - 1))  # 2–6 (after 2nd period, 1-indexed)
 
 # ---------------------------------------------------------------------------
 # Validation Helper  (used by the validation report step)

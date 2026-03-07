@@ -40,7 +40,7 @@ def generate_events(assignments, subject_load_by_group):
     events = []
 
     for row in assignments:
-        section = row["section"]
+        section = str(row["section"])
         subject  = row["subject"]
         teacher  = row.get("teacher", None)
 

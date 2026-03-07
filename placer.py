@@ -6,6 +6,7 @@ from constraints import (
     PERIODS_PER_DAY,
     LAB_BLOCK_SUBJECTS,
     FIXED_SLOT_SUBJECTS,
+    FIXED_SLOTS,
 )
 
 MAX_REPAIR_ATTEMPTS = 20   # per unplaced event-instance
@@ -86,15 +87,21 @@ def _unplace(event_idx, instance, timetable_state, occupied):
 # MRV Sort
 # ---------------------------------------------------------------------------
 
-def _mrv_order(events, conflict_map):
+def _mrv_order(events, conflict_map, suitability):
     """
-    Sort events by descending constraint density:
-      conflict_count × weekly_load
+    Sort events by descending constraint density (true MRV):
+      - Fixed-slot subjects (CCA, Game) are placed first (fewest available slots)
+      - Then by suitability size ascending (fewer allowed slots = more constrained)
+      - Then by conflict_count × weekly_load
     Most constrained events are placed first.
     """
     indexed = list(enumerate(events))
     indexed.sort(
-        key=lambda x: _conflict_count(x[0], conflict_map) * x[1]["weekly_load"],
+        key=lambda x: (
+            1 if x[1]["subject"] in FIXED_SLOT_SUBJECTS else 0,
+            -len(suitability.get(x[0], [])),   # fewer slots = less negative = higher priority
+            _conflict_count(x[0], conflict_map) * x[1]["weekly_load"],
+        ),
         reverse=True
     )
     return indexed   # list of (event_idx, event)
@@ -111,7 +118,7 @@ def _greedy_place(events, slots, slot_lookup, suitability,
     Returns list of (event_idx, instance, event) tuples that could not be placed.
     """
     unplaced = []
-    order = _mrv_order(events, conflict_map)
+    order = _mrv_order(events, conflict_map, suitability)
 
     for event_idx, event in order:
         for instance in range(event["weekly_load"]):
@@ -233,6 +240,16 @@ def _backtrack(unplaced, events, slots, slot_lookup, suitability,
             event_idx, instance = key
             unplaced.append((event_idx, instance, events[event_idx]))
             _unplace(event_idx, instance, timetable_state, occupied)
+
+    # Re-sort by MRV priority before retrying (true MRV: fewest allowed slots first)
+    unplaced.sort(
+        key=lambda x: (
+            1 if x[2]["subject"] in FIXED_SLOT_SUBJECTS else 0,
+            -len(suitability.get(x[0], [])),
+            _conflict_count(x[0], conflict_map) * x[2]["weekly_load"],
+        ),
+        reverse=True,
+    )
 
     # Retry greedily on the freed events
     retry_unplaced = []

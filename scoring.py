@@ -1,6 +1,6 @@
 # scoring.py
 
-from constraints import SOFT_CONSTRAINTS, ANCHOR_SUBJECTS, LAB_BLOCK_SUBJECTS, MONDAY
+from constraints import SOFT_CONSTRAINTS, ANCHOR_SUBJECTS, LAB_BLOCK_SUBJECTS, MONDAY, LAB_ALLOWED_START_PERIODS
 
 
 def score_slot(event, slot, timetable_state, suitability, conflict_map, event_idx):
@@ -51,9 +51,9 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
         if teacher_periods_today and (period - 1) in teacher_periods_today:
             score += SOFT_CONSTRAINTS["teacher_gap"]
 
-    # Soft: lab subjects prefer morning start (period 0–3)
+    # Soft: lab subjects prefer early start after 2nd period (period 2–3)
     if event["subject"] in LAB_BLOCK_SUBJECTS:
-        if period <= 3:
+        if 2 <= period <= 3:
             score += SOFT_CONSTRAINTS["lab_morning_prefer"]
 
     # Soft: avoid placing core subjects in last period on Monday
