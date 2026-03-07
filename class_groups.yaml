@@ -1,0 +1,19 @@
+class_groups:
+
+  class_6_8:
+    - 6A
+    - 6B
+    - 7A
+    - 7B
+    - 8A
+    - 8B
+
+  class_9_10:
+    - 9A
+    - 9B
+    - 10A
+    - 10B
+
+  class_11_12:
+    - 11
+    - 12

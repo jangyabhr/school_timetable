@@ -1,0 +1,304 @@
+assignments:
+
+# --- Class 6 ---
+- section: 6A
+  subject: SST
+  teacher: ANIL
+- section: 6B
+  subject: SST
+  teacher: ANIL
+
+- section: 6A
+  subject: English
+  teacher: Radheshyam
+- section: 6B
+  subject: English
+  teacher: Radheshyam
+
+- section: 6A
+  subject: Hindi
+  teacher: Snigdha
+- section: 6B
+  subject: Hindi
+  teacher: Snigdha
+
+- section: 6A
+  subject: Odia
+  teacher: Snigdha
+- section: 6B
+  subject: Odia
+  teacher: Snigdha
+
+- section: 6A
+  subject: Sanskrit
+  teacher: Ganesh
+- section: 6B
+  subject: Sanskrit
+  teacher: Ganesh
+
+- section: 6A
+  subject: ComputerScience
+  teacher: Sanjukta
+- section: 6B
+  subject: ComputerScience
+  teacher: Sanjukta
+
+- section: 6A
+  subject: Math
+  teacher: Nandini
+- section: 6B
+  subject: Math
+  teacher: Nandini
+
+- section: 6A
+  subject: Science
+  teacher: Pratibha
+- section: 6B
+  subject: Science
+  teacher: Pratibha
+
+
+# --- Class 7 ---
+- section: 7A
+  subject: SST
+  teacher: Srikant
+- section: 7B
+  subject: SST
+  teacher: Srikant
+
+- section: 7A
+  subject: English
+  teacher: Laxmipriya
+- section: 7B
+  subject: English
+  teacher: Laxmipriya
+
+- section: 7A
+  subject: Odia
+  teacher: Ganesh
+- section: 7B
+  subject: Odia
+  teacher: Ganesh
+
+- section: 7A
+  subject: ComputerScience
+  teacher: Sanjukta
+- section: 7B
+  subject: ComputerScience
+  teacher: Sanjukta
+
+- section: 7A
+  subject: Hindi
+  teacher: Snigdha
+- section: 7B
+  subject: Hindi
+  teacher: Snigdha
+
+- section: 7A
+  subject: Sanskrit
+  teacher: Ganesh
+- section: 7B
+  subject: Sanskrit
+  teacher: Ganesh
+
+- section: 7A
+  subject: Math
+  teacher: Nandini
+- section: 7B
+  subject: Math
+  teacher: Nandini
+
+- section: 7A
+  subject: Science
+  teacher: Priyanka
+- section: 7B
+  subject: Science
+  teacher: Priyanka
+
+
+# --- Class 8 ---
+- section: 8A
+  subject: Math
+  teacher: JB
+- section: 8B
+  subject: Math
+  teacher: JB
+
+- section: 8A
+  subject: Science
+  teacher: Sunil
+- section: 8B
+  subject: Science
+  teacher: Sunil
+
+- section: 8A
+  subject: SST
+  teacher: ANIL
+- section: 8B
+  subject: SST
+  teacher: ANIL
+
+- section: 8A
+  subject: English
+  teacher: Pratikshya
+- section: 8B
+  subject: English
+  teacher: Pratikshya
+
+- section: 8A
+  subject: Odia
+  teacher: Subhasmita
+- section: 8B
+  subject: Odia
+  teacher: Subhasmita
+
+- section: 8A
+  subject: Hindi
+  teacher: Snigdha
+- section: 8B
+  subject: Hindi
+  teacher: Snigdha
+
+- section: 8A
+  subject: Sanskrit
+  teacher: Ganesh
+- section: 8B
+  subject: Sanskrit
+  teacher: Ganesh
+
+- section: 8A
+  subject: ComputerScience
+  teacher: Sanjukta
+- section: 8B
+  subject: ComputerScience
+  teacher: Sanjukta
+
+
+# --- Class 9 ---
+- section: 9A
+  subject: SST
+  teacher: Srikant
+- section: 9B
+  subject: SST
+  teacher: Srikant
+
+- section: 9A
+  subject: English
+  teacher: Pratikshya
+- section: 9B
+  subject: English
+  teacher: Pratikshya
+
+- section: 9A
+  subject: Odia
+  teacher: Subhasmita
+- section: 9B
+  subject: Odia
+  teacher: Subhasmita
+
+- section: 9A
+  subject: IT
+  teacher: Usha
+- section: 9B
+  subject: IT
+  teacher: Usha
+
+- section: 9A
+  subject: Math
+  teacher: JB
+- section: 9B
+  subject: Math
+  teacher: JB
+
+- section: 9A
+  subject: Science
+  teacher: Sunil
+- section: 9B
+  subject: Science
+  teacher: Sunil
+
+
+# --- Class 10 ---
+- section: 10A
+  subject: SST
+  teacher: ANIL
+- section: 10B
+  subject: SST
+  teacher: Srikant
+
+- section: 10A
+  subject: English
+  teacher: Laxmipriya
+- section: 10B
+  subject: English
+  teacher: Laxmipriya
+
+- section: 10A
+  subject: Odia
+  teacher: Subhasmita
+- section: 10B
+  subject: Odia
+  teacher: Subhasmita
+
+- section: 10A
+  subject: IT
+  teacher: Usha
+- section: 10B
+  subject: IT
+  teacher: Usha
+
+- section: 10A
+  subject: Math
+  teacher: Mira
+- section: 10B
+  subject: Math
+  teacher: Mira
+
+- section: 10A
+  subject: Science
+  teacher: Sidharth
+- section: 10B
+  subject: Science
+  teacher: Sidharth
+
+
+# --- Class 11 ---
+- section: 11
+  subject: Physics
+  teacher: Pratibha
+- section: 11
+  subject: Chemistry
+  teacher: Priyanka
+- section: 11
+  subject: Biology
+  teacher: Sidharth
+- section: 11
+  subject: English
+  teacher: Radheshyam
+- section: 11
+  subject: IT
+  teacher: Usha
+- section: 11
+  subject: Math
+  teacher: Mira
+
+
+# --- Class 12 ---
+- section: 12
+  subject: Physics
+  teacher: Pratibha
+- section: 12
+  subject: Chemistry
+  teacher: Priyanka
+- section: 12
+  subject: Biology
+  teacher: Sidharth
+- section: 12
+  subject: English
+  teacher: Radheshyam
+- section: 12
+  subject: IT
+  teacher: Usha
+- section: 12
+  subject: Math
+  teacher: Mira
