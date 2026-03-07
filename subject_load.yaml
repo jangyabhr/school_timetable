@@ -6,7 +6,7 @@ class_groups:
     English: 6
     SST: 6
     Hindi: 4
-    Odia: 5
+    Odia: 4
     Sanskrit: 4
     ComputerScience: 4
     Game: 1       # Tuesday period 7 (fixed)
@@ -20,7 +20,7 @@ class_groups:
     English: 7
     SST: 7
     Odia: 6
-    IT: 7
+    IT: 6
     Game: 1       # Tuesday period 7 (fixed)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
@@ -32,7 +32,7 @@ class_groups:
     Biology: 7
     Math: 7
     English: 7
-    IT: 7
+    IT: 6
     Game: 1       # Tuesday period 7 (fixed)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
