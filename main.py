@@ -49,7 +49,7 @@ def main():
 
     # Step 6 — Export
     print("\n[6/6] Exporting to Excel...")
-    export_timetable(timetable_state, events, output_path="timetable.xlsx")
+    export_timetable(timetable_state, events, output_path="./timetable.xlsx")
 
     print("\n" + "=" * 50)
     print("  Done.")
