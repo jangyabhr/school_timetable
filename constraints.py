@@ -36,10 +36,13 @@ HARD_CONSTRAINTS = [
 
 SOFT_CONSTRAINTS = {
     "morning_anchor":        +10,   # Anchor subjects prefer periods 0–2
-    "avoid_subject_repeat":   -5,   # Same subject twice in a day for same class
+    "avoid_subject_repeat":  -20,   # Same subject twice in a day for same class
     "teacher_gap":            -3,   # Teacher has back-to-back periods with no break
     "lab_morning_prefer":     +8,   # Lab double-periods prefer morning (periods 0–3)
     "avoid_monday_last":      -4,   # Avoid placing core subjects in last period Monday
+    "period_repeat":         +18,   # Core subject lands on same period as existing instances
+    "period_near_repeat":     +8,   # Core subject lands within 1 period of existing mode
+    "avoid_last_period":     -10,   # Core subjects avoid period 7 (last period) any day
 }
 
 # ---------------------------------------------------------------------------
