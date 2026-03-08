@@ -52,7 +52,7 @@ def _header_fill():
     return PatternFill("solid", fgColor=COLOUR_HEADER)
 
 
-def _build_grid(section, timetable_state, events):
+def _build_grid(section, timetable_state):
     """
     Build a 2D grid [period][day] = (subject, teacher) for this section.
     """
@@ -65,6 +65,9 @@ def _build_grid(section, timetable_state, events):
         period  = placement["period"]
         subject = placement["subject"]
         teacher = placement.get("teacher") or ""
+        if not (0 <= day < DAYS_PER_WEEK and 0 <= period < PERIODS_PER_DAY):
+            print(f"WARNING: {section} {subject} has out-of-range day={day} period={period}, skipping")
+            continue
         grid[period][day] = (subject, teacher)
 
     return grid
@@ -92,7 +95,7 @@ def _write_sheet(ws, section, timetable_state, events):
         cell.alignment = Alignment(horizontal="center")
 
     # ── Data rows ────────────────────────────────────────────────────────────
-    grid = _build_grid(section, timetable_state, events)
+    grid = _build_grid(section, timetable_state)
 
     for p in range(PERIODS_PER_DAY):
         row_num = p + 3
@@ -212,6 +215,9 @@ def export_timetable(timetable_state, events, output_path="timetable.xlsx"):
     Raises RuntimeError if hard violations exist.
     """
     print("── Running pre-export validation ──")
+    unknown_classes = {p["class"] for p in timetable_state.values()} - set(CLASS_ORDER)
+    if unknown_classes:
+        print(f"WARNING: classes {sorted(unknown_classes)} are in timetable_state but not in CLASS_ORDER — they will be skipped in the export")
     violations = validate_before_export(timetable_state, events)
 
     if violations:
