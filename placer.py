@@ -87,24 +87,60 @@ def _unplace(event_idx, instance, timetable_state, occupied):
 # MRV Sort
 # ---------------------------------------------------------------------------
 
+def _teacher_total_load(events):
+    """Returns dict: teacher_name → total weekly periods across all their events."""
+    load = {}
+    for event in events:
+        t = event.get("teacher")
+        if t:
+            load[t] = load.get(t, 0) + event["weekly_load"]
+    return load
+
+
+_LAB_SUBJECT_PRIORITY = {"Physics": 2, "Chemistry": 1, "Biology": 0}
+
+
 def _mrv_order(events, conflict_map, suitability):
     """
-    Sort events by descending constraint density (true MRV):
-      - Fixed-slot subjects (CCA, Game) are placed first (fewest available slots)
-      - Then by suitability size ascending (fewer allowed slots = more constrained)
-      - Then by conflict_count × weekly_load
-    Most constrained events are placed first.
+    Sort events into three groups, in this order:
+      1. Fixed-slot subjects (CCA, Game) — must go first
+      2. Lab subjects (Physics > Chemistry > Biology) — grouped by subject across all
+         classes so that same-teacher lab events are placed consecutively; within each
+         subject, higher class_idx first (class 12 before class 11)
+      3. Regular subjects — sorted by teacher load DESC, class_idx DESC,
+         fewest suitability slots first, highest conflict×load first, lower event_idx first
     """
+    teacher_load = _teacher_total_load(events)
     indexed = list(enumerate(events))
-    indexed.sort(
-        key=lambda x: (
-            1 if x[1]["subject"] in FIXED_SLOT_SUBJECTS else 0,
-            -len(suitability.get(x[0], [])),   # fewer slots = less negative = higher priority
-            _conflict_count(x[0], conflict_map) * x[1]["weekly_load"],
-        ),
-        reverse=True
+
+    fixed   = [(i, e) for i, e in indexed if e["subject"] in FIXED_SLOT_SUBJECTS]
+    labs    = [(i, e) for i, e in indexed if e["subject"] in LAB_BLOCK_SUBJECTS]
+    regular = [(i, e) for i, e in indexed
+               if e["subject"] not in FIXED_SLOT_SUBJECTS
+               and e["subject"] not in LAB_BLOCK_SUBJECTS]
+
+    # Fixed slots: higher class_idx first
+    fixed.sort(key=lambda x: x[1]["class_idx"], reverse=True)
+
+    # Labs: Physics first, then Chemistry, then Biology; within same subject higher class first
+    labs.sort(
+        key=lambda x: (_LAB_SUBJECT_PRIORITY.get(x[1]["subject"], 0), x[1]["class_idx"]),
+        reverse=True,
     )
-    return indexed   # list of (event_idx, event)
+
+    # Regular: standard MRV keys
+    regular.sort(
+        key=lambda x: (
+            teacher_load.get(x[1].get("teacher"), 0),
+            x[1]["class_idx"],
+            -len(suitability.get(x[0], [])),
+            _conflict_count(x[0], conflict_map) * x[1]["weekly_load"],
+            -x[0],
+        ),
+        reverse=True,
+    )
+
+    return fixed + labs + regular
 
 
 # ---------------------------------------------------------------------------
@@ -241,15 +277,26 @@ def _backtrack(unplaced, events, slots, slot_lookup, suitability,
             unplaced.append((event_idx, instance, events[event_idx]))
             _unplace(event_idx, instance, timetable_state, occupied)
 
-    # Re-sort by MRV priority before retrying (true MRV: fewest allowed slots first)
-    unplaced.sort(
+    # Re-sort by MRV priority before retrying (same three-group order as _mrv_order)
+    _tload = _teacher_total_load(events)
+    fixed_u   = [(ei, ins, ev) for ei, ins, ev in unplaced if ev["subject"] in FIXED_SLOT_SUBJECTS]
+    labs_u    = [(ei, ins, ev) for ei, ins, ev in unplaced if ev["subject"] in LAB_BLOCK_SUBJECTS]
+    regular_u = [(ei, ins, ev) for ei, ins, ev in unplaced
+                 if ev["subject"] not in FIXED_SLOT_SUBJECTS
+                 and ev["subject"] not in LAB_BLOCK_SUBJECTS]
+    fixed_u.sort(key=lambda x: x[2]["class_idx"], reverse=True)
+    labs_u.sort(key=lambda x: (_LAB_SUBJECT_PRIORITY.get(x[2]["subject"], 0), x[2]["class_idx"]), reverse=True)
+    regular_u.sort(
         key=lambda x: (
-            1 if x[2]["subject"] in FIXED_SLOT_SUBJECTS else 0,
+            _tload.get(x[2].get("teacher"), 0),
+            x[2]["class_idx"],
             -len(suitability.get(x[0], [])),
             _conflict_count(x[0], conflict_map) * x[2]["weekly_load"],
+            -x[0],
         ),
         reverse=True,
     )
+    unplaced = fixed_u + labs_u + regular_u
 
     # Retry greedily on the freed events
     retry_unplaced = []
