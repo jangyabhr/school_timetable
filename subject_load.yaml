@@ -8,7 +8,7 @@ class_groups:
     Hindi: 4
     Odia: 4
     Sanskrit: 4
-    ComputerScience: 5
+    CS: 5
     Game: 1       # Tuesday period 7 (fixed)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday

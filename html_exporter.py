@@ -34,17 +34,6 @@ SUBJ_TEXT = {
 
 _SEP = (',', ':')
 
-# Subject name aliases: solver uses these names, HTML palette uses the short forms
-_SUBJ_ALIASES = {
-    'ComputerScience': 'CS',
-}
-
-
-def _norm(subject):
-    """Normalise a subject name from the solver to its display/colour-key form."""
-    return _SUBJ_ALIASES.get(subject, subject)
-
-
 # ── Data builders ─────────────────────────────────────────────────────────────
 
 def _build_structures(timetable_state):
@@ -67,7 +56,7 @@ def _build_structures(timetable_state):
         cls    = p['class']
         day    = DAYS[p['day']]
         period = p['period']
-        subj   = _norm(p['subject'])
+        subj   = p['subject']
         teacher = p.get('teacher') or ''
         if cls in class_timetable and 0 <= period < 8:
             class_timetable[cls][day][period] = {
@@ -98,7 +87,7 @@ def _build_structures(timetable_state):
             continue  # CCA has teacher=None
         day    = DAYS[p['day']]
         period = p['period']
-        subj   = _norm(p['subject'])
+        subj   = p['subject']
         cls    = p['class']
         if 0 <= period < 8:
             teacher_sched[t][day][period] = {'class': cls, 'subject': subj}
@@ -117,7 +106,7 @@ def _build_structures(timetable_state):
         for cls in CLASS_ORDER
     }
     for p in timetable_state.values():
-        subj = _norm(p['subject'])
+        subj = p['subject']
         cls  = p['class']
         if subj in SPECIALS and cls in special_counts:
             special_counts[cls][subj] += 1
