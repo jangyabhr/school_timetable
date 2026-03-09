@@ -1,157 +1,39 @@
 class_groups:
 
-  6A:
+  class_6_8:
     Math: 6
     Science: 6
     English: 6
     SST: 6
-    Hindi: 3
-    Odia: 4
+    Hindi: 4
+    Odia: 5
     Sanskrit: 4
-    CS: 5
+    CS: 4
     Game: 1       # Tuesday period 7 (fixed)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
 
-  6B:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 3
-    Odia: 4
-    Sanskrit: 4
-    CS: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  7A:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 4
-    Odia: 3
-    Sanskrit: 4
-    CS: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  7B:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 4
-    Odia: 3
-    Sanskrit: 4
-    CS: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  8A:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 4
-    Odia: 5
-    Sanskrit: 4
-    CS: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  8B:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 4
-    Odia: 5
-    Sanskrit: 4
-    CS: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  9A:
-    Math: 7
-    Science: 7
-    English: 7
-    SST: 6
-    Odia: 5
-    IT: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  9B:
-    Math: 7
-    Science: 7
-    English: 7
-    SST: 6
-    Odia: 5
-    IT: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  10A:
+  class_9_10:
     Math: 7
     Science: 7
     English: 7
     SST: 7
-    Odia: 5
-    IT: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
+    Odia: 6
+    IT: 7
+    Game: 1       # Tuesday period 7 (fixed)
+    Library: 1    # Floating — not Tuesday or Saturday
+    WE: 1         # Floating — not Tuesday or Saturday
+    CCA: 2        # Saturday periods 6–7 (fixed)
 
-  10B:
-    Math: 7
-    Science: 7
-    English: 7
-    SST: 7
-    Odia: 5
-    IT: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  "11":
+  class_11_12:
     Physics: 7
     Chemistry: 7
     Biology: 7
     Math: 7
     English: 7
-    IT: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
-
-  "12":
-    Physics: 7
-    Chemistry: 7
-    Biology: 7
-    Math: 7
-    English: 7
-    IT: 5
-    Game: 1
-    Library: 1
-    WE: 1
-    CCA: 2
+    IT: 7
+    Game: 1       # Tuesday period 7 (fixed)
+    Library: 1    # Floating — not Tuesday or Saturday
+    WE: 1         # Floating — not Tuesday or Saturday
+    CCA: 2        # Saturday periods 6–7 (fixed)
