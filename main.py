@@ -43,10 +43,43 @@ def main():
 
     # Step 5 — Placement
     print("\n[5/7] Running placer...")
-    timetable_state, unplaced, _ = run_placer(
+    timetable_state, unplaced, _, stats = run_placer(
         events, slots, slot_lookup, suitability, conflict_map
     )
-    print(f"      Placed: {len(timetable_state)} | Unplaced: {len(unplaced)}")
+
+    # Solver summary
+    phases_run = 1 + stats["phase2_ran"] + stats["phase3_ran"]
+    total_slots = NUM_CLASSES * DAYS_PER_WEEK * PERIODS_PER_DAY
+    placed = len(timetable_state)
+    scores = stats["scores"]
+    avg_score = sum(scores) / len(scores) if scores else 0
+
+    from collections import defaultdict
+    from event_generator import CLASS_ORDER
+    class_fill = defaultdict(int)
+    for placement in timetable_state.values():
+        class_fill[placement["class"]] += 1
+    slots_per_class = DAYS_PER_WEEK * PERIODS_PER_DAY
+
+    print(f"\n   ── Solver Summary ──")
+    print(f"   Phases run       : {phases_run} / 3")
+    print(f"   Total placed     : {placed}  |  Unplaced: {len(unplaced)}")
+    print(f"   Slot utilisation : {placed} / {total_slots}  ({placed/total_slots*100:.1f}%)")
+    print(f"   Score stats      : avg {avg_score:.1f}  |  min {min(scores)}  |  max {max(scores)}")
+    print(f"   Conflict pairs   : {total_conflicts}")
+    if stats["phase2_ran"]:
+        print(f"   Repair           : {stats['phase2_swaps']} swaps  |  {stats['phase2_repair_attempts']} slots tried")
+    if stats["phase3_ran"]:
+        print(f"   Backtrack        : {stats['phase3_undone']} placements undone")
+    print(f"\n   Per-class fill (placed / {slots_per_class} slots):")
+    row = ""
+    for i, section in enumerate(CLASS_ORDER):
+        row += f"  {section:>3} {class_fill[section]:>2}/{slots_per_class}"
+        if (i + 1) % 4 == 0:
+            print("  " + row)
+            row = ""
+    if row:
+        print("  " + row)
 
     # Step 6 — Export to Excel
     print("\n[6/7] Exporting to Excel...")
