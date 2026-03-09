@@ -5,7 +5,7 @@ class_groups:
     Science: 6
     English: 6
     SST: 6
-    Hindi: 4
+    Hindi: 3
     Odia: 4
     Sanskrit: 4
     CS: 5
@@ -19,7 +19,7 @@ class_groups:
     Science: 6
     English: 6
     SST: 6
-    Hindi: 4
+    Hindi: 3
     Odia: 4
     Sanskrit: 4
     CS: 5
@@ -34,7 +34,7 @@ class_groups:
     English: 6
     SST: 6
     Hindi: 4
-    Odia: 4
+    Odia: 3
     Sanskrit: 4
     CS: 5
     Game: 1
@@ -48,7 +48,7 @@ class_groups:
     English: 6
     SST: 6
     Hindi: 4
-    Odia: 4
+    Odia: 3
     Sanskrit: 4
     CS: 5
     Game: 1
@@ -88,7 +88,7 @@ class_groups:
     Math: 7
     Science: 7
     English: 7
-    SST: 7
+    SST: 6
     Odia: 5
     IT: 5
     Game: 1
@@ -100,7 +100,7 @@ class_groups:
     Math: 7
     Science: 7
     English: 7
-    SST: 7
+    SST: 6
     Odia: 5
     IT: 5
     Game: 1
