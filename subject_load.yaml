@@ -1,6 +1,6 @@
 class_groups:
 
-  class_6_8:
+  class_6_7:
     Math: 6
     Science: 6
     English: 6
@@ -14,12 +14,26 @@ class_groups:
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
 
+  class_8:
+    Math: 6
+    Science: 6
+    English: 6
+    SST: 6
+    Hindi: 4
+    Odia: 5
+    Sanskrit: 4
+    CS: 5
+    Game: 1       # Tuesday period 7 (fixed)
+    Library: 1    # Floating — not Tuesday or Saturday
+    WE: 1         # Floating — not Tuesday or Saturday
+    CCA: 2        # Saturday periods 6–7 (fixed)
+
   class_9_10:
     Math: 7
     Science: 7
     English: 7
     SST: 7
-    Odia: 4
+    Odia: 5
     IT: 5
     Game: 1       # Tuesday period 7 (fixed)
     Library: 1    # Floating — not Tuesday or Saturday
