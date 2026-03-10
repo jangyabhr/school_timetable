@@ -29,6 +29,22 @@ COLOUR_SUBHEAD  = "FF4A6FA5"   # medium blue  — sub-headers
 COLOUR_WHITE    = "FFFFFFFF"
 COLOUR_DASH_H   = "FF1B2631"   # near-black   — dashboard section headers
 
+# Per-section pastel palette (used on teacher-wise sheets to colour by class)
+SECTION_COLOURS = {
+    "6A":  "FFFADADD",   # rose
+    "6B":  "FFFDE8D8",   # peach
+    "7A":  "FFD5F5E3",   # mint
+    "7B":  "FFD6EAF8",   # sky blue
+    "8A":  "FFFFF3CD",   # pale yellow
+    "8B":  "FFE8DAEF",   # lavender
+    "9A":  "FFDBEAFE",   # cornflower
+    "9B":  "FFD5D8DC",   # silver
+    "10A": "FFFDEDEC",   # blush
+    "10B": "FFE9F7EF",   # sage
+    "11":  "FFFEF9E7",   # cream
+    "12":  "FFEAF4FB",   # pale cyan
+}
+
 DAY_NAMES    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 PERIOD_NAMES = [f"P{p+1}" for p in range(PERIODS_PER_DAY)]
 
@@ -47,6 +63,12 @@ def _get_fill(subject):
     if subject in FLOATING_SINGLE_SUBJECTS:
         return PatternFill("solid", fgColor=COLOUR_FLOAT)
     return PatternFill("solid", fgColor=COLOUR_WHITE)
+
+
+def _get_section_fill(section):
+    """Return a pastel fill for a class section (used on teacher-wise sheets)."""
+    color = SECTION_COLOURS.get(section, COLOUR_WHITE)
+    return PatternFill("solid", fgColor=color)
 
 
 def _thin_border():
@@ -198,7 +220,9 @@ def _write_teacher_sheet(ws, teacher_name, timetable_state):
     grid = _build_teacher_grid(teacher_name, timetable_state)
 
     def fill_fn(data):
-        return _get_fill(data[0] if data else None)
+        if not data:
+            return PatternFill("solid", fgColor=COLOUR_EMPTY)
+        return _get_section_fill(data[1])   # data[1] = cls (section)
 
     def val_fn(data):
         if not data:
@@ -218,6 +242,72 @@ def _write_teacher_sheet(ws, teacher_name, timetable_state):
         cell_fill_fn  = fill_fn,
         cell_value_fn = val_fn,
     )
+
+
+# ---------------------------------------------------------------------------
+# Master aggregate sheets
+# ---------------------------------------------------------------------------
+
+def _write_master_sections_sheet(ws, timetable_state):
+    """All class timetables stacked vertically with one blank row between each."""
+    next_row = 1
+    for section in CLASS_ORDER:
+        grid = _build_class_grid(section, timetable_state)
+
+        def fill_fn(data, _s=section):
+            return _get_fill(data[0] if data else None)
+
+        def val_fn(data):
+            if not data:
+                return "Free"
+            subject, teacher, is_lab = data
+            lab_suffix = " (Lab)" if is_lab else ""
+            return f"{subject}{lab_suffix}\n{teacher}" if teacher else f"{subject}{lab_suffix}"
+
+        next_row = _write_timetable_grid(
+            ws,
+            title         = f"Timetable — Class {section}",
+            row_labels    = DAY_NAMES,
+            col_labels    = PERIOD_NAMES,
+            grid          = grid,
+            cell_fill_fn  = fill_fn,
+            cell_value_fn = val_fn,
+            start_row     = next_row,
+        )
+        next_row += 1   # one blank row between tables
+
+
+def _write_master_teachers_sheet(ws, timetable_state, teachers):
+    """All teacher timetables stacked vertically with one blank row between each."""
+    next_row = 1
+    for teacher_name in teachers:
+        grid = _build_teacher_grid(teacher_name, timetable_state)
+
+        def fill_fn(data):
+            if not data:
+                return PatternFill("solid", fgColor=COLOUR_EMPTY)
+            return _get_section_fill(data[1])   # data[1] = cls (section)
+
+        def val_fn(data):
+            if not data:
+                return ""
+            subject, cls, is_lab = data
+            if subject == "Free":
+                return f"Duty\n({cls})"
+            lab_suffix = " (Lab)" if is_lab else ""
+            return f"{subject}{lab_suffix}\n({cls})"
+
+        next_row = _write_timetable_grid(
+            ws,
+            title         = f"Timetable — {teacher_name}",
+            row_labels    = DAY_NAMES,
+            col_labels    = PERIOD_NAMES,
+            grid          = grid,
+            cell_fill_fn  = fill_fn,
+            cell_value_fn = val_fn,
+            start_row     = next_row,
+        )
+        next_row += 1   # one blank row between tables
 
 
 # ---------------------------------------------------------------------------
@@ -400,20 +490,29 @@ def export_timetable(timetable_state, events, output_path="timetable.xlsx"):
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
 
-    # ── Sheet 1: Class-wise timetables (one sheet per class) ────────────────
+    teachers = sorted({p["teacher"] for p in timetable_state.values() if p.get("teacher")})
+
+    # ── Sheet 1: Dashboard ──────────────────────────────────────────────────
+    ws_dash = wb.create_sheet(title="Dashboard")
+    _write_dashboard(ws_dash, timetable_state, events)
+
+    # ── Sheet 2: Master — all sections stacked ──────────────────────────────
+    ws_all_sec = wb.create_sheet(title="All Sections")
+    _write_master_sections_sheet(ws_all_sec, timetable_state)
+
+    # ── Sheet 3: Master — all teachers stacked ──────────────────────────────
+    ws_all_tch = wb.create_sheet(title="All Teachers")
+    _write_master_teachers_sheet(ws_all_tch, timetable_state, teachers)
+
+    # ── Sheets 4+: Class-wise timetables (one sheet per class) ──────────────
     for section in CLASS_ORDER:
         ws = wb.create_sheet(title=f"Class {section}")
         _write_class_sheet(ws, section, timetable_state)
 
-    # ── Sheet 2: Teacher-wise timetables (one sheet per teacher) ────────────
-    teachers = sorted({p["teacher"] for p in timetable_state.values() if p.get("teacher")})
+    # ── Sheets N+: Teacher-wise timetables (one sheet per teacher) ───────────
     for teacher in teachers:
         ws = wb.create_sheet(title=teacher[:31])   # Excel sheet name limit = 31 chars
         _write_teacher_sheet(ws, teacher, timetable_state)
-
-    # ── Sheet 3: Dashboard ──────────────────────────────────────────────────
-    ws_dash = wb.create_sheet(title="Dashboard")
-    _write_dashboard(ws_dash, timetable_state, events)
 
     wb.save(output_path)
     print(f"── Timetable saved to: {output_path} ──")

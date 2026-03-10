@@ -4,13 +4,13 @@
 # Room constraints are enforced per room: no two sections can use the same
 # room at the same (day, period).
 #
-# CS lab room is shared by:  ComputerScience (6A–8B), IT (9A–12), Math (all 12)
+# CS lab room is shared by:  CS (6A–8B), IT (9A–12), Math (all 12)
 # Science lab room:          Science (9A–10B)
 # Physics/Chemistry/Biology: dedicated rooms, no constraint
 
 LAB_CONFIG = [
     # (sections,                                                    subject,          room)
-    (["6A", "6B", "7A", "7B", "8A", "8B"],                        "ComputerScience", "cs_lab"),
+    (["6A", "6B", "7A", "7B", "8A", "8B"],                        "CS",              "cs_lab"),
     (["9A", "9B", "10A", "10B", "11", "12"],                       "IT",              "cs_lab"),
     (["6A", "6B", "7A", "7B", "8A", "8B",
       "9A", "9B", "10A", "10B", "11", "12"],                       "Math",            "cs_lab"),
