@@ -22,6 +22,7 @@ COLOUR_ANCHOR   = "FFD6EAF8"   # light blue   — Math, Science, English, SST
 COLOUR_LAB      = "FFD5F5E3"   # light green  — Physics, Chemistry, Biology
 COLOUR_FIXED    = "FFFFF3CD"   # light yellow — Game, CCA
 COLOUR_FLOAT    = "FFFDE8D8"   # light orange — Library, WE
+COLOUR_FREE     = "FFD5D8DC"   # light grey-blue — Free (duty) periods
 COLOUR_EMPTY    = "FFF5F5F5"   # light grey   — empty cell
 COLOUR_HEADER   = "FF2E4057"   # dark blue    — header row/col
 COLOUR_SUBHEAD  = "FF4A6FA5"   # medium blue  — sub-headers
@@ -35,6 +36,8 @@ PERIOD_NAMES = [f"P{p+1}" for p in range(PERIODS_PER_DAY)]
 def _get_fill(subject):
     if subject is None:
         return PatternFill("solid", fgColor=COLOUR_EMPTY)
+    if subject == "Free":
+        return PatternFill("solid", fgColor=COLOUR_FREE)
     if subject in ANCHOR_SUBJECTS:
         return PatternFill("solid", fgColor=COLOUR_ANCHOR)
     if subject in LAB_BLOCK_SUBJECTS:
@@ -66,7 +69,7 @@ def _subhead_fill():
 
 # ---------------------------------------------------------------------------
 # Grid builder — days in rows, periods in columns
-# grid[day][period] = (subject, teacher)  or  None
+# grid[day][period] = (subject, teacher, is_lab)  or  None
 # ---------------------------------------------------------------------------
 
 def _build_class_grid(section, timetable_state):
@@ -78,15 +81,16 @@ def _build_class_grid(section, timetable_state):
         period  = placement["period"]
         subject = placement["subject"]
         teacher = placement.get("teacher") or ""
+        is_lab  = placement.get("is_lab", False)
         if not (0 <= day < DAYS_PER_WEEK and 0 <= period < PERIODS_PER_DAY):
             print(f"WARNING: {section} {subject} has out-of-range day={day} period={period}, skipping")
             continue
-        grid[day][period] = (subject, teacher)
+        grid[day][period] = (subject, teacher, is_lab)
     return grid
 
 
 def _build_teacher_grid(teacher_name, timetable_state):
-    """grid[day][period] = (subject, class_name) or None"""
+    """grid[day][period] = (subject, class_name, is_lab) or None"""
     grid = [[None] * PERIODS_PER_DAY for _ in range(DAYS_PER_WEEK)]
     for key, placement in timetable_state.items():
         if placement.get("teacher") != teacher_name:
@@ -95,9 +99,10 @@ def _build_teacher_grid(teacher_name, timetable_state):
         period  = placement["period"]
         subject = placement["subject"]
         cls     = placement["class"]
+        is_lab  = placement.get("is_lab", False)
         if not (0 <= day < DAYS_PER_WEEK and 0 <= period < PERIODS_PER_DAY):
             continue
-        grid[day][period] = (subject, cls)
+        grid[day][period] = (subject, cls, is_lab)
     return grid
 
 
@@ -173,9 +178,10 @@ def _write_class_sheet(ws, section, timetable_state):
 
     def val_fn(data):
         if not data:
-            return ""
-        subject, teacher = data
-        return f"{subject}\n{teacher}" if teacher else subject
+            return "Free"
+        subject, teacher, is_lab = data
+        lab_suffix = " (Lab)" if is_lab else ""
+        return f"{subject}{lab_suffix}\n{teacher}" if teacher else f"{subject}{lab_suffix}"
 
     _write_timetable_grid(
         ws,
@@ -197,8 +203,11 @@ def _write_teacher_sheet(ws, teacher_name, timetable_state):
     def val_fn(data):
         if not data:
             return ""
-        subject, cls = data
-        return f"{subject}\n({cls})"
+        subject, cls, is_lab = data
+        if subject == "Free":
+            return f"Duty\n({cls})"
+        lab_suffix = " (Lab)" if is_lab else ""
+        return f"{subject}{lab_suffix}\n({cls})"
 
     _write_timetable_grid(
         ws,

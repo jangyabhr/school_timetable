@@ -8,6 +8,8 @@ from slot_index         import build_slot_index
 from conflict_builder   import build_conflict_map
 from suitability_matrix import build_suitability_matrix
 from placer             import run_placer
+from post_processor     import run_post_processing
+from lab_assigner       import assign_lab_periods
 from exporter           import export_timetable
 from html_exporter      import generate_html
 from constraints        import NUM_CLASSES, DAYS_PER_WEEK, PERIODS_PER_DAY
@@ -19,13 +21,13 @@ def main():
     print("=" * 50)
 
     # Step 1 — Slot index
-    print("\n[1/7] Building slot index...")
+    print("\n[1/9] Building slot index...")
     slots, slot_lookup = build_slot_index(NUM_CLASSES, DAYS_PER_WEEK, PERIODS_PER_DAY)
     print(f"      {len(slots)} slots created "
           f"({NUM_CLASSES} classes × {DAYS_PER_WEEK} days × {PERIODS_PER_DAY} periods)")
 
     # Step 2 — Events
-    print("\n[2/7] Generating events...")
+    print("\n[2/9] Generating events...")
     events = generate_all_events(
         assignments_path="teacher_assignments.yaml",
         subject_load_path="subject_load.yaml",
@@ -33,18 +35,18 @@ def main():
     print(f"      {len(events)} events generated")
 
     # Step 3 — Conflict map
-    print("\n[3/7] Building conflict map...")
+    print("\n[3/9] Building conflict map...")
     conflict_map = build_conflict_map(events)
     total_conflicts = sum(len(v) for v in conflict_map.values()) // 2
     print(f"      {total_conflicts} conflict pairs found")
 
     # Step 4 — Suitability matrix
-    print("\n[4/7] Building suitability matrix...")
+    print("\n[4/9] Building suitability matrix...")
     suitability = build_suitability_matrix(events, slot_lookup)
     print(f"      Suitability built for {len(suitability)} events")
 
     # Step 5 — Placement
-    print("\n[5/7] Running placer...")
+    print("\n[5/9] Running placer...")
     timetable_state, unplaced, _, stats = run_placer(
         events, slots, slot_lookup, suitability, conflict_map
     )
@@ -81,12 +83,22 @@ def main():
     if row:
         print("  " + row)
 
-    # Step 6 — Export to Excel
-    print("\n[6/7] Exporting to Excel...")
+    # Step 6 — Post-processing (Game + duty teachers + Free periods)
+    print("\n[6/9] Post-processing (Game, duty assignments, Free periods)...")
+    timetable_state = run_post_processing(
+        timetable_state, events, CLASS_ORDER, DAYS_PER_WEEK, PERIODS_PER_DAY
+    )
+
+    # Step 7 — Lab annotation
+    print("\n[7/9] Annotating lab periods...")
+    timetable_state = assign_lab_periods(timetable_state)
+
+    # Step 8 — Export to Excel
+    print("\n[8/9] Exporting to Excel...")
     export_timetable(timetable_state, events, output_path="./timetable.xlsx")
 
-    # Step 7 — Generate HTML tools
-    print("\n[7/7] Generating HTML timetable tools...")
+    # Step 9 — Generate HTML tools
+    print("\n[9/9] Generating HTML timetable tools...")
     generate_html(timetable_state, events, output_path="./Timetable_Tools.html")
 
     print("\n" + "=" * 50)

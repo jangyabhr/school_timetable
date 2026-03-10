@@ -62,7 +62,7 @@ def _build_structures(timetable_state):
             class_timetable[cls][day][period] = {
                 's': subj,
                 't': teacher,
-                'l': subj in LAB_SUBJECTS,
+                'l': p.get('is_lab', False),
             }
 
     # ── all_teachers (sorted, excluding None from CCA) ────────────────────────
@@ -91,7 +91,7 @@ def _build_structures(timetable_state):
         cls    = p['class']
         if 0 <= period < 8:
             teacher_sched[t][day][period] = {'class': cls, 'subject': subj}
-            teacher_view[t][day][period]  = {'cls': cls, 's': subj, 'l': subj in LAB_SUBJECTS}
+            teacher_view[t][day][period]  = {'cls': cls, 's': subj, 'l': p.get('is_lab', False)}
 
     # ── wk_load ───────────────────────────────────────────────────────────────
     wk_load = {t: 0 for t in all_teachers}
