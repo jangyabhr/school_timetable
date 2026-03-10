@@ -7,10 +7,6 @@ from openpyxl.utils import get_column_letter
 from constraints import (
     DAYS_PER_WEEK,
     PERIODS_PER_DAY,
-    ANCHOR_SUBJECTS,
-    LAB_BLOCK_SUBJECTS,
-    FIXED_SLOT_SUBJECTS,
-    FLOATING_SINGLE_SUBJECTS,
 )
 from event_generator import CLASS_ORDER
 
@@ -18,11 +14,27 @@ from event_generator import CLASS_ORDER
 # Colour palette  (openpyxl uses ARGB hex, no leading #)
 # ---------------------------------------------------------------------------
 
-COLOUR_ANCHOR   = "FFD6EAF8"   # light blue   — Math, Science, English, SST
-COLOUR_LAB      = "FFD5F5E3"   # light green  — Physics, Chemistry, Biology
-COLOUR_FIXED    = "FFFFF3CD"   # light yellow — Game, CCA
-COLOUR_FLOAT    = "FFFDE8D8"   # light orange — Library, WE
 COLOUR_FREE     = "FFD5D8DC"   # light grey-blue — Free (duty) periods
+
+# Per-subject pastel palette (Material-Design-inspired, one colour per subject)
+SUBJECT_COLOURS = {
+    "Math":      "FFBBDEFB",  # pastel blue
+    "English":   "FFB2EBF2",  # pastel cyan
+    "Science":   "FFC8E6C9",  # pastel green
+    "SST":       "FFFFF9C4",  # pastel yellow
+    "Hindi":     "FFFFE0B2",  # pastel amber
+    "Odia":      "FFFCE4EC",  # pastel pink
+    "Sanskrit":  "FFE8EAF6",  # pastel indigo
+    "CS":        "FFE0F2F1",  # pastel teal
+    "IT":        "FFF3E5F5",  # pastel purple
+    "Physics":   "FFE1F5FE",  # pastel light-blue
+    "Chemistry": "FFFBE9E7",  # pastel deep-orange
+    "Biology":   "FFE8F5E9",  # pastel light-green
+    "Game":      "FFFFF3E0",  # pastel orange
+    "CCA":       "FFEDE7F6",  # pastel deep-purple
+    "Library":   "FFF9FBE7",  # pastel lime
+    "WE":        "FFECE4D6",  # pastel warm-tan
+}
 COLOUR_EMPTY    = "FFF5F5F5"   # light grey   — empty cell
 COLOUR_HEADER   = "FF2E4057"   # dark blue    — header row/col
 COLOUR_SUBHEAD  = "FF4A6FA5"   # medium blue  — sub-headers
@@ -54,15 +66,8 @@ def _get_fill(subject):
         return PatternFill("solid", fgColor=COLOUR_EMPTY)
     if subject == "Free":
         return PatternFill("solid", fgColor=COLOUR_FREE)
-    if subject in ANCHOR_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_ANCHOR)
-    if subject in LAB_BLOCK_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_LAB)
-    if subject in FIXED_SLOT_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_FIXED)
-    if subject in FLOATING_SINGLE_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_FLOAT)
-    return PatternFill("solid", fgColor=COLOUR_WHITE)
+    color = SUBJECT_COLOURS.get(subject, COLOUR_WHITE)
+    return PatternFill("solid", fgColor=color)
 
 
 def _get_section_fill(section):
