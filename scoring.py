@@ -3,6 +3,7 @@
 from constraints import (
     SOFT_CONSTRAINTS, ANCHOR_SUBJECTS, LAB_BLOCK_SUBJECTS, MONDAY,
     LAB_ALLOWED_START_PERIODS, FIXED_SLOT_SUBJECTS, FLOATING_SINGLE_SUBJECTS,
+    DAY_SPREAD_SUBJECTS as PERIOD_PRIORITY_SUBJECTS,
 )
 
 # Subjects for which period-repetition is enforced
@@ -88,5 +89,18 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
                 score += SOFT_CONSTRAINTS["period_repeat"]
             elif abs(period - mode_period) == 1:
                 score += SOFT_CONSTRAINTS["period_near_repeat"]
+
+    # Soft: extra period-consistency bonus for Math and Science
+    # (strengthens the "Math always at period 1" lock for these subjects)
+    if event["subject"] in PERIOD_PRIORITY_SUBJECTS:
+        existing_periods = [
+            p["period"]
+            for (e_idx, _inst), p in timetable_state.items()
+            if e_idx == event_idx
+        ]
+        if existing_periods:
+            mode_period = max(set(existing_periods), key=existing_periods.count)
+            if period == mode_period:
+                score += SOFT_CONSTRAINTS["period_repeat_priority"]
 
     return score

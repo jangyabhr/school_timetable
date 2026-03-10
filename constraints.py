@@ -43,6 +43,7 @@ SOFT_CONSTRAINTS = {
     "period_repeat":         +18,   # Core subject lands on same period as existing instances
     "period_near_repeat":     +8,   # Core subject lands within 1 period of existing mode
     "avoid_last_period":     -10,   # Core subjects avoid period 7 (last period) any day
+    "period_repeat_priority": +8,   # Math/Science get extra bonus for landing on their mode period
 }
 
 # ---------------------------------------------------------------------------
@@ -54,6 +55,12 @@ ANCHOR_SUBJECTS = [
     "Science",
     "English",
     "SST",
+]
+
+# Subjects that benefit from spaced-repetition across days
+DAY_SPREAD_SUBJECTS = [
+    "Math",
+    "Science",
 ]
 
 LAB_BLOCK_SUBJECTS = [
