@@ -11,12 +11,12 @@ from event_generator import CLASS_ORDER
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 DAYS    = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-PERIODS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8']
+PERIODS = ['Drill', 'P1', 'P2', 'Break', 'P3', 'P4', 'P5', 'P6']
 TIMES   = [
-    '10:05–10:50', '10:50–11:30', '11:40–12:20', '12:20–1:00',
-    '1:40–2:20',   '2:20–3:00',   '3:00–3:30',   '3:30–4:00',
+    '7:00–7:30',   '7:30–8:10',   '8:10–8:50',   '8:50–9:40',
+    '9:40–10:20',  '10:20–11:00', '11:00–11:40', '11:40–12:20',
 ]
-SPECIALS     = {'Free', 'Game', 'Library', 'WE', 'CCA'}
+SPECIALS     = {'Free', 'Game', 'Library', 'WE', 'CCA', 'Drill', 'Breakfast'}
 LAB_SUBJECTS = {'CS', 'IT', 'Math', 'Science', 'Biology', 'Physics', 'Chemistry'}
 
 SUBJ_COLORS = {
@@ -26,6 +26,7 @@ SUBJ_COLORS = {
     'Biology':   '#A8D8A8', 'Physics':   '#A9CCE3', 'Chemistry': '#A9DFBF',
     'Free':      '#ECECEC', 'Library':   '#D5D8DC', 'WE':        '#D5D8DC',
     'Game':      '#82E0AA', 'CCA':       '#C39BD3',
+    'Drill':     '#E8DAEF', 'Breakfast': '#FFF9C4',
 }
 SUBJ_TEXT = {
     'Game':    '#145A32', 'CCA':     '#4A235A',
@@ -46,9 +47,10 @@ def _build_structures(timetable_state):
     """
 
     # ── class_timetable ───────────────────────────────────────────────────────
-    # class_timetable[cls][day] = list of 8 dicts {s, t, l}
+    # class_timetable[cls][day] = list of len(PERIODS) dicts {s, t, l}
+    n_periods = len(PERIODS)
     class_timetable = {
-        cls: {day: [{'s': '', 't': '', 'l': False} for _ in range(8)] for day in DAYS}
+        cls: {day: [{'s': '', 't': '', 'l': False} for _ in range(n_periods)] for day in DAYS}
         for cls in CLASS_ORDER
     }
 
@@ -58,7 +60,7 @@ def _build_structures(timetable_state):
         period = p['period']
         subj   = p['subject']
         teacher = p.get('teacher') or ''
-        if cls in class_timetable and 0 <= period < 8:
+        if cls in class_timetable and 0 <= period < n_periods:
             class_timetable[cls][day][period] = {
                 's': subj,
                 't': teacher,
@@ -74,22 +76,22 @@ def _build_structures(timetable_state):
     # teacher_sched[t][day][pi] = {'class': cls, 'subject': subj} or None
     # teacher_view[t][day][pi]  = {'cls': cls, 's': subj, 'l': bool} or None
     teacher_sched = {
-        t: {day: [None] * 8 for day in DAYS}
+        t: {day: [None] * n_periods for day in DAYS}
         for t in all_teachers
     }
     teacher_view = {
-        t: {day: [None] * 8 for day in DAYS}
+        t: {day: [None] * n_periods for day in DAYS}
         for t in all_teachers
     }
     for p in timetable_state.values():
         t = p.get('teacher')
         if not t:
-            continue  # CCA has teacher=None
+            continue  # CCA/Drill/Breakfast have teacher=None
         day    = DAYS[p['day']]
         period = p['period']
         subj   = p['subject']
         cls    = p['class']
-        if 0 <= period < 8:
+        if 0 <= period < n_periods:
             teacher_sched[t][day][period] = {'class': cls, 'subject': subj}
             teacher_view[t][day][period]  = {'cls': cls, 's': subj, 'l': p.get('is_lab', False)}
 
@@ -830,7 +832,7 @@ function renderTable() {{
   hRow += `<th style="min-width:70px">Class</th>`;
   hRow += `<th style="min-width:48px;position:sticky;left:70px;z-index:110;background:var(--navy)">Day</th>`;
   PERIODS.forEach((p, i) => {{
-    const gapStyle = i===2 ? 'border-left:3px solid #4a6fa5' : i===4 ? 'border-left:3px solid #8b4513' : '';
+    const gapStyle = i===0 ? 'border-right:3px solid #7d3c98' : i===3 ? 'border-right:3px solid #d4ac0d' : '';
     hRow += `<th style="${{gapStyle}}">${{p}}<span class="ph-time">${{TIMES[i]}}</span></th>`;
   }});
   hRow += '</tr>';
@@ -851,7 +853,7 @@ function specialCellClass(subj) {{
 }}
 
 function specialLabel(subj) {{
-  const map = {{Free:'— Free',Game:'⚽ Game',Library:'📚 Library',WE:'✏ WE',CCA:'🎭 CCA'}};
+  const map = {{Free:'— Free',Game:'⚽ Game',Library:'📚 Library',WE:'✏ WE',CCA:'🎭 CCA',Drill:'🧘 Drill',Breakfast:'🍳 Breakfast'}};
   return map[subj] || subj;
 }}
 
@@ -870,7 +872,7 @@ function buildClassBody() {{
         const teacher = slot.t || '';
         const isLab   = slot.l && subj;
         const specCls = specialCellClass(subj);
-        const gapCls  = pi===2 ? ' gap-break' : pi===4 ? ' gap-lunch' : '';
+        const gapCls  = pi===0 ? ' gap-drill' : pi===3 ? ' gap-break' : '';
         const satCls  = isSat ? ' sat-col' : '';
         const tAttr   = teacher ? ` data-teacher="${{teacher}}"` : '';
         const sAttr   = subj    ? ` data-subj="${{subj}}"`       : '';

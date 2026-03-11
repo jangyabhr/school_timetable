@@ -1,39 +1,46 @@
 class_groups:
 
+  # April schedule: 6 teaching periods/day × 6 days = 36 slots/week per class.
+  # Reserved: CCA×2 + Game×1 + Library×1 + WE×1 = 5 special slots → 31 core slots.
+  # 1–2 free periods/week left for assembly, tests, or ad-hoc use.
+
   class_6_8:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 4
-    Odia: 4
-    Sanskrit: 4
-    ComputerScience: 5
-    Game: 1       # Latest free period (placed by post_processor)
+    Math: 5
+    Science: 5
+    English: 5
+    SST: 4
+    Hindi: 3
+    Odia: 3
+    Sanskrit: 3
+    ComputerScience: 3
+    Game: 1       # Latest free teaching period (placed by post_processor)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
+    # Total: 36 (no free periods — tight fit)
 
   class_9_10:
-    Math: 7
-    Science: 7
-    English: 7
-    SST: 7
-    Odia: 4
-    IT: 5
-    Game: 1       # Latest free period (placed by post_processor)
+    Math: 6
+    Science: 6
+    English: 5
+    SST: 5
+    Odia: 3
+    IT: 4
+    Game: 1       # Latest free teaching period (placed by post_processor)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
+    # Total: 34 → ~2 free periods/week (exam buffer / assembly)
 
   class_11_12:
-    Physics: 7
-    Chemistry: 7
-    Biology: 7
-    Math: 7
-    English: 7
-    IT: 5
-    Game: 1       # Latest free period (placed by post_processor)
+    Physics: 5
+    Chemistry: 5
+    Biology: 5
+    Math: 6
+    English: 5
+    IT: 4
+    Game: 1       # Latest free teaching period (placed by post_processor)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
+    # Total: 35 → ~1 free period/week

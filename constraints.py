@@ -6,7 +6,38 @@
 
 NUM_CLASSES      = 12   # 6A, 6B, 7A, 7B, 8A, 8B, 9A, 9B, 10A, 10B, 11, 12
 DAYS_PER_WEEK    = 6    # Monday=0 … Saturday=5
-PERIODS_PER_DAY  = 8    # Periods 0–7
+PERIODS_PER_DAY  = 8    # 8 display rows per day (see period map below)
+
+# ---------------------------------------------------------------------------
+# Period Map (April schedule)
+# Index 0  — Drill/Yoga   07:00–07:30   non-teaching, no teacher
+# Index 1  — P1           07:30–08:10   teaching
+# Index 2  — P2           08:10–08:50   teaching
+# Index 3  — Breakfast    08:50–09:40   non-teaching, break
+# Index 4  — P3           09:40–10:20   teaching
+# Index 5  — P4           10:20–11:00   teaching
+# Index 6  — P5           11:00–11:40   teaching
+# Index 7  — P6           11:40–12:20   teaching  (last)
+# ---------------------------------------------------------------------------
+DRILL_PERIOD         = 0
+BREAK_PERIOD         = 3
+NON_TEACHING_PERIODS = [DRILL_PERIOD, BREAK_PERIOD]   # never scheduled by solver
+TEACHING_PERIODS     = [p for p in range(PERIODS_PER_DAY) if p not in NON_TEACHING_PERIODS]
+
+PERIOD_NAMES_DISPLAY = ["Drill", "P1", "P2", "Break", "P3", "P4", "P5", "P6"]
+PERIOD_TIMES = [
+    "7:00–7:30",   # Drill
+    "7:30–8:10",   # P1
+    "8:10–8:50",   # P2
+    "8:50–9:40",   # Breakfast
+    "9:40–10:20",  # P3
+    "10:20–11:00", # P4
+    "11:00–11:40", # P5
+    "11:40–12:20", # P6
+]
+
+# Subjects placed by post_processor as non-teachable markers (no duty teacher assigned)
+NON_SUBJECT_MARKERS = ["Drill", "Breakfast"]
 
 # Day index aliases
 MONDAY    = 0
@@ -102,9 +133,10 @@ FLOATING_EXCLUDED_DAYS = [TUESDAY, SATURDAY]
 # (used by suitability_matrix.py and the placer)
 # ---------------------------------------------------------------------------
 
-# Lab subjects may only START on these periods so the consecutive
-# second period does not overflow the day (max start = PERIODS_PER_DAY - 2)
-LAB_ALLOWED_START_PERIODS = list(range(2, PERIODS_PER_DAY - 1))  # 2–6 (after 2nd period, 1-indexed)
+# Lab subjects may only START on these periods so the consecutive second period
+# does not land on a non-teaching slot or overflow the day.
+# Valid teaching pairs: (1,2), (4,5), (5,6), (6,7) — period 3 (Breakfast) splits morning from afternoon.
+LAB_ALLOWED_START_PERIODS = [1, 4, 5, 6]
 
 # ---------------------------------------------------------------------------
 # Validation Helper  (used by the validation report step)

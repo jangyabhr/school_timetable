@@ -36,9 +36,10 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
 
     score = 0
 
-    # Soft: anchor subjects prefer morning periods (period 0–2)
+    # Soft: anchor subjects prefer morning teaching periods (P1=1, P2=2)
+    # Period 0 is Drill (never scheduled), so morning teaching starts at period 1.
     if event["subject"] in ANCHOR_SUBJECTS:
-        if period <= 2:
+        if period in [1, 2]:
             score += SOFT_CONSTRAINTS["morning_anchor"]
 
     # Soft: penalise same subject appearing twice in a day for same class
@@ -62,9 +63,10 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
         if teacher_periods_today and (period - 1) in teacher_periods_today:
             score += SOFT_CONSTRAINTS["teacher_gap"]
 
-    # Soft: lab subjects prefer early start after 2nd period (period 2–3)
+    # Soft: lab subjects prefer early morning start (period 1 = P1→P2 pair).
+    # Period 3 is Breakfast so the only morning consecutive pair is 1+2.
     if event["subject"] in LAB_BLOCK_SUBJECTS:
-        if 2 <= period <= 3:
+        if period == 1:
             score += SOFT_CONSTRAINTS["lab_morning_prefer"]
 
     # Soft: avoid placing core subjects in last period (any day)

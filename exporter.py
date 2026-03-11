@@ -11,6 +11,8 @@ from constraints import (
     LAB_BLOCK_SUBJECTS,
     FIXED_SLOT_SUBJECTS,
     FLOATING_SINGLE_SUBJECTS,
+    PERIOD_NAMES_DISPLAY,
+    PERIOD_TIMES,
 )
 from event_generator import CLASS_ORDER
 
@@ -28,9 +30,11 @@ COLOUR_HEADER   = "FF2E4057"   # dark blue    — header row/col
 COLOUR_SUBHEAD  = "FF4A6FA5"   # medium blue  — sub-headers
 COLOUR_WHITE    = "FFFFFFFF"
 COLOUR_DASH_H   = "FF1B2631"   # near-black   — dashboard section headers
+COLOUR_DRILL    = "FFE8DAEF"   # light purple — Drill/Yoga period
+COLOUR_BREAK    = "FFFFFDE7"   # light amber  — Breakfast break
 
 DAY_NAMES    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-PERIOD_NAMES = [f"P{p+1}" for p in range(PERIODS_PER_DAY)]
+PERIOD_NAMES = PERIOD_NAMES_DISPLAY   # ["Drill","P1","P2","Break","P3","P4","P5","P6"]
 
 
 def _get_fill(subject):
@@ -38,6 +42,10 @@ def _get_fill(subject):
         return PatternFill("solid", fgColor=COLOUR_EMPTY)
     if subject == "Free":
         return PatternFill("solid", fgColor=COLOUR_FREE)
+    if subject == "Drill":
+        return PatternFill("solid", fgColor=COLOUR_DRILL)
+    if subject == "Breakfast":
+        return PatternFill("solid", fgColor=COLOUR_BREAK)
     if subject in ANCHOR_SUBJECTS:
         return PatternFill("solid", fgColor=COLOUR_ANCHOR)
     if subject in LAB_BLOCK_SUBJECTS:
@@ -139,10 +147,14 @@ def _write_timetable_grid(ws, title, row_labels, col_labels, grid, cell_fill_fn,
     day_hdr.alignment = Alignment(horizontal="center")
 
     for ci, col_label in enumerate(col_labels):
-        cell = ws.cell(row=header_row, column=ci + 2, value=col_label)
+        # Show period name + time on two lines (e.g. "P1\n7:30–8:10")
+        time_label = PERIOD_TIMES[ci] if ci < len(PERIOD_TIMES) else ""
+        cell_val   = f"{col_label}\n{time_label}" if time_label else col_label
+        cell = ws.cell(row=header_row, column=ci + 2, value=cell_val)
         cell.fill      = _header_fill()
-        cell.font      = Font(bold=True, color=COLOUR_WHITE)
-        cell.alignment = Alignment(horizontal="center")
+        cell.font      = Font(bold=True, color=COLOUR_WHITE, size=9)
+        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws.row_dimensions[header_row].height = 30
 
     # Data rows
     for ri, row_label in enumerate(row_labels):

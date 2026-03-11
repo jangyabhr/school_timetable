@@ -8,6 +8,7 @@ from constraints import (
     FLOATING_SINGLE_SUBJECTS,
     LAB_BLOCK_SUBJECTS,
     LAB_ALLOWED_START_PERIODS,
+    NON_TEACHING_PERIODS,
 )
 
 
@@ -17,10 +18,10 @@ def build_suitability_matrix(events, slot_lookup):
 
     Rules applied per subject type:
     - Fixed-slot subjects (CCA): only their exact (day, period) slots
-    - Floating singles (Library, WE): all days except Tuesday and Saturday
-    - Lab subjects (Physics, Chemistry, Biology): periods 0–6 only (room for double)
-    - All others (including Game if it ever appears as a solver event): all slots
-    Note: Game has no solver event; it is placed exclusively by post_processor.
+    - Floating singles (Library, WE): all teaching periods except Tuesday and Saturday
+    - Lab subjects (Physics, Chemistry, Biology): LAB_ALLOWED_START_PERIODS only
+    - All other subjects: all teaching periods (NON_TEACHING_PERIODS excluded)
+    Note: Game, Drill, and Breakfast have no solver events; placed by post_processor.
     """
 
     suitability = {}
@@ -43,6 +44,8 @@ def build_suitability_matrix(events, slot_lookup):
                 if day in FLOATING_EXCLUDED_DAYS:
                     continue
                 for period in range(PERIODS_PER_DAY):
+                    if period in NON_TEACHING_PERIODS:
+                        continue
                     key = (class_idx, day, period)
                     if key in slot_lookup:
                         allowed_slot_ids.append(slot_lookup[key])
@@ -59,6 +62,8 @@ def build_suitability_matrix(events, slot_lookup):
         else:
             for day in range(DAYS_PER_WEEK):
                 for period in range(PERIODS_PER_DAY):
+                    if period in NON_TEACHING_PERIODS:
+                        continue
                     key = (class_idx, day, period)
                     if key in slot_lookup:
                         allowed_slot_ids.append(slot_lookup[key])
