@@ -221,10 +221,95 @@ def _write_teacher_sheet(ws, teacher_name, timetable_state):
 
 
 # ---------------------------------------------------------------------------
+# Violations section (written into the Dashboard)
+# ---------------------------------------------------------------------------
+
+COLOUR_VIOL_HDR  = "FFC0392B"   # red      — violations section header
+COLOUR_VIOL_ROW  = "FFFCE4D6"   # salmon   — violation row cells
+COLOUR_OK_ROW    = "FFE9F7EF"   # pale green — all-clear row
+
+
+def _write_violations_section(ws, violations, start_row):
+    """
+    Writes a Validation Report block starting at start_row, columns A–C.
+    Each violation row shows: # | Violation | Suggested Fix
+    """
+    center = Alignment(horizontal="center", vertical="center")
+    left   = Alignment(horizontal="left",   vertical="center", wrap_text=True)
+    bold_white = Font(bold=True, color=COLOUR_WHITE)
+
+    if not violations:
+        ws.merge_cells(start_row=start_row, start_column=1,
+                       end_row=start_row,   end_column=3)
+        hdr = ws.cell(row=start_row, column=1,
+                      value="Validation Report — All checks passed")
+        hdr.fill      = PatternFill("solid", fgColor=COLOUR_DASH_H)
+        hdr.font      = Font(bold=True, size=12, color=COLOUR_WHITE)
+        hdr.alignment = center
+        ws.row_dimensions[start_row].height = 20
+
+        ok_row = start_row + 1
+        ws.merge_cells(start_row=ok_row, start_column=1,
+                       end_row=ok_row,   end_column=3)
+        ok = ws.cell(row=ok_row, column=1, value="No violations found")
+        ok.fill      = PatternFill("solid", fgColor=COLOUR_OK_ROW)
+        ok.font      = Font(bold=True, color="FF1E8449")
+        ok.alignment = center
+        ok.border    = _thin_border()
+        ws.row_dimensions[ok_row].height = 18
+        return
+
+    # Header
+    ws.merge_cells(start_row=start_row, start_column=1,
+                   end_row=start_row,   end_column=3)
+    hdr = ws.cell(row=start_row, column=1,
+                  value=f"Validation Report — {len(violations)} Violation(s) Found")
+    hdr.fill      = PatternFill("solid", fgColor=COLOUR_VIOL_HDR)
+    hdr.font      = Font(bold=True, size=12, color=COLOUR_WHITE)
+    hdr.alignment = center
+    ws.row_dimensions[start_row].height = 20
+
+    # Column headers
+    col_row = start_row + 1
+    for col, label in enumerate(["#", "Violation", "Suggested Fix"], start=1):
+        c = ws.cell(row=col_row, column=col, value=label)
+        c.fill      = _subhead_fill()
+        c.font      = bold_white
+        c.alignment = center
+        c.border    = _thin_border()
+    ws.row_dimensions[col_row].height = 16
+
+    # Violation rows
+    for i, v in enumerate(violations, start=1):
+        row = col_row + i
+        ws.row_dimensions[row].height = 42
+
+        num_c = ws.cell(row=row, column=1, value=i)
+        num_c.fill      = PatternFill("solid", fgColor=COLOUR_VIOL_ROW)
+        num_c.border    = _thin_border()
+        num_c.alignment = center
+        num_c.font      = Font(bold=True)
+
+        msg_c = ws.cell(row=row, column=2, value=v["message"])
+        msg_c.fill      = PatternFill("solid", fgColor=COLOUR_VIOL_ROW)
+        msg_c.border    = _thin_border()
+        msg_c.alignment = left
+
+        sug_c = ws.cell(row=row, column=3, value=v["suggestion"])
+        sug_c.fill      = PatternFill("solid", fgColor=COLOUR_VIOL_ROW)
+        sug_c.border    = _thin_border()
+        sug_c.alignment = left
+
+    # Widen columns B and C to accommodate violation text
+    ws.column_dimensions["B"].width = 55
+    ws.column_dimensions["C"].width = 55
+
+
+# ---------------------------------------------------------------------------
 # Dashboard sheet
 # ---------------------------------------------------------------------------
 
-def _write_dashboard(ws, timetable_state, events):
+def _write_dashboard(ws, timetable_state, events, violations=None):
     """
     Section 1: Teacher Load Summary — teacher → total periods/week
     Section 2: Weekly periods per subject per section (section × subject matrix)
@@ -331,36 +416,66 @@ def _write_dashboard(ws, timetable_state, events):
     for ci in range(num_subjects):
         ws.column_dimensions[get_column_letter(LEFT_COL + 1 + ci)].width = 11
 
+    # ════════════════════════════════════════════════════════════════════════
+    # SECTION 3 — Validation Report  (below Teacher Load, columns A–C)
+    # ════════════════════════════════════════════════════════════════════════
+    violations_start = load_end_row + 2
+    _write_violations_section(ws, violations or [], violations_start)
+
 
 # ---------------------------------------------------------------------------
 # Validation check before export
 # ---------------------------------------------------------------------------
 
 def validate_before_export(timetable_state, events):
+    """
+    Returns a list of violation dicts, each with keys:
+      "message"    — human-readable description of the problem
+      "suggestion" — recommended corrective action
+    """
     violations = []
     seen_teacher = {}
     seen_class   = {}
 
     for key, p in timetable_state.items():
         day, period = p["day"], p["period"]
+        subject = p.get("subject", "?")
+        cls     = p.get("class", "?")
+        day_label    = DAY_NAMES[day] if 0 <= day < len(DAY_NAMES) else f"Day{day}"
+        period_label = PERIOD_NAMES[period] if 0 <= period < len(PERIOD_NAMES) else f"P{period}"
 
         teacher = p.get("teacher")
         if teacher:
             tk = (teacher, day, period)
             if tk in seen_teacher:
-                violations.append(
-                    f"Teacher clash: {teacher} at day={day} period={period} "
-                    f"— events {seen_teacher[tk]} and {key}"
-                )
+                other_p = timetable_state[seen_teacher[tk]]
+                violations.append({
+                    "message": (
+                        f"Teacher clash: {teacher} is double-booked — "
+                        f"{cls} {subject} and {other_p['class']} {other_p['subject']} "
+                        f"both at {day_label} {period_label}"
+                    ),
+                    "suggestion": (
+                        f"Move {cls} {subject} or {other_p['class']} {other_p['subject']} "
+                        f"to any free period for {teacher}"
+                    ),
+                })
             else:
                 seen_teacher[tk] = key
 
-        ck = (p["class"], day, period)
+        ck = (cls, day, period)
         if ck in seen_class:
-            violations.append(
-                f"Class clash: {p['class']} at day={day} period={period} "
-                f"— events {seen_class[ck]} and {key}"
-            )
+            other_p = timetable_state[seen_class[ck]]
+            violations.append({
+                "message": (
+                    f"Class clash: {cls} has {subject} and {other_p['subject']} "
+                    f"both at {day_label} {period_label}"
+                ),
+                "suggestion": (
+                    f"Move {subject} or {other_p['subject']} for {cls} "
+                    f"to a different day or period"
+                ),
+            })
         else:
             seen_class[ck] = key
 
@@ -369,12 +484,26 @@ def validate_before_export(timetable_state, events):
         placement_counts[event_idx] += 1
 
     for event_idx, event in enumerate(events):
-        placed = placement_counts.get(event_idx, 0)
-        if placed != event["weekly_load"]:
-            violations.append(
-                f"Load mismatch: {event['class']} {event['subject']} "
-                f"— expected {event['weekly_load']}, placed {placed}"
-            )
+        placed   = placement_counts.get(event_idx, 0)
+        expected = event["weekly_load"]
+        if placed != expected:
+            if placed < expected:
+                suggestion = (
+                    f"Re-run solver or manually add {expected - placed} more "
+                    f"period(s) of {event['subject']} for {event['class']}"
+                )
+            else:
+                suggestion = (
+                    f"Remove {placed - expected} extra period(s) of "
+                    f"{event['subject']} for {event['class']} from the timetable"
+                )
+            violations.append({
+                "message": (
+                    f"Load mismatch: {event['class']} {event['subject']} "
+                    f"— expected {expected} period(s)/week, placed {placed}"
+                ),
+                "suggestion": suggestion,
+            })
 
     return violations
 
@@ -391,11 +520,12 @@ def export_timetable(timetable_state, events, output_path="timetable.xlsx"):
     violations = validate_before_export(timetable_state, events)
 
     if violations:
-        print(f"   EXPORT WARNING — {len(violations)} violation(s) (exporting anyway):")
+        print(f"   EXPORT WARNING — {len(violations)} violation(s) (see Dashboard sheet):")
         for v in violations:
-            print(f"   ⚠ {v}")
-
-    print("   Validation passed. Writing Excel file...")
+            print(f"   ⚠  {v['message']}")
+            print(f"      → {v['suggestion']}")
+    else:
+        print("   Validation passed — no violations found.")
 
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
@@ -413,7 +543,7 @@ def export_timetable(timetable_state, events, output_path="timetable.xlsx"):
 
     # ── Sheet 3: Dashboard ──────────────────────────────────────────────────
     ws_dash = wb.create_sheet(title="Dashboard")
-    _write_dashboard(ws_dash, timetable_state, events)
+    _write_dashboard(ws_dash, timetable_state, events, violations)
 
     wb.save(output_path)
     print(f"── Timetable saved to: {output_path} ──")

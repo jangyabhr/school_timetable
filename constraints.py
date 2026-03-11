@@ -25,7 +25,6 @@ HARD_CONSTRAINTS = [
     "class_no_parallel",      # Class cannot have two subjects at the same (day, period)
     "weekly_load_match",      # Each subject must be placed exactly weekly_load times
     "lab_must_be_double",     # Lab subjects must occupy two consecutive periods on the same day
-    "games_tuesday_last",     # Games fixed to Tuesday, last period (period 7)
     "cca_saturday_last_two",  # CCA fixed to Saturday, periods 6 and 7
     "library_we_not_fixed",   # Library and WE can float but not on Tuesday or Saturday
 ]
@@ -69,9 +68,9 @@ LAB_BLOCK_SUBJECTS = [
     "Biology",
 ]
 
-# Must each appear exactly once per week; placement is fully fixed by rule
+# CCA placement is fully fixed by rule; Game is placed by post-processing
 FIXED_SLOT_SUBJECTS = [
-    "Game",     # Tuesday, period 7 (last period)
+    "Game",     # Placed by post_processor (latest free period, any day)
     "CCA",      # Saturday, periods 6–7 (last two periods)
 ]
 
@@ -88,9 +87,7 @@ FLOATING_SINGLE_SUBJECTS = [
 
 FIXED_SLOTS = {
     # subject → list of (day, period) tuples it is allowed to occupy
-    "Game": [
-        (TUESDAY, 7),           # All classes: Tuesday last period
-    ],
+    # Game is NOT listed here; it has no solver event and is placed by post_processor
     "CCA": [
         (SATURDAY, 6),          # All classes: Saturday second-to-last period
         (SATURDAY, 7),          # All classes: Saturday last period

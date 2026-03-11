@@ -16,10 +16,11 @@ def build_suitability_matrix(events, slot_lookup):
     Returns a dict: event_idx → list of allowed slot_ids.
 
     Rules applied per subject type:
-    - Fixed-slot subjects (Game, CCA): only their exact (day, period) slots
+    - Fixed-slot subjects (CCA): only their exact (day, period) slots
     - Floating singles (Library, WE): all days except Tuesday and Saturday
     - Lab subjects (Physics, Chemistry, Biology): periods 0–6 only (room for double)
-    - All others: all (day, period) combinations for their class
+    - All others (including Game if it ever appears as a solver event): all slots
+    Note: Game has no solver event; it is placed exclusively by post_processor.
     """
 
     suitability = {}

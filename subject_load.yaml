@@ -9,7 +9,7 @@ class_groups:
     Odia: 4
     Sanskrit: 4
     ComputerScience: 5
-    Game: 1       # Tuesday period 7 (fixed)
+    Game: 1       # Latest free period (placed by post_processor)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
@@ -21,7 +21,7 @@ class_groups:
     SST: 7
     Odia: 4
     IT: 5
-    Game: 1       # Tuesday period 7 (fixed)
+    Game: 1       # Latest free period (placed by post_processor)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
@@ -33,7 +33,7 @@ class_groups:
     Math: 7
     English: 7
     IT: 5
-    Game: 1       # Tuesday period 7 (fixed)
+    Game: 1       # Latest free period (placed by post_processor)
     Library: 1    # Floating — not Tuesday or Saturday
     WE: 1         # Floating — not Tuesday or Saturday
     CCA: 2        # Saturday periods 6–7 (fixed)
