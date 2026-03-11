@@ -31,7 +31,7 @@ def generate_events(assignments, subject_load_by_group):
 
     Returns a list of event dicts:
       class       — section name e.g. "7A"
-      class_idx   — integer index (0–11) for slot_lookup
+      class_idx   — integer index (0–8) for slot_lookup
       subject     — subject name
       teacher     — teacher name or None (for CCA)
       weekly_load — number of periods per week

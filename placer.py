@@ -106,7 +106,7 @@ def _mrv_order(events, conflict_map, suitability):
       1. Fixed-slot subjects (CCA, Game) — must go first
       2. Lab subjects (Physics > Chemistry > Biology) — grouped by subject across all
          classes so that same-teacher lab events are placed consecutively; within each
-         subject, higher class_idx first (class 12 before class 11)
+         subject, higher class_idx first
       3. Regular subjects — sorted by teacher load DESC, class_idx DESC,
          fewest suitability slots first, highest conflict×load first, lower event_idx first
     """
