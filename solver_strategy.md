@@ -1,18 +1,18 @@
 # Solver Strategy
 
 ## Timetable Scale
-- Classes: 12 (6A, 6B, 7A, 7B, 8A, 8B, 9A, 9B, 10A, 10B, 11, 12)
+- Classes: 9 (7A, 7B, 8A, 8B, 9A, 9B, 10A, 10B, 12)
 - Days: 6 per week (Monday=0 … Saturday=5)
 - Periods: 8 per day (0–7)
-- Total slots: 12 × 6 × 8 = 576 per week
+- Total slots: 9 × 6 × 8 = 432 per week
 
 
 ## Pipeline Overview
 
 ### Step 1 — Build Slot Index (`slot_index.py`)
-Call `build_slot_index(num_classes=12, days_per_week=6, periods_per_day=8)`.
+Call `build_slot_index(num_classes=9, days_per_week=6, periods_per_day=8)`.
 Produces:
-- `slots`: flat list of 576 slot dicts `{slot_id, class_idx, day, period}`
+- `slots`: flat list of 432 slot dicts `{slot_id, class_idx, day, period}`
 - `slot_lookup`: dict mapping `(class_idx, day, period)` → `slot_id`
 
 Every event placement, conflict check, and suitability filter references slot_ids.
@@ -59,12 +59,12 @@ Sort events descending by: `conflict_count × weekly_load`
 Most-constrained events placed first to minimise backtracking.
 
 Highest-priority events:
-- Nandini (Math, 6A+6B+7A+7B) — 4 sections, weekly_load=6
+- Nandini (Math, 7A+7B) — 2 sections, weekly_load=6
 - JB (Math, 8A+8B+9A+9B) — 4 sections, weekly_load=6–7
-- Snigdha (Hindi+Odia, 6A–8B) — 6 sections across 2 subjects
-- Ganesh (Sanskrit+Odia, 6A–8B) — 6 sections across 2 subjects
-- Sanjukta (ComputerScience, 6A–8B) — 6 sections
-- Lab subjects for classes 11 and 12 (double-period constraint)
+- Snigdha (Hindi+Odia, 7A–8B) — 4 sections across 2 subjects
+- Ganesh (Sanskrit+Odia, 7A–8B) — 4 sections across 2 subjects
+- Sanjukta (CS, 7A–8B) — 4 sections
+- Lab subjects for class 12 (double-period constraint)
 
 
 ### Step 6 — Greedy Placement Loop
@@ -132,7 +132,7 @@ Do not export if any violation exists.
 
 
 ### Step 11 — Excel Export (`exporter.py`)
-One sheet per class section (12 sheets) + Legend sheet.
+One sheet per class section (9 sheets) + Legend sheet.
 Rows = periods 0–7, Columns = Mon–Sat.
 Cell value = "Subject\nTeacher" (teacher omitted for CCA).
 
@@ -152,7 +152,7 @@ class_groups.yaml         ─┘         (+ CCA events)       │
                                                            │
 constraints.py ─────────────────────────────────────┐     │
                                                     │     ▼
-slot_index.py ──────────────────────────────► slot index (576 slots)
+slot_index.py ──────────────────────────────► slot index (432 slots)
                                                     │     │
 conflict_builder.py ◄───────────────────────────────┼─────┤
 suitability_matrix.py ◄─────────────────────────────┘     │

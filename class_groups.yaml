@@ -1,8 +1,6 @@
 class_groups:
 
   class_6_8:
-    - 6A
-    - 6B
     - 7A
     - 7B
     - 8A
@@ -15,5 +13,4 @@ class_groups:
     - 10B
 
   class_11_12:
-    - 11
     - 12

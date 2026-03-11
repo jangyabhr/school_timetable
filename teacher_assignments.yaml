@@ -1,63 +1,5 @@
 assignments:
 
-# --- Class 6 ---
-- section: 6A
-  subject: SST
-  teacher: ANIL
-- section: 6B
-  subject: SST
-  teacher: ANIL
-
-- section: 6A
-  subject: English
-  teacher: Radheshyam
-- section: 6B
-  subject: English
-  teacher: Radheshyam
-
-- section: 6A
-  subject: Hindi
-  teacher: Snigdha
-- section: 6B
-  subject: Hindi
-  teacher: Snigdha
-
-- section: 6A
-  subject: Odia
-  teacher: Snigdha
-- section: 6B
-  subject: Odia
-  teacher: Snigdha
-
-- section: 6A
-  subject: Sanskrit
-  teacher: Ganesh
-- section: 6B
-  subject: Sanskrit
-  teacher: Ganesh
-
-- section: 6A
-  subject: ComputerScience
-  teacher: Sanjukta
-- section: 6B
-  subject: ComputerScience
-  teacher: Sanjukta
-
-- section: 6A
-  subject: Math
-  teacher: Nandini
-- section: 6B
-  subject: Math
-  teacher: Nandini
-
-- section: 6A
-  subject: Science
-  teacher: Pratibha
-- section: 6B
-  subject: Science
-  teacher: Pratibha
-
-
 # --- Class 7 ---
 - section: 7A
   subject: SST
@@ -81,10 +23,10 @@ assignments:
   teacher: Ganesh
 
 - section: 7A
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 - section: 7B
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 
 - section: 7A
@@ -167,10 +109,10 @@ assignments:
   teacher: Ganesh
 
 - section: 8A
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 - section: 8B
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 
 
@@ -260,27 +202,6 @@ assignments:
 - section: 10B
   subject: Science
   teacher: Sidharth
-
-
-# --- Class 11 ---
-- section: 11
-  subject: Physics
-  teacher: Pratibha
-- section: 11
-  subject: Chemistry
-  teacher: Priyanka
-- section: 11
-  subject: Biology
-  teacher: Sidharth
-- section: 11
-  subject: English
-  teacher: Radheshyam
-- section: 11
-  subject: IT
-  teacher: Usha
-- section: 11
-  subject: Math
-  teacher: Mira
 
 
 # --- Class 12 ---

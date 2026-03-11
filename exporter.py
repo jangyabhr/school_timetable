@@ -25,7 +25,7 @@ SUBJECT_COLOURS = {
     "Hindi":       "FFFFE0B2",  # pastel amber
     "Odia":        "FFFCE4EC",  # pastel pink
     "Sanskrit":    "FFE8EAF6",  # pastel indigo
-    "ComputerScience": "FFE0F2F1",  # pastel teal
+    "CS":          "FFE0F2F1",  # pastel teal
     "IT":          "FFF3E5F5",  # pastel purple
     "Physics":     "FFE1F5FE",  # pastel light-blue
     "Chemistry":   "FFFBE9E7",  # pastel deep-orange
@@ -40,12 +40,11 @@ SUBJECT_COLOURS = {
 
 # Per-section pastel palette — used on teacher-wise sheets to colour by class
 SECTION_COLOURS = {
-    "6A":  "FFFADADD",  "6B":  "FFFDE8D8",
     "7A":  "FFD5F5E3",  "7B":  "FFD6EAF8",
     "8A":  "FFFFF3CD",  "8B":  "FFE8DAEF",
     "9A":  "FFDBEAFE",  "9B":  "FFD5D8DC",
     "10A": "FFFDEDEC",  "10B": "FFE9F7EF",
-    "11":  "FFFEF9E7",  "12":  "FFEAF4FB",
+    "12":  "FFEAF4FB",
 }
 
 COLOUR_FREE     = "FFD5D8DC"   # light grey-blue — Free (duty) periods

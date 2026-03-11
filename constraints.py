@@ -4,7 +4,7 @@
 # Timetable Scale Constants
 # ---------------------------------------------------------------------------
 
-NUM_CLASSES      = 12   # 6A, 6B, 7A, 7B, 8A, 8B, 9A, 9B, 10A, 10B, 11, 12
+NUM_CLASSES      = 9    # 7A, 7B, 8A, 8B, 9A, 9B, 10A, 10B, 12
 DAYS_PER_WEEK    = 6    # Monday=0 … Saturday=5
 PERIODS_PER_DAY  = 8    # 8 display rows per day (see period map below)
 

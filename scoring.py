@@ -10,7 +10,7 @@ from constraints import (
 _REPETITION_SUBJECTS = (
     ANCHOR_SUBJECTS
     + LAB_BLOCK_SUBJECTS
-    + ["IT", "Hindi", "Odia", "Sanskrit", "ComputerScience"]
+    + ["IT", "Hindi", "Odia", "Sanskrit", "CS"]
 )
 
 
