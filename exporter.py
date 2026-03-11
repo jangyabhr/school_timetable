@@ -7,10 +7,6 @@ from openpyxl.utils import get_column_letter
 from constraints import (
     DAYS_PER_WEEK,
     PERIODS_PER_DAY,
-    ANCHOR_SUBJECTS,
-    LAB_BLOCK_SUBJECTS,
-    FIXED_SLOT_SUBJECTS,
-    FLOATING_SINGLE_SUBJECTS,
     PERIOD_NAMES_DISPLAY,
     PERIOD_TIMES,
 )
@@ -20,18 +16,44 @@ from event_generator import CLASS_ORDER
 # Colour palette  (openpyxl uses ARGB hex, no leading #)
 # ---------------------------------------------------------------------------
 
-COLOUR_ANCHOR   = "FFD6EAF8"   # light blue   — Math, Science, English, SST
-COLOUR_LAB      = "FFD5F5E3"   # light green  — Physics, Chemistry, Biology
-COLOUR_FIXED    = "FFFFF3CD"   # light yellow — Game, CCA
-COLOUR_FLOAT    = "FFFDE8D8"   # light orange — Library, WE
+# Per-subject pastel palette — one unique colour per subject
+SUBJECT_COLOURS = {
+    "Math":        "FFBBDEFB",  # pastel blue
+    "English":     "FFB2EBF2",  # pastel cyan
+    "Science":     "FFC8E6C9",  # pastel green
+    "SST":         "FFFFF9C4",  # pastel yellow
+    "Hindi":       "FFFFE0B2",  # pastel amber
+    "Odia":        "FFFCE4EC",  # pastel pink
+    "Sanskrit":    "FFE8EAF6",  # pastel indigo
+    "ComputerScience": "FFE0F2F1",  # pastel teal
+    "IT":          "FFF3E5F5",  # pastel purple
+    "Physics":     "FFE1F5FE",  # pastel light-blue
+    "Chemistry":   "FFFBE9E7",  # pastel deep-orange
+    "Biology":     "FFE8F5E9",  # pastel light-green
+    "Game":        "FFFFF3E0",  # pastel orange
+    "CCA":         "FFEDE7F6",  # pastel deep-purple
+    "Library":     "FFF9FBE7",  # pastel lime
+    "WE":          "FFECE4D6",  # pastel warm-tan
+    "Drill":       "FFE8DAEF",  # light purple — Drill/Yoga
+    "Breakfast":   "FFFFFDE7",  # light amber  — Breakfast break
+}
+
+# Per-section pastel palette — used on teacher-wise sheets to colour by class
+SECTION_COLOURS = {
+    "6A":  "FFFADADD",  "6B":  "FFFDE8D8",
+    "7A":  "FFD5F5E3",  "7B":  "FFD6EAF8",
+    "8A":  "FFFFF3CD",  "8B":  "FFE8DAEF",
+    "9A":  "FFDBEAFE",  "9B":  "FFD5D8DC",
+    "10A": "FFFDEDEC",  "10B": "FFE9F7EF",
+    "11":  "FFFEF9E7",  "12":  "FFEAF4FB",
+}
+
 COLOUR_FREE     = "FFD5D8DC"   # light grey-blue — Free (duty) periods
-COLOUR_EMPTY    = "FFF5F5F5"   # light grey   — empty cell
-COLOUR_HEADER   = "FF2E4057"   # dark blue    — header row/col
-COLOUR_SUBHEAD  = "FF4A6FA5"   # medium blue  — sub-headers
+COLOUR_EMPTY    = "FFF5F5F5"   # light grey      — empty cell
+COLOUR_HEADER   = "FF2E4057"   # dark blue       — header row/col
+COLOUR_SUBHEAD  = "FF4A6FA5"   # medium blue     — sub-headers
 COLOUR_WHITE    = "FFFFFFFF"
-COLOUR_DASH_H   = "FF1B2631"   # near-black   — dashboard section headers
-COLOUR_DRILL    = "FFE8DAEF"   # light purple — Drill/Yoga period
-COLOUR_BREAK    = "FFFFFDE7"   # light amber  — Breakfast break
+COLOUR_DASH_H   = "FF1B2631"   # near-black      — dashboard section headers
 
 DAY_NAMES    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 PERIOD_NAMES = PERIOD_NAMES_DISPLAY   # ["Drill","P1","P2","Break","P3","P4","P5","P6"]
@@ -42,19 +64,14 @@ def _get_fill(subject):
         return PatternFill("solid", fgColor=COLOUR_EMPTY)
     if subject == "Free":
         return PatternFill("solid", fgColor=COLOUR_FREE)
-    if subject == "Drill":
-        return PatternFill("solid", fgColor=COLOUR_DRILL)
-    if subject == "Breakfast":
-        return PatternFill("solid", fgColor=COLOUR_BREAK)
-    if subject in ANCHOR_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_ANCHOR)
-    if subject in LAB_BLOCK_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_LAB)
-    if subject in FIXED_SLOT_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_FIXED)
-    if subject in FLOATING_SINGLE_SUBJECTS:
-        return PatternFill("solid", fgColor=COLOUR_FLOAT)
-    return PatternFill("solid", fgColor=COLOUR_WHITE)
+    colour = SUBJECT_COLOURS.get(subject, COLOUR_WHITE)
+    return PatternFill("solid", fgColor=colour)
+
+
+def _get_section_fill(section):
+    """Pastel fill keyed by class section — used on teacher-wise sheets."""
+    colour = SECTION_COLOURS.get(section, COLOUR_WHITE)
+    return PatternFill("solid", fgColor=colour)
 
 
 def _thin_border():
@@ -210,7 +227,9 @@ def _write_teacher_sheet(ws, teacher_name, timetable_state):
     grid = _build_teacher_grid(teacher_name, timetable_state)
 
     def fill_fn(data):
-        return _get_fill(data[0] if data else None)
+        if not data:
+            return PatternFill("solid", fgColor=COLOUR_EMPTY)
+        return _get_section_fill(data[1])   # data[1] = cls (section)
 
     def val_fn(data):
         if not data:
@@ -230,6 +249,72 @@ def _write_teacher_sheet(ws, teacher_name, timetable_state):
         cell_fill_fn  = fill_fn,
         cell_value_fn = val_fn,
     )
+
+
+# ---------------------------------------------------------------------------
+# Master aggregate sheets
+# ---------------------------------------------------------------------------
+
+def _write_master_sections_sheet(ws, timetable_state):
+    """All 12 class timetables stacked vertically, one blank row between each."""
+    next_row = 1
+    for section in CLASS_ORDER:
+        grid = _build_class_grid(section, timetable_state)
+
+        def fill_fn(data):
+            return _get_fill(data[0] if data else None)
+
+        def val_fn(data):
+            if not data:
+                return "Free"
+            subject, teacher, is_lab = data
+            lab_suffix = " (Lab)" if is_lab else ""
+            return f"{subject}{lab_suffix}\n{teacher}" if teacher else f"{subject}{lab_suffix}"
+
+        next_row = _write_timetable_grid(
+            ws,
+            title         = f"Timetable — Class {section}",
+            row_labels    = DAY_NAMES,
+            col_labels    = PERIOD_NAMES,
+            grid          = grid,
+            cell_fill_fn  = fill_fn,
+            cell_value_fn = val_fn,
+            start_row     = next_row,
+        )
+        next_row += 1   # blank row between tables
+
+
+def _write_master_teachers_sheet(ws, timetable_state, teachers):
+    """All teacher timetables stacked vertically, one blank row between each."""
+    next_row = 1
+    for teacher_name in teachers:
+        grid = _build_teacher_grid(teacher_name, timetable_state)
+
+        def fill_fn(data):
+            if not data:
+                return PatternFill("solid", fgColor=COLOUR_EMPTY)
+            return _get_section_fill(data[1])   # data[1] = cls (section)
+
+        def val_fn(data):
+            if not data:
+                return ""
+            subject, cls, is_lab = data
+            if subject == "Free":
+                return f"Duty\n({cls})"
+            lab_suffix = " (Lab)" if is_lab else ""
+            return f"{subject}{lab_suffix}\n({cls})"
+
+        next_row = _write_timetable_grid(
+            ws,
+            title         = f"Timetable — {teacher_name}",
+            row_labels    = DAY_NAMES,
+            col_labels    = PERIOD_NAMES,
+            grid          = grid,
+            cell_fill_fn  = fill_fn,
+            cell_value_fn = val_fn,
+            start_row     = next_row,
+        )
+        next_row += 1   # blank row between tables
 
 
 # ---------------------------------------------------------------------------
@@ -542,20 +627,29 @@ def export_timetable(timetable_state, events, output_path="timetable.xlsx"):
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
 
-    # ── Sheet 1: Class-wise timetables (one sheet per class) ────────────────
+    teachers = sorted({p["teacher"] for p in timetable_state.values() if p.get("teacher")})
+
+    # ── Sheet 1: Dashboard ──────────────────────────────────────────────────
+    ws_dash = wb.create_sheet(title="Dashboard")
+    _write_dashboard(ws_dash, timetable_state, events, violations)
+
+    # ── Sheet 2: All Sections — every class timetable stacked ───────────────
+    ws_all_sec = wb.create_sheet(title="All Sections")
+    _write_master_sections_sheet(ws_all_sec, timetable_state)
+
+    # ── Sheet 3: All Teachers — every teacher timetable stacked ─────────────
+    ws_all_tch = wb.create_sheet(title="All Teachers")
+    _write_master_teachers_sheet(ws_all_tch, timetable_state, teachers)
+
+    # ── Sheets 4+: Class-wise timetables (one sheet per class) ──────────────
     for section in CLASS_ORDER:
         ws = wb.create_sheet(title=f"Class {section}")
         _write_class_sheet(ws, section, timetable_state)
 
-    # ── Sheet 2: Teacher-wise timetables (one sheet per teacher) ────────────
-    teachers = sorted({p["teacher"] for p in timetable_state.values() if p.get("teacher")})
+    # ── Sheets N+: Teacher-wise timetables (one sheet per teacher) ───────────
     for teacher in teachers:
         ws = wb.create_sheet(title=teacher[:31])   # Excel sheet name limit = 31 chars
         _write_teacher_sheet(ws, teacher, timetable_state)
-
-    # ── Sheet 3: Dashboard ──────────────────────────────────────────────────
-    ws_dash = wb.create_sheet(title="Dashboard")
-    _write_dashboard(ws_dash, timetable_state, events, violations)
 
     wb.save(output_path)
     print(f"── Timetable saved to: {output_path} ──")
