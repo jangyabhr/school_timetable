@@ -107,7 +107,7 @@ def _mrv_order(events, conflict_map, suitability):
       2. Lab subjects (Physics > Chemistry > Biology) — grouped by subject across all
          classes so that same-teacher lab events are placed consecutively; within each
          subject, higher class_idx first
-      3. Regular subjects — sorted by teacher load DESC, class_idx DESC,
+      3. Regular subjects — sorted by class_idx DESC, teacher load DESC,
          fewest suitability slots first, highest conflict×load first, lower event_idx first
     """
     teacher_load = _teacher_total_load(events)
@@ -128,11 +128,11 @@ def _mrv_order(events, conflict_map, suitability):
         reverse=True,
     )
 
-    # Regular: standard MRV keys
+    # Regular: higher class first, then teacher load as tiebreaker
     regular.sort(
         key=lambda x: (
-            teacher_load.get(x[1].get("teacher"), 0),
             x[1]["class_idx"],
+            teacher_load.get(x[1].get("teacher"), 0),
             -len(suitability.get(x[0], [])),
             _conflict_count(x[0], conflict_map) * x[1]["weekly_load"],
             -x[0],
@@ -299,8 +299,8 @@ def _backtrack(unplaced, events, slots, slot_lookup, suitability,
     labs_u.sort(key=lambda x: (_LAB_SUBJECT_PRIORITY.get(x[2]["subject"], 0), x[2]["class_idx"]), reverse=True)
     regular_u.sort(
         key=lambda x: (
-            _tload.get(x[2].get("teacher"), 0),
             x[2]["class_idx"],
+            _tload.get(x[2].get("teacher"), 0),
             -len(suitability.get(x[0], [])),
             _conflict_count(x[0], conflict_map) * x[2]["weekly_load"],
             -x[0],
