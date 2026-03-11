@@ -10,7 +10,7 @@ from constraints import (
 )
 
 MAX_REPAIR_ATTEMPTS = 20   # per unplaced event-instance
-BACKTRACK_WINDOW    = 30   # how many recent placements to undo on backtrack
+BACKTRACK_WINDOW    = 33   # how many recent placements to undo on backtrack
 
 
 # ---------------------------------------------------------------------------
