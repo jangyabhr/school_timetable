@@ -63,7 +63,7 @@ Highest-priority events:
 - JB (Math, 8A+8B+9A+9B) — 4 sections, weekly_load=6–7
 - Snigdha (Hindi+Odia, 6A–8B) — 6 sections across 2 subjects
 - Ganesh (Sanskrit+Odia, 6A–8B) — 6 sections across 2 subjects
-- Sanjukta (ComputerScience, 6A–8B) — 6 sections
+- Sanjukta (CS, 6A–8B) — 6 sections
 - Lab subjects for classes 11 and 12 (double-period constraint)
 
 

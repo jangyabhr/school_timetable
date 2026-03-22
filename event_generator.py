@@ -10,14 +10,7 @@ CLASS_ORDER = ["6A", "6B", "7A", "7B", "8A", "8B",
 CLASS_IDX = {section: i for i, section in enumerate(CLASS_ORDER)}
 
 # Which subject_load group each section belongs to
-CLASS_GROUP_MAP = {
-    "6A": "class_6_8",  "6B": "class_6_8",
-    "7A": "class_6_8",  "7B": "class_6_8",
-    "8A": "class_6_8",  "8B": "class_6_8",
-    "9A": "class_9_10", "9B": "class_9_10",
-    "10A": "class_9_10","10B": "class_9_10",
-    "11":  "class_11_12","12": "class_11_12",
-}
+CLASS_GROUP_MAP = {s: s for s in CLASS_ORDER}
 
 
 def load_yaml(path):
