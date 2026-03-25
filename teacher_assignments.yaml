@@ -37,10 +37,10 @@ assignments:
   teacher: Ganesh
 
 - section: 6A
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 - section: 6B
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 
 - section: 6A
@@ -81,10 +81,10 @@ assignments:
   teacher: Ganesh
 
 - section: 7A
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 - section: 7B
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 
 - section: 7A
@@ -167,10 +167,10 @@ assignments:
   teacher: Ganesh
 
 - section: 8A
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 - section: 8B
-  subject: ComputerScience
+  subject: CS
   teacher: Sanjukta
 
 
