@@ -100,17 +100,31 @@ def _teacher_total_load(events):
 _LAB_SUBJECT_PRIORITY = {"Physics": 2, "Chemistry": 1, "Biology": 0}
 
 
+def _teacher_section_count(events):
+    """Returns dict: teacher_name → number of distinct class sections they teach."""
+    sections = {}
+    for event in events:
+        t = event.get("teacher")
+        if t:
+            if t not in sections:
+                sections[t] = set()
+            sections[t].add(event["class"])
+    return {t: len(s) for t, s in sections.items()}
+
+
 def _mrv_order(events, conflict_map, suitability):
     """
-    Sort events into three groups, in this order:
-      1. Fixed-slot subjects (CCA, Game) — must go first
-      2. Lab subjects (Physics > Chemistry > Biology) — grouped by subject across all
-         classes so that same-teacher lab events are placed consecutively; within each
-         subject, higher class_idx first (class 12 before class 11)
-      3. Regular subjects — sorted by teacher load DESC, class_idx DESC,
-         fewest suitability slots first, highest conflict×load first, lower event_idx first
+    Sort events into four groups, in this order:
+      1. Fixed-slot subjects — must go first
+      2. Lab subjects (Physics > Chemistry > Biology) — higher class_idx first within subject
+      3. Cross-section bottleneck teachers (≥5 sections) — placed before other regular events
+         so they claim (day,period) combos before the pool is exhausted; sorted by
+         section_count DESC, class_idx DESC, conflict×load DESC
+      4. Regular subjects — sorted by teacher load DESC, class_idx DESC,
+         fewest suitability slots first, highest conflict×load first
     """
     teacher_load = _teacher_total_load(events)
+    teacher_sections = _teacher_section_count(events)
     indexed = list(enumerate(events))
 
     fixed   = [(i, e) for i, e in indexed if e["subject"] in FIXED_SLOT_SUBJECTS]
@@ -128,8 +142,25 @@ def _mrv_order(events, conflict_map, suitability):
         reverse=True,
     )
 
-    # Regular: standard MRV keys
-    regular.sort(
+    # Split regular into bottleneck (≥5 sections) and normal
+    bottleneck = [(i, e) for i, e in regular
+                  if teacher_sections.get(e.get("teacher"), 0) >= 5]
+    normal     = [(i, e) for i, e in regular
+                  if teacher_sections.get(e.get("teacher"), 0) < 5]
+
+    # Bottleneck teachers: most sections first, then class_idx DESC, then conflict×load DESC
+    bottleneck.sort(
+        key=lambda x: (
+            teacher_sections.get(x[1].get("teacher"), 0),
+            x[1]["class_idx"],
+            _conflict_count(x[0], conflict_map) * x[1]["weekly_load"],
+            -x[0],
+        ),
+        reverse=True,
+    )
+
+    # Normal teachers: standard MRV keys
+    normal.sort(
         key=lambda x: (
             teacher_load.get(x[1].get("teacher"), 0),
             x[1]["class_idx"],
@@ -140,7 +171,7 @@ def _mrv_order(events, conflict_map, suitability):
         reverse=True,
     )
 
-    return fixed + labs + regular
+    return fixed + labs + bottleneck + normal
 
 
 # ---------------------------------------------------------------------------
