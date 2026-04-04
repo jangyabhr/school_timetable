@@ -38,10 +38,10 @@ assignments:
 
 - section: 6A
   subject: ComputerScience
-  teacher: Sanjukta
+  teacher: Usha
 - section: 6B
   subject: ComputerScience
-  teacher: Sanjukta
+  teacher: Usha
 
 - section: 6A
   subject: Math
@@ -242,10 +242,10 @@ assignments:
 
 - section: 10A
   subject: IT
-  teacher: Usha
+  teacher: Sanjukta
 - section: 10B
   subject: IT
-  teacher: Usha
+  teacher: Sanjukta
 
 - section: 10A
   subject: Math
