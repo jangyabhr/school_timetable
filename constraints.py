@@ -46,7 +46,7 @@ HARD_CONSTRAINTS = [
     "class_no_parallel",      # Class cannot have two subjects at the same (day, period)
     "weekly_load_match",      # Each subject must be placed exactly weekly_load times
     "lab_must_be_double",     # Lab subjects must occupy two consecutive periods on the same day
-    "library_we_not_fixed",   # Library and WE can float but not on Tuesday or Saturday
+    "library_not_fixed",       # Library can float but not on Tuesday or Saturday
 ]
 
 # ---------------------------------------------------------------------------
@@ -88,15 +88,11 @@ LAB_BLOCK_SUBJECTS = [
     "Biology",
 ]
 
-# Game is placed by post_processor (latest free period, any day)
-FIXED_SLOT_SUBJECTS = [
-    "Game",
-]
+FIXED_SLOT_SUBJECTS = []   # No fixed-slot subjects currently
 
-# Float freely but excluded from Tuesday and Saturday
+# Floats freely but excluded from Tuesday and Saturday
 FLOATING_SINGLE_SUBJECTS = [
     "Library",
-    "WE",
 ]
 
 # ---------------------------------------------------------------------------

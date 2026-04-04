@@ -16,7 +16,7 @@ TIMES   = [
     '6:40–7:20',  '7:20–8:00',  '8:00–8:40',
     '8:40–9:10',  '9:10–9:40',  '9:40–10:10',
 ]
-SPECIALS     = {'Free', 'Game', 'Library', 'WE'}
+SPECIALS     = {'Free', 'Library'}
 LAB_SUBJECTS = {'CS', 'IT', 'Math', 'Science', 'Biology', 'Physics', 'Chemistry'}
 
 SUBJ_COLORS = {
@@ -24,25 +24,24 @@ SUBJ_COLORS = {
     'SST':       '#F9E79F', 'Hindi':     '#FADBD8', 'Odia':      '#F5CBA7',
     'Sanskrit':  '#D2B4DE', 'CS':        '#AED6F1', 'IT':        '#85C1E9',
     'Biology':   '#A8D8A8', 'Physics':   '#A9CCE3', 'Chemistry': '#A9DFBF',
-    'Free':      '#ECECEC', 'Library':   '#D5D8DC', 'WE':        '#D5D8DC',
-    'Game':      '#82E0AA',
+    'Free':      '#ECECEC', 'Library':   '#D5D8DC',
 }
 SUBJ_TEXT = {
-    'Game':    '#145A32',
-    'Free':    '#888888', 'Library': '#555555', 'WE': '#555555',
+    'Free':    '#888888', 'Library': '#555555',
 }
 
 _SEP = (',', ':')
 
 # ── Data builders ─────────────────────────────────────────────────────────────
 
-def _build_structures(timetable_state):
+def _build_structures(timetable_state, events=None):
     """
     Transforms the solver's timetable_state into the data structures
     expected by the HTML template.
 
     timetable_state keys : (event_idx, instance)
-    timetable_state values: {'class', 'day' (int), 'period' (int), 'subject', 'teacher'}
+    timetable_state values: {'class', 'day' (int 0-5), 'period' (int 0-5), 'subject', 'teacher'}
+    events : list of event dicts (used for teacher load detail breakdown)
     """
 
     # ── class_timetable ───────────────────────────────────────────────────────
@@ -143,9 +142,34 @@ def _build_structures(timetable_state):
                     })
             coverage[cls][day] = cov_list
 
+    # ── teacher_load_detail ───────────────────────────────────────────────────
+    # teacher_load_detail[teacher] = sorted list of
+    #   {subject, classes (sorted), per_class, subtotal}
+    from collections import defaultdict as _dd
+    _tld = _dd(lambda: _dd(list))  # teacher → (subject, load) → [classes]
+    if events:
+        for ev in events:
+            t = ev.get('teacher')
+            if t:
+                _tld[t][(ev['subject'], ev['weekly_load'])].append(ev['class'])
+
+    teacher_load_detail = {}
+    for t in all_teachers:
+        rows = []
+        for (subj, load), classes in sorted(_tld[t].items(), key=lambda x: x[0][0]):
+            classes_sorted = sorted(classes)
+            rows.append({
+                'subject':   subj,
+                'classes':   ', '.join(classes_sorted),
+                'per_class': load,
+                'subtotal':  load * len(classes_sorted),
+            })
+        teacher_load_detail[t] = rows
+
     return (
         class_timetable, teacher_sched, teacher_view,
         coverage, wk_load, special_counts, all_teachers,
+        teacher_load_detail,
     )
 
 
@@ -154,22 +178,24 @@ def _build_structures(timetable_state):
 def _build_html(
     class_timetable, teacher_sched, teacher_view,
     coverage, wk_load, special_counts, all_teachers,
+    teacher_load_detail,
 ):
-    sched_json        = json.dumps(teacher_sched,   ensure_ascii=False, separators=_SEP)
-    class_json        = json.dumps(class_timetable, ensure_ascii=False, separators=_SEP)
-    teacher_view_json = json.dumps(teacher_view,    ensure_ascii=False, separators=_SEP)
-    coverage_json     = json.dumps(coverage,        ensure_ascii=False, separators=_SEP)
-    wk_load_json      = json.dumps(wk_load,         ensure_ascii=False, separators=_SEP)
-    spec_counts_json  = json.dumps(special_counts,  ensure_ascii=False, separators=_SEP)
-    days_json         = json.dumps(DAYS)
-    periods_json      = json.dumps(PERIODS)
-    times_json        = json.dumps(TIMES)
-    classes_json      = json.dumps(CLASS_ORDER)
-    teachers_json     = json.dumps(all_teachers)
-    colors_json       = json.dumps(SUBJ_COLORS,     ensure_ascii=False, separators=_SEP)
-    text_colors_json  = json.dumps(SUBJ_TEXT,       ensure_ascii=False, separators=_SEP)
-    n_teachers        = len(all_teachers)
-    n_classes         = len(CLASS_ORDER)
+    sched_json          = json.dumps(teacher_sched,        ensure_ascii=False, separators=_SEP)
+    class_json          = json.dumps(class_timetable,      ensure_ascii=False, separators=_SEP)
+    teacher_view_json   = json.dumps(teacher_view,         ensure_ascii=False, separators=_SEP)
+    coverage_json       = json.dumps(coverage,             ensure_ascii=False, separators=_SEP)
+    wk_load_json        = json.dumps(wk_load,              ensure_ascii=False, separators=_SEP)
+    spec_counts_json    = json.dumps(special_counts,       ensure_ascii=False, separators=_SEP)
+    tld_json            = json.dumps(teacher_load_detail,  ensure_ascii=False, separators=_SEP)
+    days_json           = json.dumps(DAYS)
+    periods_json        = json.dumps(PERIODS)
+    times_json          = json.dumps(TIMES)
+    classes_json        = json.dumps(CLASS_ORDER)
+    teachers_json       = json.dumps(all_teachers)
+    colors_json         = json.dumps(SUBJ_COLORS,          ensure_ascii=False, separators=_SEP)
+    text_colors_json    = json.dumps(SUBJ_TEXT,            ensure_ascii=False, separators=_SEP)
+    n_teachers          = len(all_teachers)
+    n_classes           = len(CLASS_ORDER)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -547,10 +573,13 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
       🔍 Substitute Finder <span class="tbadge">{n_teachers} teachers</span>
     </button>
     <button class="tab-btn" onclick="switchTab('cov')" id="tab-cov">
-      📋 Period Coverage <span class="tbadge">Free·Game·Library·WE</span>
+      📋 Period Coverage <span class="tbadge">Free·Library</span>
     </button>
     <button class="tab-btn" onclick="switchTab('master')" id="tab-master">
       📊 Master Timetable <span class="tbadge">{n_classes} classes</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('tload')" id="tab-tload">
+      📚 Teacher Loads <span class="tbadge">{n_teachers} teachers</span>
     </button>
   </nav>
 </header>
@@ -598,9 +627,7 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
         <div class="spec-pills" id="cov-type-pills">
           <button class="spec-pill sp-all active" data-type="all"     onclick="setTypeFilter('all')">All</button>
           <button class="spec-pill sp-free"        data-type="Free"    onclick="setTypeFilter('Free')">— Free</button>
-          <button class="spec-pill sp-game"        data-type="Game"    onclick="setTypeFilter('Game')">⚽ Game</button>
           <button class="spec-pill sp-library"     data-type="Library" onclick="setTypeFilter('Library')">📚 Library</button>
-          <button class="spec-pill sp-we"          data-type="WE"      onclick="setTypeFilter('WE')">✏ WE</button>
         </div>
         <button class="btn btn-teal" id="cov-find-btn" onclick="findCoverage()" disabled>
           📋 &nbsp;Show Available Teachers
@@ -668,6 +695,7 @@ const CLASS_TT     = {class_json};
 const TEACHER_VIEW = {teacher_view_json};
 const COVERAGE     = {coverage_json};
 const WK_LOAD      = {wk_load_json};
+const TLD          = {tld_json};
 const SPEC_COUNTS  = {spec_counts_json};
 const DAYS         = {days_json};
 const PERIODS      = {periods_json};
@@ -774,10 +802,10 @@ function findCoverage(){{
   if(!slots.length){{document.getElementById('cov-res-body').innerHTML=`<div class="empty"><div class="eico">🎉</div><p>No ${{covType==='all'?'special':covType}} periods for Class ${{covCls}} on ${{covDay}}.</p></div>`;return;}}
   const allSl=COVERAGE[covCls]?.[covDay]||[],tC={{}};
   allSl.forEach(s=>tC[s.type]=(tC[s.type]||0)+1);
-  const tO=['Free','Game','Library','WE'],tCss={{Free:'st-free',Game:'st-game',Library:'st-library',WE:'st-we'}},tIco={{Free:'—',Game:'⚽',Library:'📚',WE:'✏'}};
+  const tO=['Free','Library'],tCss={{Free:'st-free',Library:'st-library'}},tIco={{Free:'—',Library:'📚'}};
   let html=`<div class="summary"><span>Class <strong>${{covCls}}</strong> on <strong>${{covDay}}</strong>:</span>${{tO.filter(t=>tC[t]).map(t=>`<span class="spec-tag ${{tCss[t]}}">${{tIco[t]}} ${{tC[t]}}× ${{t}}</span>`).join('')}}<span class="legend"><span><span class="sdot" style="background:var(--green2)"></span>Free all day</span><span><span class="sdot" style="background:var(--amber2)"></span>Light day</span></span></div>`;
   slots.forEach(sl=>{{
-    const hC=`ch-${{sl.type==='Free'?'f':sl.type==='Game'?'g':sl.type==='Library'?'l':'w'}}`;
+    const hC=`ch-${{sl.type==='Free'?'f':'l'}}`;
     html+=`<div class="cov-slot"><div class="cov-head ${{hC}}"><span>${{tIco[sl.type]||''}} ${{sl.type}}</span><span style="font-weight:400;font-size:.7rem;opacity:.8">${{sl.period}} · ${{sl.time}}</span></div><div class="cov-body">`;
     if(!sl.free.length) html+=`<div class="no-cov">⚠ No teachers free this period</div>`;
     else{{
@@ -844,12 +872,12 @@ function cellStyle(subj) {{
 }}
 
 function specialCellClass(subj) {{
-  const map = {{Free:'sp-free-cell',Game:'sp-game-cell',Library:'sp-library-cell',WE:'sp-we-cell'}};
+  const map = {{Free:'sp-free-cell',Library:'sp-library-cell'}};
   return map[subj] || '';
 }}
 
 function specialLabel(subj) {{
-  const map = {{Free:'— Free',Game:'⚽ Game',Library:'📚 Library',WE:'✏ WE'}};
+  const map = {{Free:'— Free',Library:'📚 Library'}};
   return map[subj] || subj;
 }}
 
@@ -1003,7 +1031,7 @@ function updateStats() {{
 function buildLegend() {{
   const strip = document.getElementById('legend-strip');
   const subjects = ['Math','Science','English','SST','Hindi','Odia','Sanskrit','CS','IT','Biology','Physics','Chemistry'];
-  const specials = ['Free','Game','Library','WE'];
+  const specials = ['Free','Library'];
   let html = '<span style="font-size:.68rem;font-weight:800;color:var(--ink3);margin-right:4px">SUBJECTS:</span>';
   subjects.forEach(s => {{
     const bg = SUBJ_COLORS[s]||'#eee', txt = SUBJ_TEXT[s]||'inherit';
@@ -1015,14 +1043,73 @@ function buildLegend() {{
     html += `<span class="lchip" style="background:${{bg}};color:${{txt}}">${{s}}</span>`;
   }});
   html += '<span class="lchip" style="background:var(--sky);color:var(--blue);margin-left:10px">★ = Lab/Practical</span>';
-  html += '<span class="lchip" style="border-left:3px solid #4a6fa5;padding-left:6px;margin-left:4px;color:var(--blue);font-weight:700">P3 = after Break</span>';
-  html += '<span class="lchip" style="border-left:3px solid #8b4513;padding-left:6px;margin-left:4px;color:#8b4513;font-weight:700">P5 = after Lunch</span>';
   strip.innerHTML = html;
+}}
+
+/* ── TAB 4: TEACHER LOADS ── */
+function renderTeacherLoads() {{
+  const container = document.getElementById('tload-body');
+  const filter = (document.getElementById('tload-search').value||'').toLowerCase();
+  const teachers = Object.keys(TLD).sort().filter(t => !filter || t.toLowerCase().includes(filter));
+  let html = '';
+  teachers.forEach(t => {{
+    const rows = TLD[t];
+    const total = rows.reduce((s,r) => s+r.subtotal, 0);
+    html += `<div class="tl-block">
+      <div class="tl-header">
+        <span class="tl-name">${{t}}</span>
+        <span class="tl-total">${{total}} periods / week</span>
+      </div>
+      <table class="tl-table">
+        <thead><tr><th>Subject</th><th>Classes</th><th>Periods/Class</th><th>Subtotal</th></tr></thead>
+        <tbody>`;
+    rows.forEach(r => {{
+      html += `<tr>
+        <td style="background:${{SUBJ_COLORS[r.subject]||'#f9f9f9'}}">${{r.subject}}</td>
+        <td>${{r.classes}}</td>
+        <td style="text-align:center">${{r.per_class}}</td>
+        <td style="text-align:center;font-weight:700">${{r.subtotal}}</td>
+      </tr>`;
+    }});
+    html += `<tr class="tl-total-row"><td colspan="3" style="text-align:right;font-weight:700">Total</td>
+      <td style="text-align:center;font-weight:800">${{total}}</td></tr>`;
+    html += `</tbody></table></div>`;
+  }});
+  container.innerHTML = html || '<p style="padding:20px;color:#888">No teachers match.</p>';
 }}
 
 initSub();
 initCov();
+renderTeacherLoads();
 </script>
+
+<!-- TAB 4: TEACHER LOADS PAGE -->
+<div class="page" id="page-tload">
+<div class="inner">
+  <div class="card" style="margin-bottom:16px">
+    <div class="ch ch-indigo">📚 &nbsp;Teacher Subject Loads — Periods per Week</div>
+    <div class="cb" style="padding:10px 16px">
+      <input id="tload-search" type="search" placeholder="Filter by teacher name…"
+        oninput="renderTeacherLoads()"
+        style="width:280px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:.85rem">
+    </div>
+  </div>
+  <div id="tload-body" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px"></div>
+</div>
+</div>
+
+<style>
+.tl-block{{background:var(--white);border-radius:var(--rlg);box-shadow:var(--sh);border:1px solid var(--border);overflow:hidden}}
+.tl-header{{background:var(--navy);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center}}
+.tl-name{{font-weight:800;font-size:.95rem}}
+.tl-total{{font-size:.8rem;opacity:.8;font-weight:600}}
+.tl-table{{width:100%;border-collapse:collapse;font-size:.8rem}}
+.tl-table th{{background:var(--paper);padding:6px 10px;text-align:left;font-size:.72rem;font-weight:800;color:var(--ink2);border-bottom:1px solid var(--border)}}
+.tl-table td{{padding:5px 10px;border-bottom:1px solid var(--border)}}
+.tl-table tr:last-child td{{border-bottom:none}}
+.tl-total-row td{{background:var(--sky);color:var(--blue)}}
+</style>
+
 </body>
 </html>"""
 
@@ -1039,21 +1126,23 @@ def generate_html(timetable_state, events, output_path='Timetable_Tools.html'):
         Keys: (event_idx, instance) tuples.
         Values: {'class', 'day' (int 0-5), 'period' (int 0-5), 'subject', 'teacher'}.
     events : list
-        Event dicts (not used directly here; kept for API symmetry with exporter.py).
+        Event dicts — used for teacher load detail breakdown.
     output_path : str
         Destination file path.
     """
     (
         class_timetable, teacher_sched, teacher_view,
         coverage, wk_load, special_counts, all_teachers,
-    ) = _build_structures(timetable_state)
+        teacher_load_detail,
+    ) = _build_structures(timetable_state, events)
 
     html = _build_html(
         class_timetable, teacher_sched, teacher_view,
         coverage, wk_load, special_counts, all_teachers,
+        teacher_load_detail,
     )
 
     Path(output_path).write_text(html, encoding='utf-8')
     size_kb = Path(output_path).stat().st_size / 1024
     print(f"      HTML written to {output_path}  ({size_kb:.1f} KB)")
-    print("      Tabs: 🔍 Substitute Finder | 📋 Period Coverage | 📊 Master Timetable")
+    print("      Tabs: 🔍 Substitute Finder | 📋 Period Coverage | 📊 Master Timetable | 📚 Teacher Loads")

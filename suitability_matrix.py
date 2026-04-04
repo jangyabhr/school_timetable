@@ -17,7 +17,7 @@ def build_suitability_matrix(events, slot_lookup):
 
     Rules applied per subject type:
     - Fixed-slot subjects: only their exact (day, period) slots (none currently)
-    - Floating singles (Library, WE): all periods except Tuesday and Saturday
+    - Floating singles (Library): all periods except Tuesday and Saturday
     - Lab subjects (Physics, Chemistry, Biology): LAB_ALLOWED_START_PERIODS only
     - All other subjects: all 6 teaching periods (all periods are teaching)
     Note: Game has no solver event; it is placed by post_processor.
@@ -37,7 +37,7 @@ def build_suitability_matrix(events, slot_lookup):
                 if key in slot_lookup:
                     allowed_slot_ids.append(slot_lookup[key])
 
-        # ── Floating singles (Library, WE) ───────────────────────────────────
+        # ── Floating singles (Library) ───────────────────────────────────
         elif subject in FLOATING_SINGLE_SUBJECTS:
             for day in range(DAYS_PER_WEEK):
                 if day in FLOATING_EXCLUDED_DAYS:

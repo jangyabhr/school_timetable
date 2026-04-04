@@ -34,7 +34,7 @@ def generate_events(assignments, subject_load_by_group):
       class       — section name e.g. "6A"
       class_idx   — integer index (0–11) for slot_lookup
       subject     — subject name
-      teacher     — teacher name or None (for CCA)
+      teacher     — teacher name
       weekly_load — number of periods per week
     """
     events = []
@@ -83,7 +83,7 @@ def generate_cca_events(subject_load_by_group):
 
 def generate_floating_events(subject_load_by_group):
     """
-    Library and WE have no teacher and no entry in teacher_assignments.yaml.
+    Library has no teacher and no entry in teacher_assignments.yaml.
     Generate one event per section per floating subject from subject_load.
     weekly_load = 1 per subject per section.
     """
@@ -111,7 +111,7 @@ def generate_all_events(
 ):
     """
     Main entry point. Loads both YAMLs and returns the full event list
-    (teacher-assigned subjects + Library + WE).
+    (teacher-assigned subjects + Library).
     """
     raw_assignments  = load_yaml(assignments_path)["assignments"]
     raw_subject_load = load_yaml(subject_load_path)["class_groups"]

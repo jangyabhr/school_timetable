@@ -83,8 +83,8 @@ def main():
     if row:
         print("  " + row)
 
-    # Step 6 — Post-processing (Game + duty teachers + Free periods)
-    print("\n[6/9] Post-processing (Game, duty assignments, Free periods)...")
+    # Step 6 — Post-processing (duty teachers + Free periods)
+    print("\n[6/9] Post-processing (duty assignments, Free periods)...")
     timetable_state = run_post_processing(
         timetable_state, events, CLASS_ORDER, DAYS_PER_WEEK, PERIODS_PER_DAY
     )
