@@ -3,15 +3,11 @@
 # Post-processing steps run after the solver:
 #   A. Rebuild occupied set
 #   B. Place Game per section (last teaching period preferred, any day)
-#   B2. Place Drill (period 0) for every class × every day
-#   B3. Place Breakfast break (period 3) for every class × every day
 #   C. Compute teaching loads + teacher availability
 #   D. Assign duty teachers to Library/WE/Game slots (teacher=None)
-#      — Drill and Breakfast remain teacher=None (no duty assigned)
 #   E. Mark remaining empty slots as "Free" with a duty teacher
 
 from event_generator import CLASS_ORDER, CLASS_IDX
-from constraints import DRILL_PERIOD, BREAK_PERIOD, NON_SUBJECT_MARKERS
 
 
 def run_post_processing(timetable_state, events, class_order,
@@ -39,7 +35,7 @@ def run_post_processing(timetable_state, events, class_order,
     })
 
     # ------------------------------------------------------------------
-    # Step B — Place Game per section (period 7 preferred, fallback down)
+    # Step B — Place Game per section (last period preferred, fallback down)
     # ------------------------------------------------------------------
     BASE_GAME_IDX = len(events)   # post-processed keys start here
 
@@ -64,44 +60,6 @@ def run_post_processing(timetable_state, events, class_order,
                     break
             if placed:
                 break
-
-    # ------------------------------------------------------------------
-    # Step B2 — Place Drill (period 0) for every class × every day
-    # ------------------------------------------------------------------
-    BASE_DRILL_IDX = BASE_GAME_IDX + len(class_order)  # keys after Game keys
-
-    for ci, section in enumerate(class_order):
-        class_idx = CLASS_IDX[section]
-        for day in range(days_per_week):
-            key = (BASE_DRILL_IDX + ci * days_per_week + day, 0)
-            timetable_state[key] = {
-                "day":       day,
-                "period":    DRILL_PERIOD,
-                "class":     section,
-                "class_idx": class_idx,
-                "subject":   "Drill",
-                "teacher":   None,
-            }
-            occupied.add((class_idx, day, DRILL_PERIOD))
-
-    # ------------------------------------------------------------------
-    # Step B3 — Place Breakfast break (period 3) for every class × every day
-    # ------------------------------------------------------------------
-    BASE_BREAK_IDX = BASE_DRILL_IDX + len(class_order) * days_per_week
-
-    for ci, section in enumerate(class_order):
-        class_idx = CLASS_IDX[section]
-        for day in range(days_per_week):
-            key = (BASE_BREAK_IDX + ci * days_per_week + day, 0)
-            timetable_state[key] = {
-                "day":       day,
-                "period":    BREAK_PERIOD,
-                "class":     section,
-                "class_idx": class_idx,
-                "subject":   "Breakfast",
-                "teacher":   None,
-            }
-            occupied.add((class_idx, day, BREAK_PERIOD))
 
     # ------------------------------------------------------------------
     # Step C — Compute teaching loads and teacher availability
@@ -131,7 +89,7 @@ def run_post_processing(timetable_state, events, class_order,
             if (t, day, period) in teacher_busy:
                 continue
             total = teaching_loads[t] + duty_loads[t]
-            if total >= 26:  # 36 teaching slots × ~0.72 — proportional to old 34/48 cap
+            if total >= 26:  # 36 teaching slots × ~0.72 — proportional cap
                 continue
             if total < best_total:
                 best_total = total
@@ -143,13 +101,11 @@ def run_post_processing(timetable_state, events, class_order,
 
     # ------------------------------------------------------------------
     # Step D — Assign duty teachers to teacher=None slots
-    #          (Library, WE, Game — but NOT CCA)
+    #          (Library, WE, Game)
     # ------------------------------------------------------------------
     none_keys = [
         k for k, p in timetable_state.items()
         if p.get("teacher") is None
-        and p["subject"] not in ("CCA",)
-        and p["subject"] not in NON_SUBJECT_MARKERS   # Drill and Breakfast: no duty teacher
     ]
     # Sort for determinism: by (class_idx, day, period)
     none_keys.sort(key=lambda k: (
@@ -166,10 +122,8 @@ def run_post_processing(timetable_state, events, class_order,
     # ------------------------------------------------------------------
     # Step E — Mark remaining empty slots as "Free" with duty teacher
     # ------------------------------------------------------------------
-    # Key space: events → Game (len(class_order)) → Drill (len×days) → Breakfast (len×days)
-    BASE_FREE_IDX = (len(events) + len(class_order)
-                     + len(class_order) * days_per_week   # Drill
-                     + len(class_order) * days_per_week)  # Breakfast
+    # Key space: events → Game (len(class_order)) → Free slots
+    BASE_FREE_IDX = len(events) + len(class_order)
     counter = 0
 
     for class_idx_val, section in enumerate(class_order):

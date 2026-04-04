@@ -111,7 +111,7 @@ def generate_all_events(
 ):
     """
     Main entry point. Loads both YAMLs and returns the full event list
-    (teacher-assigned subjects + CCA + Library + WE).
+    (teacher-assigned subjects + Library + WE).
     """
     raw_assignments  = load_yaml(assignments_path)["assignments"]
     raw_subject_load = load_yaml(subject_load_path)["class_groups"]

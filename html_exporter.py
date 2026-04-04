@@ -11,12 +11,12 @@ from event_generator import CLASS_ORDER
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 DAYS    = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-PERIODS = ['Drill', 'P1', 'P2', 'Break', 'P3', 'P4', 'P5', 'P6']
+PERIODS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6']
 TIMES   = [
-    '7:00–7:30',   '7:30–8:10',   '8:10–8:50',   '8:50–9:40',
-    '9:40–10:20',  '10:20–11:00', '11:00–11:40', '11:40–12:20',
+    '6:40–7:20',  '7:20–8:00',  '8:00–8:40',
+    '8:40–9:10',  '9:10–9:40',  '9:40–10:10',
 ]
-SPECIALS     = {'Free', 'Game', 'Library', 'WE', 'CCA', 'Drill', 'Breakfast'}
+SPECIALS     = {'Free', 'Game', 'Library', 'WE'}
 LAB_SUBJECTS = {'CS', 'IT', 'Math', 'Science', 'Biology', 'Physics', 'Chemistry'}
 
 SUBJ_COLORS = {
@@ -25,11 +25,10 @@ SUBJ_COLORS = {
     'Sanskrit':  '#D2B4DE', 'CS':        '#AED6F1', 'IT':        '#85C1E9',
     'Biology':   '#A8D8A8', 'Physics':   '#A9CCE3', 'Chemistry': '#A9DFBF',
     'Free':      '#ECECEC', 'Library':   '#D5D8DC', 'WE':        '#D5D8DC',
-    'Game':      '#82E0AA', 'CCA':       '#C39BD3',
-    'Drill':     '#E8DAEF', 'Breakfast': '#FFF9C4',
+    'Game':      '#82E0AA',
 }
 SUBJ_TEXT = {
-    'Game':    '#145A32', 'CCA':     '#4A235A',
+    'Game':    '#145A32',
     'Free':    '#888888', 'Library': '#555555', 'WE': '#555555',
 }
 
@@ -67,7 +66,7 @@ def _build_structures(timetable_state):
                 'l': p.get('is_lab', False),
             }
 
-    # ── all_teachers (sorted, excluding None from CCA) ────────────────────────
+    # ── all_teachers (sorted) ────────────────────────────────────────────────
     all_teachers = sorted({
         p['teacher'] for p in timetable_state.values() if p.get('teacher')
     })
@@ -86,7 +85,7 @@ def _build_structures(timetable_state):
     for p in timetable_state.values():
         t = p.get('teacher')
         if not t:
-            continue  # CCA/Drill/Breakfast have teacher=None
+            continue
         day    = DAYS[p['day']]
         period = p['period']
         subj   = p['subject']
@@ -114,7 +113,7 @@ def _build_structures(timetable_state):
             special_counts[cls][subj] += 1
 
     # ── coverage ──────────────────────────────────────────────────────────────
-    # coverage[cls][day] = list of slot dicts for non-CCA specials
+    # coverage[cls][day] = list of slot dicts for specials
     # Each slot: {period, time, type, free: [{name, day_load, wk_load}]}
     coverage = {}
     for cls in CLASS_ORDER:
@@ -123,7 +122,7 @@ def _build_structures(timetable_state):
             cov_list = []
             for pi, slot in enumerate(class_timetable[cls][day]):
                 subj = slot['s']
-                if subj in SPECIALS and subj != 'CCA':
+                if subj in SPECIALS:
                     free_teachers = sorted(
                         [
                             {
@@ -738,8 +737,7 @@ function findSubs() {{
   const tot=piK.reduce((s,pi)=>s+byP[pi].length,0);
   let html=`<div class="summary"><span><span class="sdot" style="background:var(--red2)"></span><strong>${{absent.size}}</strong> absent</span><span><span class="sdot" style="background:var(--amber2)"></span><strong>${{tot}}</strong> class${{tot>1?'es':''}} need cover</span><span><span class="sdot" style="background:var(--green2)"></span>Day: <strong>${{subDay}}</strong></span><span class="legend"><span><span class="sdot" style="background:var(--green2)"></span>Free all day</span><span><span class="sdot" style="background:var(--amber2)"></span>Light (≤${{LIGHT_MAX}})</span><span><span class="sdot" style="background:#aaa"></span>Busy</span></span></div>`;
   piK.forEach(pi=>{{
-    const gap=pi===2?'← after ☕ Break':pi===4?'← after 🍽 Lunch':'';
-    html+=`<div class="pblock"><div class="pblock-head"><span>${{PERIODS[pi]}}</span><span class="ph-time">${{TIMES[pi]}}</span>${{gap?`<span class="ph-gap">${{gap}}</span>`:''}}</div><div class="pblock-body">`;
+    html+=`<div class="pblock"><div class="pblock-head"><span>${{PERIODS[pi]}}</span><span class="ph-time">${{TIMES[pi]}}</span></div><div class="pblock-body">`;
     byP[pi].forEach(({{absTeacher:aT,cls,subj}})=>{{
       const fN=ALL.filter(t=>!absent.has(t)&&isFree(t,subDay,pi));
       const byWk=a=>[...a].sort((x,y)=>(WK_LOAD[x]||0)-(WK_LOAD[y]||0));
@@ -780,8 +778,7 @@ function findCoverage(){{
   let html=`<div class="summary"><span>Class <strong>${{covCls}}</strong> on <strong>${{covDay}}</strong>:</span>${{tO.filter(t=>tC[t]).map(t=>`<span class="spec-tag ${{tCss[t]}}">${{tIco[t]}} ${{tC[t]}}× ${{t}}</span>`).join('')}}<span class="legend"><span><span class="sdot" style="background:var(--green2)"></span>Free all day</span><span><span class="sdot" style="background:var(--amber2)"></span>Light day</span></span></div>`;
   slots.forEach(sl=>{{
     const hC=`ch-${{sl.type==='Free'?'f':sl.type==='Game'?'g':sl.type==='Library'?'l':'w'}}`;
-    const gap=sl.period==='P3'?' · ← after ☕':sl.period==='P5'?' · ← after 🍽':'';
-    html+=`<div class="cov-slot"><div class="cov-head ${{hC}}"><span>${{tIco[sl.type]||''}} ${{sl.type}}</span><span style="font-weight:400;font-size:.7rem;opacity:.8">${{sl.period}} · ${{sl.time}}${{gap}}</span></div><div class="cov-body">`;
+    html+=`<div class="cov-slot"><div class="cov-head ${{hC}}"><span>${{tIco[sl.type]||''}} ${{sl.type}}</span><span style="font-weight:400;font-size:.7rem;opacity:.8">${{sl.period}} · ${{sl.time}}</span></div><div class="cov-body">`;
     if(!sl.free.length) html+=`<div class="no-cov">⚠ No teachers free this period</div>`;
     else{{
       const byWk=[...sl.free].sort((a,b)=>a.wk_load-b.wk_load);
@@ -832,8 +829,7 @@ function renderTable() {{
   hRow += `<th style="min-width:70px">Class</th>`;
   hRow += `<th style="min-width:48px;position:sticky;left:70px;z-index:110;background:var(--navy)">Day</th>`;
   PERIODS.forEach((p, i) => {{
-    const gapStyle = i===0 ? 'border-right:3px solid #7d3c98' : i===3 ? 'border-right:3px solid #d4ac0d' : '';
-    hRow += `<th style="${{gapStyle}}">${{p}}<span class="ph-time">${{TIMES[i]}}</span></th>`;
+    hRow += `<th>${{p}}<span class="ph-time">${{TIMES[i]}}</span></th>`;
   }});
   hRow += '</tr>';
   thead.innerHTML = hRow;
@@ -848,12 +844,12 @@ function cellStyle(subj) {{
 }}
 
 function specialCellClass(subj) {{
-  const map = {{Free:'sp-free-cell',Game:'sp-game-cell',Library:'sp-library-cell',WE:'sp-we-cell',CCA:'sp-cca-cell'}};
+  const map = {{Free:'sp-free-cell',Game:'sp-game-cell',Library:'sp-library-cell',WE:'sp-we-cell'}};
   return map[subj] || '';
 }}
 
 function specialLabel(subj) {{
-  const map = {{Free:'— Free',Game:'⚽ Game',Library:'📚 Library',WE:'✏ WE',CCA:'🎭 CCA',Drill:'🧘 Drill',Breakfast:'🍳 Breakfast'}};
+  const map = {{Free:'— Free',Game:'⚽ Game',Library:'📚 Library',WE:'✏ WE'}};
   return map[subj] || subj;
 }}
 
@@ -1007,7 +1003,7 @@ function updateStats() {{
 function buildLegend() {{
   const strip = document.getElementById('legend-strip');
   const subjects = ['Math','Science','English','SST','Hindi','Odia','Sanskrit','CS','IT','Biology','Physics','Chemistry'];
-  const specials = ['Free','Game','Library','WE','CCA'];
+  const specials = ['Free','Game','Library','WE'];
   let html = '<span style="font-size:.68rem;font-weight:800;color:var(--ink3);margin-right:4px">SUBJECTS:</span>';
   subjects.forEach(s => {{
     const bg = SUBJ_COLORS[s]||'#eee', txt = SUBJ_TEXT[s]||'inherit';
@@ -1041,7 +1037,7 @@ def generate_html(timetable_state, events, output_path='Timetable_Tools.html'):
     ----------
     timetable_state : dict
         Keys: (event_idx, instance) tuples.
-        Values: {'class', 'day' (int 0-5), 'period' (int 0-7), 'subject', 'teacher'}.
+        Values: {'class', 'day' (int 0-5), 'period' (int 0-5), 'subject', 'teacher'}.
     events : list
         Event dicts (not used directly here; kept for API symmetry with exporter.py).
     output_path : str

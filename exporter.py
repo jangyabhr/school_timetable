@@ -31,11 +31,8 @@ SUBJECT_COLOURS = {
     "Chemistry":   "FFFBE9E7",  # pastel deep-orange
     "Biology":     "FFE8F5E9",  # pastel light-green
     "Game":        "FFFFF3E0",  # pastel orange
-    "CCA":         "FFEDE7F6",  # pastel deep-purple
     "Library":     "FFF9FBE7",  # pastel lime
     "WE":          "FFECE4D6",  # pastel warm-tan
-    "Drill":       "FFE8DAEF",  # light purple — Drill/Yoga
-    "Breakfast":   "FFFFFDE7",  # light amber  — Breakfast break
 }
 
 # Per-section pastel palette — used on teacher-wise sheets to colour by class
