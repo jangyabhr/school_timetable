@@ -1,0 +1,62 @@
+# teachers.yaml
+# Declares each teacher's weekly capacity and qualified subjects.
+# Used by assignment_validator.py to catch over-assignment before the solver runs.
+#
+# capacity = maximum teaching periods per week this teacher may be assigned.
+# subjects = list of subjects this teacher is qualified to teach.
+#
+# Loads shown are computed from teacher_assignments.yaml after removing
+# sections 6A, 6B, and 11.
+
+teachers:
+  Nandini:
+    capacity: 22       # load: 10  (Math: 7A,7B)
+    subjects: [Math]
+  JB:
+    capacity: 26       # load: 22  (Math: 8A,8B,9A,9B)
+    subjects: [Math]
+  Mira:
+    capacity: 26       # load: 18  (Math: 10A,10B,12)
+    subjects: [Math]
+  Pratibha:
+    capacity: 20       # load:  6  (Physics: 12 only)
+    subjects: [Science, Physics]
+  Priyanka:
+    capacity: 24       # load: 16  (Science: 7A,7B + Chemistry: 12)
+    subjects: [Science, Chemistry]
+  Sunil:
+    capacity: 26       # load: 22  (Science: 8A,8B,9A,9B)
+    subjects: [Science]
+  Sidharth:
+    capacity: 26       # load: 18  (Science: 10A,10B + Biology: 12)
+    subjects: [Science, Biology]
+  Radheshyam:
+    capacity: 20       # load:  5  (English: 12 only)
+    subjects: [English]
+  Laxmipriya:
+    capacity: 24       # load: 20  (English: 7A,7B,10A,10B)
+    subjects: [English]
+  Pratikshya:
+    capacity: 24       # load: 20  (English: 8A,8B,9A,9B)
+    subjects: [English]
+  ANIL:
+    capacity: 24       # load: 14  (SST: 8A,8B,10A)
+    subjects: [SST]
+  Srikant:
+    capacity: 30       # load: 26  (SST: 7A,7B,9A,9B,10B) — highest load
+    subjects: [SST]
+  Snigdha:
+    capacity: 24       # load: 12  (Hindi: 7A,7B,8A,8B)
+    subjects: [Hindi, Odia]
+  Ganesh:
+    capacity: 26       # load: 18  (Sanskrit: 7A,7B,8A,8B + Odia: 7A,7B)
+    subjects: [Sanskrit, Odia]
+  Subhasmita:
+    capacity: 22       # load: 18  (Odia: 8A,8B,9A,9B,10A,10B)
+    subjects: [Odia]
+  Usha:
+    capacity: 22       # load: 12  (IT: 9A,9B,12)
+    subjects: [ComputerScience, IT]
+  Sanjukta:
+    capacity: 24       # load: 20  (CS: 7A,7B,8A,8B + IT: 10A,10B)
+    subjects: [ComputerScience, IT]

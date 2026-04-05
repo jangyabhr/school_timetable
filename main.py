@@ -1,9 +1,10 @@
 # main.py
 # Full pipeline entry point for the school timetable solver.
 
+import sys
 from collections import defaultdict
 
-from event_generator    import generate_all_events, CLASS_ORDER
+from event_generator    import generate_all_events, CLASS_ORDER, load_yaml
 from slot_index         import build_slot_index
 from conflict_builder   import build_conflict_map
 from suitability_matrix import build_suitability_matrix
@@ -33,6 +34,26 @@ def main():
         subject_load_path="subject_load.yaml",
     )
     print(f"      {len(events)} events generated")
+
+    # Step 2.5 — Assignment validation
+    print("\n[2.5/9] Validating assignments...")
+    from assignment_validator import validate_assignments
+    try:
+        teachers_data = load_yaml("teachers.yaml").get("teachers", {})
+        result = validate_assignments(events, teachers_data)
+        for w in result["warnings"]:
+            print(f"  WARNING: {w}")
+        for e in result["errors"]:
+            print(f"  ERROR:   {e}")
+        if not result["valid"]:
+            print("\n  Aborting: fix assignment errors before running the solver.")
+            sys.exit(1)
+        elif not result["errors"] and not result["warnings"]:
+            print("  All assignments valid.")
+        else:
+            print("  Assignments valid (see warnings above).")
+    except FileNotFoundError:
+        print("  WARNING: teachers.yaml not found — skipping capacity validation")
 
     # Step 3 — Conflict map
     print("\n[3/9] Building conflict map...")

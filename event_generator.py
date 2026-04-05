@@ -3,21 +3,14 @@
 import yaml
 from constraints import FIXED_SLOT_SUBJECTS, FLOATING_SINGLE_SUBJECTS
 
-# Canonical class order — index in this list becomes class_idx
-CLASS_ORDER = ["6A", "6B", "7A", "7B", "8A", "8B",
-               "9A", "9B", "10A", "10B", "11", "12"]
+# Canonical class order — index in this list becomes class_idx.
+# Sections 6A, 6B, and 11 have been removed.
+CLASS_ORDER = ["7A", "7B", "8A", "8B", "9A", "9B", "10A", "10B", "12"]
 
 CLASS_IDX = {section: i for i, section in enumerate(CLASS_ORDER)}
 
-# Which subject_load group each section belongs to
-CLASS_GROUP_MAP = {
-    "6A": "class_6_8",  "6B": "class_6_8",
-    "7A": "class_6_8",  "7B": "class_6_8",
-    "8A": "class_6_8",  "8B": "class_6_8",
-    "9A": "class_9_10", "9B": "class_9_10",
-    "10A": "class_9_10","10B": "class_9_10",
-    "11":  "class_11_12","12": "class_11_12",
-}
+# CLASS_GROUP_MAP is no longer hardcoded — it is derived at runtime from
+# class_groups.yaml via _build_group_map() inside generate_all_events().
 
 
 def load_yaml(path):
@@ -25,14 +18,45 @@ def load_yaml(path):
         return yaml.safe_load(f)
 
 
-def generate_events(assignments, subject_load_by_group):
+def _build_group_map(class_groups_data):
+    """Build {section: group_name} from class_groups.yaml data."""
+    group_map = {}
+    for group_name, sections in class_groups_data.items():
+        for section in sections:
+            group_map[str(section)] = group_name
+    return group_map
+
+
+def resolve_section_loads(class_groups_data, group_defaults, section_overrides):
+    """
+    Returns {section: {subject: weekly_load}} for all sections in CLASS_ORDER.
+
+    Each section starts from its group default (from group_defaults), then
+    section_overrides[section] is merged on top — keys in the override ADD to
+    or REPLACE the corresponding group-default values.
+    """
+    group_map = _build_group_map(class_groups_data)
+    resolved = {}
+    for section in CLASS_ORDER:
+        group = group_map[section]
+        load = dict(group_defaults.get(group, {}))       # copy group default
+        load.update(section_overrides.get(section, {}))  # override wins
+        resolved[section] = load
+    return resolved
+
+
+def generate_events(assignments, section_loads):
     """
     Generates one event per (section, subject) from teacher_assignments.yaml.
     Each event is placed weekly_load times by the placer.
 
+    Assignments for sections not in CLASS_IDX (e.g. 6A, 6B, 11) are silently
+    skipped — teacher_assignments.yaml does not need to be edited when sections
+    are removed.
+
     Returns a list of event dicts:
-      class       — section name e.g. "6A"
-      class_idx   — integer index (0–11) for slot_lookup
+      class       — section name e.g. "7A"
+      class_idx   — integer index (0–8) for slot_lookup
       subject     — subject name
       teacher     — teacher name
       weekly_load — number of periods per week
@@ -41,11 +65,11 @@ def generate_events(assignments, subject_load_by_group):
 
     for row in assignments:
         section = str(row["section"])
-        subject  = row["subject"]
-        teacher  = row.get("teacher", None)
-
-        group = CLASS_GROUP_MAP[section]
-        load  = subject_load_by_group[group].get(subject, 0)
+        if section not in CLASS_IDX:          # skip removed sections
+            continue
+        subject = row["subject"]
+        teacher = row.get("teacher", None)
+        load    = section_loads[section].get(subject, 0)
 
         events.append({
             "class":       section,
@@ -58,17 +82,15 @@ def generate_events(assignments, subject_load_by_group):
     return events
 
 
-def generate_cca_events(subject_load_by_group):
+def generate_cca_events(section_loads):
     """
     CCA has no teacher and no entry in teacher_assignments.yaml.
-    Generate one CCA event per section directly from subject_load.
-    weekly_load = 2 (Saturday periods 6 and 7).
+    Generate one CCA event per section directly from section_loads.
     """
     events = []
 
     for section in CLASS_ORDER:
-        group = CLASS_GROUP_MAP[section]
-        load  = subject_load_by_group[group].get("CCA", 0)
+        load = section_loads[section].get("CCA", 0)
         if load > 0:
             events.append({
                 "class":       section,
@@ -81,18 +103,16 @@ def generate_cca_events(subject_load_by_group):
     return events
 
 
-def generate_floating_events(subject_load_by_group):
+def generate_floating_events(section_loads):
     """
     Library has no teacher and no entry in teacher_assignments.yaml.
-    Generate one event per section per floating subject from subject_load.
-    weekly_load = 1 per subject per section.
+    Generate one event per section per floating subject from section_loads.
     """
     events = []
 
     for section in CLASS_ORDER:
-        group = CLASS_GROUP_MAP[section]
         for subject in FLOATING_SINGLE_SUBJECTS:
-            load = subject_load_by_group[group].get(subject, 0)
+            load = section_loads[section].get(subject, 0)
             if load > 0:
                 events.append({
                     "class":       section,
@@ -108,16 +128,24 @@ def generate_floating_events(subject_load_by_group):
 def generate_all_events(
     assignments_path="teacher_assignments.yaml",
     subject_load_path="subject_load.yaml",
+    class_groups_path="class_groups.yaml",
 ):
     """
-    Main entry point. Loads both YAMLs and returns the full event list
-    (teacher-assigned subjects + Library).
+    Main entry point. Loads all three YAMLs, resolves per-section loads
+    from group_defaults + section_overrides, and returns the full event list.
     """
-    raw_assignments  = load_yaml(assignments_path)["assignments"]
-    raw_subject_load = load_yaml(subject_load_path)["class_groups"]
+    raw_assignments   = load_yaml(assignments_path)["assignments"]
+    raw_load          = load_yaml(subject_load_path)
+    raw_groups        = load_yaml(class_groups_path)["class_groups"]
 
-    events  = generate_events(raw_assignments, raw_subject_load)
-    events += generate_cca_events(raw_subject_load)
-    events += generate_floating_events(raw_subject_load)
+    group_defaults    = raw_load["group_defaults"]
+    # Normalize keys to strings — YAML parses bare integers (e.g. 12) as int
+    section_overrides = {str(k): v for k, v in raw_load.get("section_overrides", {}).items()}
+
+    section_loads = resolve_section_loads(raw_groups, group_defaults, section_overrides)
+
+    events  = generate_events(raw_assignments, section_loads)
+    events += generate_cca_events(section_loads)
+    events += generate_floating_events(section_loads)
 
     return events
