@@ -10,11 +10,11 @@ CLASS_IDX = {section: i for i, section in enumerate(CLASS_ORDER)}
 
 # Which subject_load group each section belongs to
 CLASS_GROUP_MAP = {
-    "7A": "class_6_8",  "7B": "class_6_8",
-    "8A": "class_6_8",  "8B": "class_6_8",
+    "7A": "class_7_8",  "7B": "class_7_8",
+    "8A": "class_7_8",  "8B": "class_7_8",
     "9A": "class_9_10", "9B": "class_9_10",
     "10A": "class_9_10","10B": "class_9_10",
-    "12":  "class_11_12",
+    "12":  "class_12",
 }
 
 
@@ -29,8 +29,8 @@ def generate_events(assignments, subject_load_by_group):
     Each event is placed weekly_load times by the placer.
 
     Returns a list of event dicts:
-      class       — section name e.g. "6A"
-      class_idx   — integer index (0–11) for slot_lookup
+      class       — section name e.g. "7A"
+      class_idx   — integer index (0–8) for slot_lookup
       subject     — subject name
       teacher     — teacher name
       weekly_load — number of periods per week

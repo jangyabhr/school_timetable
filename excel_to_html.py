@@ -22,7 +22,7 @@ from html_exporter import generate_html
 
 NON_DATA_SHEETS = {"Dashboard", "Teacher Loads", "All Sections", "All Teachers"}
 
-# exporter.py names class sheets "Class 6A", "Class 7B", etc.
+# exporter.py names class sheets "Class 7A", "Class 12", etc.
 CLASS_SHEET_PREFIX = "Class "
 CLASS_SHEET_NAMES  = {f"Class {cls}": cls for cls in CLASS_ORDER}  # sheet_name → cls
 CLASS_SHEET_SET    = set(CLASS_SHEET_NAMES.keys())
@@ -90,9 +90,9 @@ def _parse_teacher_cell(raw):
 
     Cell formats written by exporter.py:
       ""                        → None
-      "Duty\n(6A)"              → ('6A', 'Free', False)
-      "Subject\n(6A)"           → ('6A', 'Subject', False)
-      "Subject (Lab)\n(6A)"     → ('6A', 'Subject', True)
+      "Duty\n(7A)"              → ('7A', 'Free', False)
+      "Subject\n(7A)"           → ('7A', 'Subject', False)
+      "Subject (Lab)\n(7A)"     → ('7A', 'Subject', True)
     """
     if raw is None:
         return None
@@ -104,7 +104,7 @@ def _parse_teacher_cell(raw):
     first = lines[0].strip()
     second = lines[1].strip() if len(lines) > 1 else ''
 
-    # Extract class name from "(6A)" format
+    # Extract class name from "(7A)" format
     cls_match = re.match(r'^\((.+)\)$', second)
     cls = cls_match.group(1) if cls_match else second
 

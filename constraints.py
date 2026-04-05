@@ -73,6 +73,7 @@ ANCHOR_SUBJECTS = [
     "Science",
     "English",
     "SST",
+    "Biology",
 ]
 
 # Subjects that benefit from spaced-repetition across days

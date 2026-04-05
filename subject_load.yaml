@@ -4,37 +4,37 @@ class_groups:
   # Teacher loads manually calculated so no teacher exceeds 30 periods/week.
   #
   # Solver constraints (why not every group reaches 36/36):
-  #   • class_6_8  (4 sections: 7A, 7B, 8A, 8B): Snigdha (Hindi×4 = 12/wk),
+  #   • class_7_8  (4 sections: 7A, 7B, 8A, 8B): Snigdha (Hindi×4 = 12/wk),
   #     Ganesh (Sanskrit×4 + Odia×2 = 18/wk), Subhasmita (Odia×2 = 6/wk)
   #     → capped at 31/36.
   #   • class_9_10 (4 sections): cross-group teachers like Pratikshya (English
   #     8A/8B + 9A/9B) and Sunil/JB exhaust teacher-combo options in 8A when
   #     9A/9B fill rises; SST can safely go to 6 (ANIL & Srikant teach separate
   #     sections here) → capped at 31/36.
-  #   • class_11_12 (1 section: 12): lab subjects (Physics, Chemistry, Biology)
+  #   • class_12   (1 section: 12): lab subjects (Physics, Chemistry, Biology)
   #     each at 6 → 33/36.
 
-  class_6_8:
+  class_7_8:
     Math: 5
     Science: 5
     English: 5
     SST: 4          # ANIL: 2×4+6=14/wk  |  Srikant: 2×4+2×6+6=26/wk
-    Hindi: 3        # Snigdha: 6×3+2×3=24/wk
-    Odia: 3         # Snigdha: 24/wk (6A,6B)  |  Ganesh: 24/wk (7A,7B)  |  Subhasmita: 18/wk (8A,8B)
-    Sanskrit: 3     # Ganesh: 6×3+2×3=24/wk
-    ComputerScience: 3  # Usha: 2×3+2×4+2×4=22/wk  |  Sanjukta: 4×3+2×5=22/wk
+    Hindi: 3        # Snigdha: 4×3=12/wk
+    Odia: 3         # Ganesh: 2×3=6/wk (7A,7B)  |  Subhasmita: 2×3=6/wk (8A,8B)
+    Sanskrit: 3     # Ganesh: 4×3+2×3=18/wk
+    ComputerScience: 3  # Sanjukta: 4×3+2×4=20/wk
     # Total: 31 (5 free periods/week)
 
   class_9_10:
     Math: 6
     Science: 6
     English: 5      # Pratikshya: 2×5+2×5=20/wk  |  Laxmipriya: 2×5+2×5=20/wk
-    SST: 6          # +1 from 5  |  ANIL: 4×4+1×6=22/wk  |  Srikant: 2×4+2×6+1×6=26/wk
-    Odia: 3         # Subhasmita: 6×3=18/wk across all 6 sections
-    IT: 4           # Usha: 2×3+2×4+2×4=22/wk  |  Sanjukta: 4×3+2×5=22/wk
+    SST: 6          # ANIL: 2×4+1×6=14/wk  |  Srikant: 2×4+3×6=26/wk
+    Odia: 3         # Subhasmita: 6×3=18/wk (8A,8B,9A,9B,10A,10B)
+    IT: 4           # Usha: 2×4+1×4=12/wk  |  Sanjukta: 4×3+2×4=20/wk
     # Total: 30 (6 free periods/week)
 
-  class_11_12:
+  class_12:
     Physics: 6      # Pratibha: 1×6=6/wk
     Chemistry: 6    # Priyanka: 1×6=6/wk
     Biology: 6      # Sidharth: 1×6+2×6=18/wk (10A/10B + 12)
