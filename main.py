@@ -1,19 +1,23 @@
 # main.py
 # Full pipeline entry point for the school timetable solver.
 
+import os
 import sys
-from collections import defaultdict
 
 from event_generator    import generate_all_events, CLASS_ORDER, load_yaml
 from slot_index         import build_slot_index
-from conflict_builder   import build_conflict_map
-from suitability_matrix import build_suitability_matrix
-from placer             import run_placer
+from period_generator   import (
+    generate_period_assignments, validate_period_assignments,
+    save_period_assignments, load_period_assignments,
+)
+from day_assigner       import assign_days
 from post_processor     import run_post_processing
 from lab_assigner       import assign_lab_periods
 from exporter           import export_timetable
 from html_exporter      import generate_html
 from constraints        import NUM_CLASSES, DAYS_PER_WEEK, PERIODS_PER_DAY
+
+PERIOD_ASSIGNMENTS_PATH = "period_assignments.yaml"
 
 
 def main():
@@ -22,21 +26,21 @@ def main():
     print("=" * 50)
 
     # Step 1 — Slot index
-    print("\n[1/9] Building slot index...")
+    print("\n[1/7] Building slot index...")
     slots, slot_lookup = build_slot_index(NUM_CLASSES, DAYS_PER_WEEK, PERIODS_PER_DAY)
-    print(f"      {len(slots)} slots created "
+    print(f"      {len(slots)} slots  "
           f"({NUM_CLASSES} classes × {DAYS_PER_WEEK} days × {PERIODS_PER_DAY} periods)")
 
     # Step 2 — Events
-    print("\n[2/9] Generating events...")
+    print("\n[2/7] Generating events...")
     events = generate_all_events(
         assignments_path="teacher_assignments.yaml",
         subject_load_path="subject_load.yaml",
     )
     print(f"      {len(events)} events generated")
 
-    # Step 2.5 — Assignment validation
-    print("\n[2.5/9] Validating assignments...")
+    # Step 2.5 — Teacher capacity validation gate
+    print("\n[2.5/7] Validating assignments...")
     from assignment_validator import validate_assignments
     try:
         teachers_data = load_yaml("teachers.yaml").get("teachers", {})
@@ -61,71 +65,81 @@ def main():
         if event.get("teacher"):
             event["teacher"] = TEACHER_TITLES.get(event["teacher"], event["teacher"])
 
-    # Step 3 — Conflict map
-    print("\n[3/9] Building conflict map...")
-    conflict_map = build_conflict_map(events)
-    total_conflicts = sum(len(v) for v in conflict_map.values()) // 2
-    print(f"      {total_conflicts} conflict pairs found")
+    # Step 3 — Period assignments
+    # Load from period_assignments.yaml if it exists and covers all events;
+    # otherwise generate fresh and save.
+    print(f"\n[3/7] Period assignments...")
+    regen = True
+    if os.path.exists(PERIOD_ASSIGNMENTS_PATH):
+        print(f"      Loading {PERIOD_ASSIGNMENTS_PATH}...")
+        period_assignments, teacher_period_load, class_period_load = \
+            load_period_assignments(PERIOD_ASSIGNMENTS_PATH, events)
+        if len(period_assignments) == len(events):
+            violations = validate_period_assignments(
+                events, period_assignments, teacher_period_load, class_period_load
+            )
+            if violations:
+                print("      Violations in loaded file — regenerating:")
+                for v in violations:
+                    print(f"        {v}")
+            else:
+                print(f"      {len(period_assignments)} assignments loaded — valid.")
+                regen = False
+        else:
+            missing = len(events) - len(period_assignments)
+            print(f"      {missing} events missing from file — regenerating.")
 
-    # Step 4 — Suitability matrix
-    print("\n[4/9] Building suitability matrix...")
-    suitability = build_suitability_matrix(events, slot_lookup)
-    print(f"      Suitability built for {len(suitability)} events")
+    if regen:
+        print("      Generating period assignments (backtracking CSP)...")
+        period_assignments, teacher_period_load, class_period_load = \
+            generate_period_assignments(events)
+        violations = validate_period_assignments(
+            events, period_assignments, teacher_period_load, class_period_load
+        )
+        if violations:
+            print("      Period assignment violations:")
+            for v in violations:
+                print(f"        {v}")
+            print("      WARNING: proceeding with violations — check data and rerun.")
+        else:
+            print(f"      {len(period_assignments)} events assigned — no violations.")
+        save_period_assignments(period_assignments, events, PERIOD_ASSIGNMENTS_PATH)
 
-    # Step 5 — Placement
-    print("\n[5/9] Running placer...")
-    timetable_state, unplaced, _, stats = run_placer(
-        events, slots, slot_lookup, suitability, conflict_map
-    )
-
-    # Solver summary
-    phases_run      = 1 + stats["phase2_ran"] + stats["phase3_ran"]
-    total_slots     = NUM_CLASSES * DAYS_PER_WEEK * PERIODS_PER_DAY
+    # Step 4 — Day assignment
+    print(f"\n[4/7] Assigning days...")
+    timetable_state = assign_days(events, period_assignments, slot_lookup)
+    total_instances = sum(e["weekly_load"] for e in events)
     placed          = len(timetable_state)
-    scores          = stats["scores"]
-    avg_score       = sum(scores) / len(scores) if scores else 0
+    print(f"      {placed} / {total_instances} instances placed")
+
+    # Per-class fill summary
     slots_per_class = DAYS_PER_WEEK * PERIODS_PER_DAY
-
-    class_fill = defaultdict(int)
+    class_fill = {}
     for placement in timetable_state.values():
-        class_fill[placement["class"]] += 1
-
-    print(f"\n   ── Solver Summary ──")
-    print(f"   Phases run       : {phases_run} / 3")
-    print(f"   Total placed     : {placed}  |  Unplaced: {len(unplaced)}")
-    print(f"   Slot utilisation : {placed} / {total_slots}  ({placed/total_slots*100:.1f}%)")
-    print(f"   Score stats      : avg {avg_score:.1f}  |  min {min(scores)}  |  max {max(scores)}")
-    print(f"   Conflict pairs   : {total_conflicts}")
-    if stats["phase2_ran"]:
-        print(f"   Repair           : {stats['phase2_swaps']} swaps  |  {stats['phase2_repair_attempts']} slots tried")
-    if stats["phase3_ran"]:
-        print(f"   Backtrack        : {stats['phase3_undone']} placements undone")
-    print(f"\n   Per-class fill (placed / {slots_per_class} slots):")
+        cls = placement["class"]
+        class_fill[cls] = class_fill.get(cls, 0) + 1
     row = ""
     for i, section in enumerate(CLASS_ORDER):
-        row += f"  {section:>3} {class_fill[section]:>2}/{slots_per_class}"
+        row += f"  {section:>3} {class_fill.get(section, 0):>2}/{slots_per_class}"
         if (i + 1) % 4 == 0:
             print("  " + row)
             row = ""
     if row:
         print("  " + row)
 
-    # Step 6 — Post-processing (duty teachers + Free periods)
-    print("\n[6/9] Post-processing (duty assignments, Free periods)...")
+    # Step 5 — Post-processing (duty teachers + Free periods)
+    print("\n[5/7] Post-processing (duty assignments, Free periods)...")
     timetable_state = run_post_processing(
         timetable_state, events, CLASS_ORDER, DAYS_PER_WEEK, PERIODS_PER_DAY
     )
 
-    # Step 7 — Lab annotation
-    print("\n[7/9] Annotating lab periods...")
+    # Step 6 — Lab annotation
+    print("\n[6/7] Annotating lab periods...")
     timetable_state = assign_lab_periods(timetable_state)
 
-    # Step 8 — Export to Excel
-    print("\n[8/9] Exporting to Excel...")
+    # Step 7 — Export
+    print("\n[7/7] Exporting...")
     export_timetable(timetable_state, events, output_path="./timetable.xlsx")
-
-    # Step 9 — Generate HTML tools
-    print("\n[9/9] Generating HTML timetable tools...")
     generate_html(timetable_state, events, output_path="./Timetable_Tools.html")
 
     print("\n" + "=" * 50)

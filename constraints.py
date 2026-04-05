@@ -88,10 +88,8 @@ LAB_BLOCK_SUBJECTS = [
 
 FIXED_SLOT_SUBJECTS = []   # No fixed-slot subjects currently
 
-# Floats freely but excluded from Tuesday and Saturday
-FLOATING_SINGLE_SUBJECTS = [
-    "Library",
-]
+# Library has been removed from the schedule; no floating subjects remain.
+FLOATING_SINGLE_SUBJECTS = []
 
 # ---------------------------------------------------------------------------
 # Fixed Slot Rules

@@ -5,10 +5,10 @@ group_defaults:
   #
   # Solver constraints (why not every group reaches 36/36):
   #   • class_6_8  (4 sections: 7A,7B,8A,8B): Snigdha (Hindi×4=12/wk),
-  #     Ganesh (Sanskrit×4 + Odia×2 = 24/wk) teach across the full group → capped at 32/36.
+  #     Ganesh (Sanskrit×4 + Odia×2 = 24/wk) teach across the full group → capped at 31/36.
   #   • class_9_10 (4 sections): cross-group teachers Pratikshya (English 8A/8B+9A/9B)
-  #     and Sunil/JB → capped at 31/36.
-  #   • class_12  (1 section): lab subjects each at 6 → 34/36.
+  #     and Sunil/JB → capped at 30/36.
+  #   • class_12  (1 section): lab subjects each at 6 → 33/36.
 
   class_6_8:
     Math: 5
@@ -19,8 +19,7 @@ group_defaults:
     Odia: 3
     Sanskrit: 3
     CS: 3
-    Library: 1
-    # Total: 32  (4 free periods/week in a 6×6=36 slot week)
+    # Total: 31  (5 free periods/week in a 6×6=36 slot week)
 
   class_9_10:
     Math: 6
@@ -29,16 +28,14 @@ group_defaults:
     SST: 6
     Odia: 3
     IT: 4
-    Library: 1
-    # Total: 31  (5 free periods/week)
+    # Total: 30  (6 free periods/week)
 
   class_12:
     # Common senior subjects only — stream subjects defined per section below
     Math: 6
     English: 5
     IT: 4
-    Library: 1
-    # Total base: 16 — stream subjects added via section_overrides
+    # Total base: 15 — stream subjects added via section_overrides
 
 
 # Per-section overrides: keys here ADD to or REPLACE the group default.
@@ -56,8 +53,7 @@ section_overrides:
     Odia: 3
     Sanskrit: 3
     CS: 3
-    Library: 1
-    # Total: 32
+    # Total: 31
 
   7B:
     Math: 5
@@ -68,8 +64,7 @@ section_overrides:
     Odia: 3
     Sanskrit: 3
     CS: 3
-    Library: 1
-    # Total: 32
+    # Total: 31
 
   # ── Class 8 ──────────────────────────────────────────────────────────────
   8A:
@@ -81,8 +76,7 @@ section_overrides:
     Odia: 3
     Sanskrit: 3
     CS: 3
-    Library: 1
-    # Total: 32
+    # Total: 31
 
   8B:
     Math: 5
@@ -93,8 +87,7 @@ section_overrides:
     Odia: 3
     Sanskrit: 3
     CS: 3
-    Library: 1
-    # Total: 32
+    # Total: 31
 
   # ── Class 9 ──────────────────────────────────────────────────────────────
   9A:
@@ -104,8 +97,7 @@ section_overrides:
     SST: 6
     Odia: 3
     IT: 4
-    Library: 1
-    # Total: 31
+    # Total: 30
 
   9B:
     Math: 6
@@ -114,8 +106,7 @@ section_overrides:
     SST: 6
     Odia: 3
     IT: 4
-    Library: 1
-    # Total: 31
+    # Total: 30
 
   # ── Class 10 ─────────────────────────────────────────────────────────────
   10A:
@@ -125,8 +116,7 @@ section_overrides:
     SST: 6
     Odia: 3
     IT: 4
-    Library: 1
-    # Total: 31
+    # Total: 30
 
   10B:
     Math: 6
@@ -135,8 +125,7 @@ section_overrides:
     SST: 6
     Odia: 3
     IT: 4
-    Library: 1
-    # Total: 31
+    # Total: 30
 
   # ── Class 12 (Science stream) ─────────────────────────────────────────────
   12:
@@ -146,5 +135,4 @@ section_overrides:
     Math: 6
     English: 5
     IT: 4
-    Library: 1
-    # Total: 34  (2 free periods/week)
+    # Total: 33  (3 free periods/week)
