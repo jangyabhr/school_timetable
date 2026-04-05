@@ -46,7 +46,6 @@ HARD_CONSTRAINTS = [
     "class_no_parallel",      # Class cannot have two subjects at the same (day, period)
     "weekly_load_match",      # Each subject must be placed exactly weekly_load times
     "lab_must_be_double",     # Lab subjects must occupy two consecutive periods on the same day
-    "library_not_fixed",       # Library can float but not on Tuesday or Saturday
 ]
 
 # ---------------------------------------------------------------------------
@@ -90,20 +89,12 @@ LAB_BLOCK_SUBJECTS = [
 
 FIXED_SLOT_SUBJECTS = []   # No fixed-slot subjects currently
 
-# Floats freely but excluded from Tuesday and Saturday
-FLOATING_SINGLE_SUBJECTS = [
-    "Library",
-]
-
 # ---------------------------------------------------------------------------
 # Fixed Slot Rules
 # (CCA removed — no fixed-slot subjects remain in the solver)
 # ---------------------------------------------------------------------------
 
 FIXED_SLOTS = {}
-
-# Days on which Library and WE may NOT be placed
-FLOATING_EXCLUDED_DAYS = [TUESDAY, SATURDAY]
 
 # ---------------------------------------------------------------------------
 # Lab Double-Period Rules

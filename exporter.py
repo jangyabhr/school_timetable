@@ -30,7 +30,6 @@ SUBJECT_COLOURS = {
     "Physics":     "FFE1F5FE",  # pastel light-blue
     "Chemistry":   "FFFBE9E7",  # pastel deep-orange
     "Biology":     "FFE8F5E9",  # pastel light-green
-    "Library":     "FFF9FBE7",  # pastel lime
 }
 
 # Per-section pastel palette — used on teacher-wise sheets to colour by class

@@ -1,7 +1,7 @@
 # event_generator.py
 
 import yaml
-from constraints import FIXED_SLOT_SUBJECTS, FLOATING_SINGLE_SUBJECTS
+from constraints import FIXED_SLOT_SUBJECTS
 
 # Canonical class order — index in this list becomes class_idx
 CLASS_ORDER = ["6A", "6B", "7A", "7B", "8A", "8B",
@@ -81,43 +81,18 @@ def generate_cca_events(subject_load_by_group):
     return events
 
 
-def generate_floating_events(subject_load_by_group):
-    """
-    Library has no teacher and no entry in teacher_assignments.yaml.
-    Generate one event per section per floating subject from subject_load.
-    weekly_load = 1 per subject per section.
-    """
-    events = []
-
-    for section in CLASS_ORDER:
-        group = CLASS_GROUP_MAP[section]
-        for subject in FLOATING_SINGLE_SUBJECTS:
-            load = subject_load_by_group[group].get(subject, 0)
-            if load > 0:
-                events.append({
-                    "class":       section,
-                    "class_idx":   CLASS_IDX[section],
-                    "subject":     subject,
-                    "teacher":     None,
-                    "weekly_load": load,
-                })
-
-    return events
-
-
 def generate_all_events(
     assignments_path="teacher_assignments.yaml",
     subject_load_path="subject_load.yaml",
 ):
     """
     Main entry point. Loads both YAMLs and returns the full event list
-    (teacher-assigned subjects + Library).
+    (teacher-assigned subjects + CCA).
     """
     raw_assignments  = load_yaml(assignments_path)["assignments"]
     raw_subject_load = load_yaml(subject_load_path)["class_groups"]
 
     events  = generate_events(raw_assignments, raw_subject_load)
     events += generate_cca_events(raw_subject_load)
-    events += generate_floating_events(raw_subject_load)
 
     return events

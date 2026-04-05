@@ -16,7 +16,7 @@ TIMES   = [
     '6:40–7:20',  '7:20–8:00',  '8:00–8:40',
     '8:40–9:10',  '9:10–9:40',  '9:40–10:10',
 ]
-SPECIALS     = {'Free', 'Library'}
+SPECIALS     = {'Free'}
 LAB_SUBJECTS = {'CS', 'IT', 'Math', 'Science', 'Biology', 'Physics', 'Chemistry'}
 
 SUBJ_COLORS = {
@@ -24,10 +24,10 @@ SUBJ_COLORS = {
     'SST':       '#F9E79F', 'Hindi':     '#FADBD8', 'Odia':      '#F5CBA7',
     'Sanskrit':  '#D2B4DE', 'CS':        '#AED6F1', 'IT':        '#85C1E9',
     'Biology':   '#A8D8A8', 'Physics':   '#A9CCE3', 'Chemistry': '#A9DFBF',
-    'Free':      '#ECECEC', 'Library':   '#D5D8DC',
+    'Free':      '#ECECEC',
 }
 SUBJ_TEXT = {
-    'Free':    '#888888', 'Library': '#555555',
+    'Free':    '#888888',
 }
 
 _SEP = (',', ':')
@@ -573,7 +573,7 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
       🔍 Substitute Finder <span class="tbadge">{n_teachers} teachers</span>
     </button>
     <button class="tab-btn" onclick="switchTab('cov')" id="tab-cov">
-      📋 Period Coverage <span class="tbadge">Free·Library</span>
+      📋 Period Coverage <span class="tbadge">Free</span>
     </button>
     <button class="tab-btn" onclick="switchTab('master')" id="tab-master">
       📊 Master Timetable <span class="tbadge">{n_classes} classes</span>
@@ -625,9 +625,8 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
         <div class="day-grid" id="cov-day-grid"></div>
         <div class="slabel">3 · Filter type</div>
         <div class="spec-pills" id="cov-type-pills">
-          <button class="spec-pill sp-all active" data-type="all"     onclick="setTypeFilter('all')">All</button>
-          <button class="spec-pill sp-free"        data-type="Free"    onclick="setTypeFilter('Free')">— Free</button>
-          <button class="spec-pill sp-library"     data-type="Library" onclick="setTypeFilter('Library')">📚 Library</button>
+          <button class="spec-pill sp-all active" data-type="all"  onclick="setTypeFilter('all')">All</button>
+          <button class="spec-pill sp-free"        data-type="Free" onclick="setTypeFilter('Free')">— Free</button>
         </div>
         <button class="btn btn-teal" id="cov-find-btn" onclick="findCoverage()" disabled>
           📋 &nbsp;Show Available Teachers
@@ -802,7 +801,7 @@ function findCoverage(){{
   if(!slots.length){{document.getElementById('cov-res-body').innerHTML=`<div class="empty"><div class="eico">🎉</div><p>No ${{covType==='all'?'special':covType}} periods for Class ${{covCls}} on ${{covDay}}.</p></div>`;return;}}
   const allSl=COVERAGE[covCls]?.[covDay]||[],tC={{}};
   allSl.forEach(s=>tC[s.type]=(tC[s.type]||0)+1);
-  const tO=['Free','Library'],tCss={{Free:'st-free',Library:'st-library'}},tIco={{Free:'—',Library:'📚'}};
+  const tO=['Free'],tCss={{Free:'st-free'}},tIco={{Free:'—'}};
   let html=`<div class="summary"><span>Class <strong>${{covCls}}</strong> on <strong>${{covDay}}</strong>:</span>${{tO.filter(t=>tC[t]).map(t=>`<span class="spec-tag ${{tCss[t]}}">${{tIco[t]}} ${{tC[t]}}× ${{t}}</span>`).join('')}}<span class="legend"><span><span class="sdot" style="background:var(--green2)"></span>Free all day</span><span><span class="sdot" style="background:var(--amber2)"></span>Light day</span></span></div>`;
   slots.forEach(sl=>{{
     const hC=`ch-${{sl.type==='Free'?'f':'l'}}`;
@@ -872,13 +871,11 @@ function cellStyle(subj) {{
 }}
 
 function specialCellClass(subj) {{
-  const map = {{Free:'sp-free-cell',Library:'sp-library-cell'}};
-  return map[subj] || '';
+  return subj === 'Free' ? 'sp-free-cell' : '';
 }}
 
 function specialLabel(subj) {{
-  const map = {{Free:'— Free',Library:'📚 Library'}};
-  return map[subj] || subj;
+  return subj === 'Free' ? '— Free' : subj;
 }}
 
 function buildClassBody() {{
@@ -1031,7 +1028,7 @@ function updateStats() {{
 function buildLegend() {{
   const strip = document.getElementById('legend-strip');
   const subjects = ['Math','Science','English','SST','Hindi','Odia','Sanskrit','CS','IT','Biology','Physics','Chemistry'];
-  const specials = ['Free','Library'];
+  const specials = ['Free'];
   let html = '<span style="font-size:.68rem;font-weight:800;color:var(--ink3);margin-right:4px">SUBJECTS:</span>';
   subjects.forEach(s => {{
     const bg = SUBJ_COLORS[s]||'#eee', txt = SUBJ_TEXT[s]||'inherit';

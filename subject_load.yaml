@@ -24,8 +24,7 @@ class_groups:
     Odia: 3         # Snigdha: 24/wk (6A,6B)  |  Ganesh: 24/wk (7A,7B)  |  Subhasmita: 18/wk (8A,8B)
     Sanskrit: 3     # Ganesh: 6×3+2×3=24/wk
     ComputerScience: 3  # Usha: 2×3+2×4+2×4=22/wk  |  Sanjukta: 4×3+2×5=22/wk
-    Library: 1      # Floating — not Tuesday or Saturday
-    # Total: 32 (4 free periods/week)
+    # Total: 31 (5 free periods/week)
 
   class_9_10:
     Math: 6
@@ -34,8 +33,7 @@ class_groups:
     SST: 6          # +1 from 5  |  ANIL: 4×4+1×6=22/wk  |  Srikant: 2×4+2×6+1×6=26/wk
     Odia: 3         # Subhasmita: 6×3=18/wk across all 6 sections
     IT: 4           # Usha: 2×3+2×4+2×4=22/wk  |  Sanjukta: 4×3+2×5=22/wk
-    Library: 1      # Floating — not Tuesday or Saturday
-    # Total: 31 (5 free periods/week)
+    # Total: 30 (6 free periods/week)
 
   class_11_12:
     Physics: 6      # +1 from 5  |  Pratibha: 2×5+2×6=22/wk
@@ -44,5 +42,4 @@ class_groups:
     Math: 6         # Mira: 2×6+2×6=24/wk
     English: 5      # Radheshyam spans 6_8+11_12: 2×5+2×5=20/wk
     IT: 4           # Usha: 2×3+2×4+2×4=22/wk
-    Library: 1      # Floating — not Tuesday or Saturday
-    # Total: 34 (2 free periods/week)
+    # Total: 33 (3 free periods/week)

@@ -3,8 +3,7 @@
 # Post-processing steps run after the solver:
 #   A. Rebuild occupied set
 #   B. Compute teaching loads + teacher availability
-#   C. Assign duty teachers to Library slots (teacher=None)
-#   D. Mark remaining empty slots as "Free" with a duty teacher
+#   C. Mark remaining empty slots as "Free" with a duty teacher
 
 from event_generator import CLASS_ORDER, CLASS_IDX
 
@@ -13,7 +12,6 @@ def run_post_processing(timetable_state, events, class_order,
                         days_per_week, periods_per_day):
     """
     Returns the updated timetable_state with:
-      - Duty teacher assigned to Library slots
       - Remaining empty slots filled as "Free" with a duty teacher
     """
 
@@ -71,25 +69,7 @@ def run_post_processing(timetable_state, events, class_order,
         return best
 
     # ------------------------------------------------------------------
-    # Step C — Assign duty teachers to teacher=None slots (Library)
-    # ------------------------------------------------------------------
-    none_keys = [
-        k for k, p in timetable_state.items()
-        if p.get("teacher") is None
-    ]
-    none_keys.sort(key=lambda k: (
-        timetable_state[k]["class_idx"],
-        timetable_state[k]["day"],
-        timetable_state[k]["period"],
-    ))
-
-    for k in none_keys:
-        p = timetable_state[k]
-        chosen = assign_duty(p["day"], p["period"])
-        timetable_state[k]["teacher"] = chosen
-
-    # ------------------------------------------------------------------
-    # Step D — Mark remaining empty slots as "Free" with duty teacher
+    # Step C — Mark remaining empty slots as "Free" with duty teacher
     # ------------------------------------------------------------------
     BASE_FREE_IDX = len(events)
     counter = 0

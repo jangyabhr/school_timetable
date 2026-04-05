@@ -185,7 +185,7 @@ def excel_to_timetable_state(wb):
     for name in teacher_sheet_names:
         teacher_data[name] = _parse_teacher_sheet(wb[name])
 
-    # ── Cross-reference: fill teacher for Free/Library cells ─────────────────
+    # ── Cross-reference: fill teacher for Free cells ─────────────────────────
     # Build a lookup: (day, period, cls) → teacher_name
     duty_lookup = {}   # (day, period, cls) → teacher_name
     for teacher_name, grid in teacher_data.items():
