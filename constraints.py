@@ -38,16 +38,14 @@ FRIDAY    = 4
 SATURDAY  = 5
 
 # ---------------------------------------------------------------------------
-# Hard Constraints
+# Hard Constraints  (enforced in suitability_matrix.py, placer.py, scoring.py)
 # ---------------------------------------------------------------------------
-
-HARD_CONSTRAINTS = [
-    "teacher_no_parallel",    # Teacher cannot be in two classes at the same (day, period)
-    "class_no_parallel",      # Class cannot have two subjects at the same (day, period)
-    "weekly_load_match",      # Each subject must be placed exactly weekly_load times
-    "lab_must_be_double",     # Lab subjects must occupy two consecutive periods on the same day
-    "library_not_fixed",       # Library can float but not on Tuesday or Saturday
-]
+# • teacher_no_parallel  — same teacher cannot be in two classes at same (day, period)
+# • class_no_parallel    — same class cannot have two subjects at same (day, period)
+# • weekly_load_match    — each event must be placed exactly weekly_load times
+# • library_not_fixed    — Library floats freely but not on Tuesday or Saturday
+# • section_period_lock  — (section, subject) pairs in SECTION_PERIOD_LOCKS are
+#                          restricted to their declared period index (see below)
 
 # ---------------------------------------------------------------------------
 # Soft Constraints  (score deltas used by scoring.py)

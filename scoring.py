@@ -2,7 +2,6 @@
 
 from constraints import (
     SOFT_CONSTRAINTS, ANCHOR_SUBJECTS, LAB_BLOCK_SUBJECTS, MONDAY,
-    LAB_ALLOWED_START_PERIODS, FIXED_SLOT_SUBJECTS, FLOATING_SINGLE_SUBJECTS,
     DAY_SPREAD_SUBJECTS as PERIOD_PRIORITY_SUBJECTS,
 )
 
@@ -62,8 +61,7 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
         if teacher_periods_today and (period - 1) in teacher_periods_today:
             score += SOFT_CONSTRAINTS["teacher_gap"]
 
-    # Soft: lab subjects prefer early morning start (period 0 = P1→P2, or period 1 = P2→P3).
-    # Periods 0–2 are the 40-min periods; prefer labs in morning pairs.
+    # Soft: lab subjects prefer early morning start (period 0 = P1→P2, or period 1 = P2→P3)
     if event["subject"] in LAB_BLOCK_SUBJECTS:
         if period in [0, 1]:
             score += SOFT_CONSTRAINTS["lab_morning_prefer"]
@@ -71,12 +69,12 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
     # Soft: avoid placing core subjects in last period (period 5, any day)
     if period == 5 and event["subject"] in _REPETITION_SUBJECTS:
         score += SOFT_CONSTRAINTS["avoid_last_period"]
-    # Soft: extra penalty on Monday specifically
     if day == MONDAY and period == 5 and event["subject"] in ANCHOR_SUBJECTS:
         score += SOFT_CONSTRAINTS["avoid_monday_last"]
 
     # Soft: reward placing core subjects at the same period as existing instances
-    # (drives "Math always at period 1" style repetition)
+    # (drives "Math always at P1" style repetition).
+    # Math/Science get an extra bonus on top to strengthen their period lock.
     if event["subject"] in _REPETITION_SUBJECTS:
         existing_periods = [
             p["period"]
@@ -84,24 +82,12 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
             if e_idx == event_idx
         ]
         if existing_periods:
-            # Mode = most common period already placed
             mode_period = max(set(existing_periods), key=existing_periods.count)
             if period == mode_period:
                 score += SOFT_CONSTRAINTS["period_repeat"]
+                if event["subject"] in PERIOD_PRIORITY_SUBJECTS:
+                    score += SOFT_CONSTRAINTS["period_repeat_priority"]
             elif abs(period - mode_period) == 1:
                 score += SOFT_CONSTRAINTS["period_near_repeat"]
-
-    # Soft: extra period-consistency bonus for Math and Science
-    # (strengthens the "Math always at period 1" lock for these subjects)
-    if event["subject"] in PERIOD_PRIORITY_SUBJECTS:
-        existing_periods = [
-            p["period"]
-            for (e_idx, _inst), p in timetable_state.items()
-            if e_idx == event_idx
-        ]
-        if existing_periods:
-            mode_period = max(set(existing_periods), key=existing_periods.count)
-            if period == mode_period:
-                score += SOFT_CONSTRAINTS["period_repeat_priority"]
 
     return score

@@ -6,7 +6,6 @@ from constraints import (
     PERIODS_PER_DAY,
     LAB_BLOCK_SUBJECTS,
     FIXED_SLOT_SUBJECTS,
-    FIXED_SLOTS,
     SECTION_PERIOD_LOCKS,
 )
 
@@ -45,7 +44,6 @@ def _candidate_slots(event, event_idx, slots, slot_lookup,
         # Conflicting event placed at same (day, period)
         blocked = False
         for ci in conflict_map.get(event_idx, set()):
-            p = timetable_state.get((ci, 0))   # first instance
             # check all instances of conflicting event
             for inst_key, placement in timetable_state.items():
                 if inst_key[0] == ci:

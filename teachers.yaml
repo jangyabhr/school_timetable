@@ -49,7 +49,7 @@ teachers:
     capacity: 24       # load: 12  (Hindi: 7A,7B,8A,8B)
     subjects: [Hindi, Odia]
   Ganesh:
-    capacity: 26       # load: 18  (Sanskrit: 7A,7B,8A,8B + Odia: 7A,7B)
+    capacity: 26       # load: 24  (Sanskrit: 7A,7B,8A,8B×3 + Odia: 7A,7B×3)
     subjects: [Sanskrit, Odia]
   Subhasmita:
     capacity: 22       # load: 18  (Odia: 8A,8B,9A,9B,10A,10B)

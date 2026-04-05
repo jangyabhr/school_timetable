@@ -6,7 +6,7 @@
 #   C. Assign duty teachers to Library slots (teacher=None)
 #   D. Mark remaining empty slots as "Free" with a duty teacher
 
-from event_generator import CLASS_ORDER, CLASS_IDX
+from event_generator import CLASS_ORDER
 
 
 def run_post_processing(timetable_state, events, class_order,

@@ -1,167 +1,127 @@
 # Solver Strategy
 
 ## Timetable Scale
-- Classes: 12 (6A, 6B, 7A, 7B, 8A, 8B, 9A, 9B, 10A, 10B, 11, 12)
-- Days: 6 per week (Monday=0 … Saturday=5)
-- Periods: 8 per day (0–7)
-- Total slots: 12 × 6 × 8 = 576 per week
+- **Classes:** 9 (12, 10B, 10A, 9B, 9A, 8B, 8A, 7B, 7A — in CLASS_ORDER)
+- **Days:** 6 per week (Monday=0 … Saturday=5)
+- **Periods:** 6 per day (P1 06:40 – P6 10:10)
+- **Total slots:** 9 × 6 × 6 = 324 per week
 
 
 ## Pipeline Overview
 
 ### Step 1 — Build Slot Index (`slot_index.py`)
-Call `build_slot_index(num_classes=12, days_per_week=6, periods_per_day=8)`.
-Produces:
-- `slots`: flat list of 576 slot dicts `{slot_id, class_idx, day, period}`
-- `slot_lookup`: dict mapping `(class_idx, day, period)` → `slot_id`
-
-Every event placement, conflict check, and suitability filter references slot_ids.
+`build_slot_index(num_classes=9, days_per_week=6, periods_per_day=6)`
+- `slots`: flat list of 324 dicts `{slot_id, class_idx, day, period}`
+- `slot_lookup`: `(class_idx, day, period)` → `slot_id`
 
 
 ### Step 2 — Generate Events (`event_generator.py`)
-Call `generate_all_events(assignments_path, subject_load_path)`.
-Loads `teacher_assignments.yaml` and `subject_load.yaml`.
+`generate_all_events(assignments_path, subject_load_path, class_groups_path)`
 
-Each event is an atomic scheduling unit:
-```
-{ class, class_idx, subject, teacher, weekly_load }
-```
-- One event per (section, subject) pair from teacher_assignments.yaml
-- CCA events generated separately via `generate_cca_events()` — teacher=None,
-  weekly_load=2, placed on Saturday periods 6–7
-- Each event is placed `weekly_load` times by the placer
+Loads all three YAMLs. Resolves per-section load via `group_defaults` + `section_overrides`.
+Assignments for removed sections (6A, 6B, 11) are silently skipped.
+
+Each event: `{class, class_idx, subject, teacher, weekly_load}`
+Teacher names are bare at this point (titles applied in Step 2.6).
+
+
+### Step 2.5 — Assignment Validation (`assignment_validator.py`)
+Checks teacher capacity and subject qualification before the solver runs.
+Aborts with a clear error message if any teacher is over-assigned.
+
+
+### Step 2.6 — Apply Teacher Titles (`teacher_titles.py`)
+Maps bare names → "sir" / "ma'am" display names (e.g. "ANIL" → "ANIL sir").
+Applied once here; titled names propagate through all downstream steps.
 
 
 ### Step 3 — Build Conflict Map (`conflict_builder.py`)
-Call `build_conflict_map(events)`.
 Two events conflict if they share a teacher OR share a class section.
-CCA events (teacher=None) are excluded from teacher-clash checks.
+Library events (teacher=None) skip teacher-clash checks.
 Result: `event_idx → set of conflicting event_idxs`
 
 
 ### Step 4 — Build Suitability Matrix (`suitability_matrix.py`)
-Call `build_suitability_matrix(events, slot_lookup)`.
-Maps each event to its list of allowed slot_ids:
+Maps each event to its allowed slot_ids:
 
-| Subject type          | Allowed slots                                  |
-|-----------------------|------------------------------------------------|
-| Game                  | Tuesday period 7 only (fixed)                  |
-| CCA                   | Saturday periods 6–7 only (fixed)              |
-| Library, WE           | Any day except Tuesday and Saturday (floating) |
-| Physics/Chemistry/Bio | Periods 0–6 only (lab double-period fits)      |
-| All others            | All 48 slots for their class                   |
+| Subject type               | Allowed slots                                      |
+|----------------------------|----------------------------------------------------|
+| Fixed-slot (none currently)| Exact (day, period) from FIXED_SLOTS               |
+| Library                    | All periods except Tuesday and Saturday (floating) |
+| Physics / Chemistry / Bio  | Periods 0–4 only (lab double-period fits)          |
+| All others                 | All 36 slots for their class                       |
 
-Suitability filters run before scoring — only passing slot_ids reach score_slot.
-
-
-### Step 5 — Sort Events by Constraint Density (MRV Heuristic)
-Sort events descending by: `conflict_count × weekly_load`
-Most-constrained events placed first to minimise backtracking.
-
-Highest-priority events:
-- Nandini (Math, 6A+6B+7A+7B) — 4 sections, weekly_load=6
-- JB (Math, 8A+8B+9A+9B) — 4 sections, weekly_load=6–7
-- Snigdha (Hindi+Odia, 6A–8B) — 6 sections across 2 subjects
-- Ganesh (Sanskrit+Odia, 6A–8B) — 6 sections across 2 subjects
-- Sanjukta (ComputerScience, 6A–8B) — 6 sections
-- Lab subjects for classes 11 and 12 (double-period constraint)
+`SECTION_PERIOD_LOCKS` is applied as an additional hard filter on top of subject-type rules.
+Current locks: Biology/12→P1, Math/9A→P1, English/9B→P1, Math/12→P2.
 
 
-### Step 6 — Greedy Placement Loop
-`timetable_state` is a dict: `(event_idx, instance)` → placement dict.
-It is the single mutable structure updated throughout placement.
+### Step 5 — Greedy Placement (`placer.py`)
+Events sorted into five MRV priority tiers (most constrained first):
 
-For each event (MRV order), repeat `weekly_load` times:
-```
-candidate_slots = [
-    slot for slot in slots
-    if slot_id in suitability[event_idx]
-    and (class_idx, day, period) not in occupied
-    and no conflicting event placed at (day, period)
-]
-scored = [(score_slot(...), slot) for slot in candidate_slots if score is not None]
-best = max(scored, key=score)
-place event at best; update timetable_state and occupied set
-```
+1. Fixed-slot subjects (currently none)
+2. Period-locked events (SECTION_PERIOD_LOCKS) — fewest allowed slots first
+3. Lab subjects — Physics > Chemistry > Biology
+4. Bottleneck teachers (≥5 sections) — Subhasmita ma'am (6), Sanjukta ma'am (6), Srikant ma'am (5)
+5. All others — teacher load DESC, class_idx DESC, fewest suitability slots, conflict×load DESC
+
+For each event × weekly_load instances: score all candidate slots, place at best.
+Falls back to Phase 2 (repair: displacing lower-scored events) and Phase 3 (limited backtrack: undo last 30, retry) if any events remain unplaced.
 
 
-### Step 7 — Scoring (`scoring.py`)
-`score_slot(event, slot, timetable_state, suitability, conflict_map, event_idx)`
-Returns None for hard violations, numeric score for valid slots.
+### Step 6 — Scoring (`scoring.py`)
+`score_slot()` returns `None` for hard violations, numeric score otherwise.
 
-Hard checks (returns None):
-- slot_id not in suitability[event_idx]
-- A conflicting event is placed at the same (day, period)
-
-Soft scoring (additive):
-| Condition                                        | Weight |
-|--------------------------------------------------|--------|
-| Anchor subject in period 0–2                     |    +10 |
-| Same subject already placed for class today      |     −5 |
-| Teacher has back-to-back period (no gap)         |     −3 |
-| Lab subject starting in period 0–3               |     +8 |
-| Anchor subject in last period on Monday          |     −4 |
-
-All weights defined in `constraints.SOFT_CONSTRAINTS`.
+| Soft constraint                                        | Weight |
+|--------------------------------------------------------|--------|
+| Anchor subject (Math/Sci/Eng/SST) in morning P1–P3     |    +10 |
+| Lab subject starting in P1–P2                          |     +8 |
+| Core subject at same period as existing instances      |    +18 |
+| Core subject within ±1 period of mode                  |     +8 |
+| Math/Science extra period-consistency bonus            |     +8 |
+| Same subject twice in a day for same class             |    −20 |
+| Core subject in last period (P6, any day)              |    −10 |
+| Core subject in last period on Monday                  |     −4 |
+| Teacher back-to-back periods                           |     −3 |
 
 
-### Step 8 — Repair Pass
-After greedy loop, for each unplaced event-instance:
-1. Find valid candidate slots (suitability + no hard conflict)
-2. Find a placed event in that slot with a lower score than ours
-3. If found: displace it, place ours, re-queue the displaced event
-4. Cap at 20 attempts per event to prevent infinite loops
+### Step 7 — Post-Processing (`post_processor.py`)
+- Assigns a duty teacher to each Library slot (teacher=None → lowest-load available)
+- Fills remaining empty slots as "Free" with a duty teacher
 
 
-### Step 9 — Limited Backtracking
-Triggered only if repair pass leaves events unplaced.
-Undo last 30 placements from placement stack and retry.
-Do not use full exhaustive backtracking — won't terminate at this scale.
+### Step 8 — Lab Annotation (`lab_assigner.py`)
+Marks one instance per (section, subject) as `is_lab=True`.
+Respects room conflicts: CS lab shared by CS (7A–8B), IT (9A–12), Math (all 9 sections).
 
 
-### Step 10 — Validation Report
-Hard checks before export:
-- [ ] No teacher in two places at same (day, period)
-- [ ] No class in two places at same (day, period)
-- [ ] Each event placed exactly weekly_load times
-- [ ] No lab subject starting at period 7 (double overflow)
-- [ ] Game placed only at Tuesday period 7
-- [ ] CCA placed only at Saturday periods 6 and 7
-
-Do not export if any violation exists.
-
-
-### Step 11 — Excel Export (`exporter.py`)
-One sheet per class section (12 sheets) + Legend sheet.
-Rows = periods 0–7, Columns = Mon–Sat.
-Cell value = "Subject\nTeacher" (teacher omitted for CCA).
-
-Colour coding:
-- Light blue  — Anchor subjects (Math, Science, English, SST)
-- Light green — Lab subjects (Physics, Chemistry, Biology)
-- Light yellow — Fixed slots (Game, CCA)
-- Light orange — Floating singles (Library, WE)
-- Light grey  — Empty period
+### Step 9 — Export
+- `exporter.py` → `timetable.xlsx` (one sheet per section + teacher load summary + dashboard)
+- `html_exporter.py` → `Timetable_Tools.html` (Substitute Finder, Period Coverage,
+  Master Timetable, Teacher Loads — all interactive)
 
 
 ## File Dependency Map
 ```
 teacher_assignments.yaml ─┐
-subject_load.yaml         ─┼─► event_generator.py ──► events list
-class_groups.yaml         ─┘         (+ CCA events)       │
-                                                           │
-constraints.py ─────────────────────────────────────┐     │
-                                                    │     ▼
-slot_index.py ──────────────────────────────► slot index (576 slots)
-                                                    │     │
-conflict_builder.py ◄───────────────────────────────┼─────┤
-suitability_matrix.py ◄─────────────────────────────┘     │
-                                                           │
-                     ┌─────────────────────────────────────┘
-                     ▼
-               MRV sort → greedy placer → timetable_state
-                     │         (event_idx, instance) keys
-               scoring.py (score_slot)
-                     │
-               repair pass → backtrack → validation → exporter.py → timetable.xlsx
+subject_load.yaml         ─┼─► event_generator.py ──► events (bare names)
+class_groups.yaml         ─┘                              │
+                                                          │ validate
+teachers.yaml ──────────────► assignment_validator.py ◄──┤
+                                                          │ apply titles
+teacher_titles.py ──────────────────────────────────────► │
+                                                          ▼
+                                                   events (titled names)
+constraints.py ──────────────────────────┐             │
+                                         │             ▼
+slot_index.py ──────────────────────► slot index ──► placer.py
+                                         │           (+ conflict_builder,
+                                         │             suitability_matrix,
+                                         └──────────────scoring)
+                                                          │
+                                                    timetable_state
+                                                          │
+                                          post_processor → lab_assigner
+                                                          │
+                                              exporter → timetable.xlsx
+                                           html_exporter → Tools.html
 ```

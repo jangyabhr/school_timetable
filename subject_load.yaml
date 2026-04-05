@@ -4,11 +4,11 @@ group_defaults:
   # documentation of the curriculum baseline and onboarding reference.
   #
   # Solver constraints (why not every group reaches 36/36):
-  #   • class_6_8  (4 sections: 7A,7B,8A,8B): Snigdha (Hindi×4 + Odia×0 = 12/wk),
-  #     Ganesh (Sanskrit×4 + Odia×2 = 18/wk) teach across the full group → capped at 32/36.
-  #   • class_9_10 (4 sections): cross-group teachers like Pratikshya (English 8A/8B+9A/9B)
+  #   • class_6_8  (4 sections: 7A,7B,8A,8B): Snigdha (Hindi×4=12/wk),
+  #     Ganesh (Sanskrit×4 + Odia×2 = 24/wk) teach across the full group → capped at 32/36.
+  #   • class_9_10 (4 sections): cross-group teachers Pratikshya (English 8A/8B+9A/9B)
   #     and Sunil/JB → capped at 31/36.
-  #   • class_11_12 (1 section: 12 only): lab subjects each at 6 → 34/36.
+  #   • class_12  (1 section): lab subjects each at 6 → 34/36.
 
   class_6_8:
     Math: 5
@@ -32,7 +32,7 @@ group_defaults:
     Library: 1
     # Total: 31  (5 free periods/week)
 
-  class_11_12:
+  class_12:
     # Common senior subjects only — stream subjects defined per section below
     Math: 6
     English: 5
