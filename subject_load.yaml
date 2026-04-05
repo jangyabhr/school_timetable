@@ -18,7 +18,7 @@ group_defaults:
     Hindi: 3
     Odia: 3
     Sanskrit: 3
-    ComputerScience: 3
+    CS: 3
     Library: 1
     # Total: 32  (4 free periods/week in a 6×6=36 slot week)
 
@@ -55,7 +55,7 @@ section_overrides:
     Hindi: 3
     Odia: 3
     Sanskrit: 3
-    ComputerScience: 3
+    CS: 3
     Library: 1
     # Total: 32
 
@@ -67,7 +67,7 @@ section_overrides:
     Hindi: 3
     Odia: 3
     Sanskrit: 3
-    ComputerScience: 3
+    CS: 3
     Library: 1
     # Total: 32
 
@@ -80,7 +80,7 @@ section_overrides:
     Hindi: 3
     Odia: 3
     Sanskrit: 3
-    ComputerScience: 3
+    CS: 3
     Library: 1
     # Total: 32
 
@@ -92,7 +92,7 @@ section_overrides:
     Hindi: 3
     Odia: 3
     Sanskrit: 3
-    ComputerScience: 3
+    CS: 3
     Library: 1
     # Total: 32
 

@@ -5,7 +5,7 @@ from constraints import FIXED_SLOT_SUBJECTS, FLOATING_SINGLE_SUBJECTS
 
 # Canonical class order — index in this list becomes class_idx.
 # Sections 6A, 6B, and 11 have been removed.
-CLASS_ORDER = ["7A", "7B", "8A", "8B", "9A", "9B", "10A", "10B", "12"]
+CLASS_ORDER = ["12", "10B", "10A", "9B", "9A", "8B", "8A", "7B", "7A"]
 
 CLASS_IDX = {section: i for i, section in enumerate(CLASS_ORDER)}
 

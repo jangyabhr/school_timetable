@@ -7,6 +7,7 @@ from constraints import (
     LAB_BLOCK_SUBJECTS,
     FIXED_SLOT_SUBJECTS,
     FIXED_SLOTS,
+    SECTION_PERIOD_LOCKS,
 )
 
 MAX_REPAIR_ATTEMPTS = 20   # per unplaced event-instance
@@ -114,24 +115,33 @@ def _teacher_section_count(events):
 
 def _mrv_order(events, conflict_map, suitability):
     """
-    Sort events into four groups, in this order:
+    Sort events into five groups, in this order:
       1. Fixed-slot subjects — must go first
-      2. Lab subjects (Physics > Chemistry > Biology) — higher class_idx first within subject
-      3. Cross-section bottleneck teachers (≥5 sections) — placed before other regular events
+      2. Period-locked events (SECTION_PERIOD_LOCKS) — restricted to specific period(s);
+         must claim those slots before any other event fills them
+      3. Lab subjects (Physics > Chemistry > Biology) — higher class_idx first within subject
+      4. Cross-section bottleneck teachers (≥5 sections) — placed before other regular events
          so they claim (day,period) combos before the pool is exhausted; sorted by
          section_count DESC, class_idx DESC, conflict×load DESC
-      4. Regular subjects — sorted by teacher load DESC, class_idx DESC,
+      5. Regular subjects — sorted by teacher load DESC, class_idx DESC,
          fewest suitability slots first, highest conflict×load first
     """
     teacher_load = _teacher_total_load(events)
     teacher_sections = _teacher_section_count(events)
     indexed = list(enumerate(events))
 
-    fixed   = [(i, e) for i, e in indexed if e["subject"] in FIXED_SLOT_SUBJECTS]
-    labs    = [(i, e) for i, e in indexed if e["subject"] in LAB_BLOCK_SUBJECTS]
-    regular = [(i, e) for i, e in indexed
-               if e["subject"] not in FIXED_SLOT_SUBJECTS
-               and e["subject"] not in LAB_BLOCK_SUBJECTS]
+    def _is_period_locked(e):
+        return (e["class"], e["subject"]) in SECTION_PERIOD_LOCKS
+
+    fixed        = [(i, e) for i, e in indexed if e["subject"] in FIXED_SLOT_SUBJECTS]
+    period_locked= [(i, e) for i, e in indexed
+                    if _is_period_locked(e) and e["subject"] not in FIXED_SLOT_SUBJECTS]
+    labs         = [(i, e) for i, e in indexed
+                    if e["subject"] in LAB_BLOCK_SUBJECTS and not _is_period_locked(e)]
+    regular      = [(i, e) for i, e in indexed
+                    if e["subject"] not in FIXED_SLOT_SUBJECTS
+                    and e["subject"] not in LAB_BLOCK_SUBJECTS
+                    and not _is_period_locked(e)]
 
     # Fixed slots: higher class_idx first
     fixed.sort(key=lambda x: x[1]["class_idx"], reverse=True)
@@ -171,7 +181,12 @@ def _mrv_order(events, conflict_map, suitability):
         reverse=True,
     )
 
-    return fixed + labs + bottleneck + normal
+    # Period-locked: sorted by fewest allowed slots (most constrained first), then class_idx DESC
+    period_locked.sort(
+        key=lambda x: (len(suitability.get(x[0], [])), -x[1]["class_idx"]),
+    )
+
+    return fixed + period_locked + labs + bottleneck + normal
 
 
 # ---------------------------------------------------------------------------

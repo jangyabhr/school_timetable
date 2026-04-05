@@ -8,6 +8,7 @@ from constraints import (
     FLOATING_SINGLE_SUBJECTS,
     LAB_BLOCK_SUBJECTS,
     LAB_ALLOWED_START_PERIODS,
+    SECTION_PERIOD_LOCKS,
 )
 
 
@@ -20,19 +21,28 @@ def build_suitability_matrix(events, slot_lookup):
     - Floating singles (Library): all periods except Tuesday and Saturday
     - Lab subjects (Physics, Chemistry, Biology): LAB_ALLOWED_START_PERIODS only
     - All other subjects: all 6 teaching periods (all periods are teaching)
-    Note: Game has no solver event; it is placed by post_processor.
+
+    Additionally, SECTION_PERIOD_LOCKS is applied as a hard filter:
+    if (section, subject) appears in SECTION_PERIOD_LOCKS, only the listed
+    period indices are allowed, regardless of subject type.
     """
 
     suitability = {}
 
     for i, event in enumerate(events):
-        subject  = event["subject"]
-        class_idx = event["class_idx"]   # integer index, set during event generation
+        subject   = event["subject"]
+        class_idx = event["class_idx"]
+        section   = event["class"]
         allowed_slot_ids = []
+
+        # Per-section period lock — restricts allowed periods for this (section, subject)
+        locked_periods = SECTION_PERIOD_LOCKS.get((section, subject))
 
         # ── Fixed-slot subjects ──────────────────────────────────────────────
         if subject in FIXED_SLOTS:
             for (day, period) in FIXED_SLOTS[subject]:
+                if locked_periods is not None and period not in locked_periods:
+                    continue
                 key = (class_idx, day, period)
                 if key in slot_lookup:
                     allowed_slot_ids.append(slot_lookup[key])
@@ -43,6 +53,8 @@ def build_suitability_matrix(events, slot_lookup):
                 if day in FLOATING_EXCLUDED_DAYS:
                     continue
                 for period in range(PERIODS_PER_DAY):
+                    if locked_periods is not None and period not in locked_periods:
+                        continue
                     key = (class_idx, day, period)
                     if key in slot_lookup:
                         allowed_slot_ids.append(slot_lookup[key])
@@ -51,6 +63,8 @@ def build_suitability_matrix(events, slot_lookup):
         elif subject in LAB_BLOCK_SUBJECTS:
             for day in range(DAYS_PER_WEEK):
                 for period in LAB_ALLOWED_START_PERIODS:
+                    if locked_periods is not None and period not in locked_periods:
+                        continue
                     key = (class_idx, day, period)
                     if key in slot_lookup:
                         allowed_slot_ids.append(slot_lookup[key])
@@ -59,6 +73,8 @@ def build_suitability_matrix(events, slot_lookup):
         else:
             for day in range(DAYS_PER_WEEK):
                 for period in range(PERIODS_PER_DAY):
+                    if locked_periods is not None and period not in locked_periods:
+                        continue
                     key = (class_idx, day, period)
                     if key in slot_lookup:
                         allowed_slot_ids.append(slot_lookup[key])

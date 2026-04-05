@@ -25,7 +25,7 @@ SUBJECT_COLOURS = {
     "Hindi":       "FFFFE0B2",  # pastel amber
     "Odia":        "FFFCE4EC",  # pastel pink
     "Sanskrit":    "FFE8EAF6",  # pastel indigo
-    "ComputerScience": "FFE0F2F1",  # pastel teal
+    "CS":          "FFE0F2F1",  # pastel teal
     "IT":          "FFF3E5F5",  # pastel purple
     "Physics":     "FFE1F5FE",  # pastel light-blue
     "Chemistry":   "FFFBE9E7",  # pastel deep-orange

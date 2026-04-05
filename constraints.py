@@ -102,6 +102,16 @@ FLOATING_SINGLE_SUBJECTS = [
 
 FIXED_SLOTS = {}
 
+# Per-(section, subject) period restrictions applied in suitability_matrix.py.
+# Key: (section_name, subject_name) → list of allowed period indices (0-based).
+# Period 0 = P1 (06:40–07:20), period 1 = P2 (07:20–08:00), etc.
+SECTION_PERIOD_LOCKS = {
+    ("12",  "Biology"): [0],   # Biology class 12 always in P1
+    ("9A",  "Math"):    [0],   # Math 9A always in P1
+    ("9B",  "English"): [0],   # English 9B always in P1
+    ("12",  "Math"):    [1],   # Math class 12 always in P2
+}
+
 # Days on which Library and WE may NOT be placed
 FLOATING_EXCLUDED_DAYS = [TUESDAY, SATURDAY]
 

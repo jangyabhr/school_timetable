@@ -55,6 +55,12 @@ def main():
     except FileNotFoundError:
         print("  WARNING: teachers.yaml not found — skipping capacity validation")
 
+    # Step 2.6 — Apply teacher display titles (sir / ma'am)
+    from teacher_titles import TEACHER_TITLES
+    for event in events:
+        if event.get("teacher"):
+            event["teacher"] = TEACHER_TITLES.get(event["teacher"], event["teacher"])
+
     # Step 3 — Conflict map
     print("\n[3/9] Building conflict map...")
     conflict_map = build_conflict_map(events)

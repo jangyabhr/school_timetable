@@ -55,8 +55,8 @@ teachers:
     capacity: 22       # load: 18  (Odia: 8A,8B,9A,9B,10A,10B)
     subjects: [Odia]
   Usha:
-    capacity: 22       # load: 12  (IT: 9A,9B,12)
-    subjects: [ComputerScience, IT]
+    capacity: 26       # load: 16  (IT: 9A,9B,10B,12)
+    subjects: [CS, IT]
   Sanjukta:
-    capacity: 24       # load: 20  (CS: 7A,7B,8A,8B + IT: 10A,10B)
-    subjects: [ComputerScience, IT]
+    capacity: 24       # load: 16  (CS: 7A,7B,8A,8B + IT: 10A)
+    subjects: [CS, IT]
