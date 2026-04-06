@@ -1,131 +1,116 @@
 group_defaults:
-  # Fallback load used when a section has no override entry.
-  # All active sections have explicit overrides below, so these serve as
-  # documentation of the curriculum baseline and onboarding reference.
-  #
-  # Solver constraints (why not every group reaches 36/36):
-  #   • class_6_8  (4 sections: 7A,7B,8A,8B): Snigdha (Hindi×4=12/wk),
-  #     Ganesh (Sanskrit×4 + Odia×2 = 24/wk) teach across the full group → capped at 31/36.
-  #   • class_9_10 (4 sections): cross-group teachers Pratikshya (English 8A/8B+9A/9B)
-  #     and Sunil/JB → capped at 30/36.
-  #   • class_12  (1 section): lab subjects each at 6 → 33/36.
-
   class_6_8:
-    Math: 5
-    Science: 5
-    English: 5
-    SST: 4
+    Math: 6
+    Science: 6
+    English: 6
+    SST: 6
     Hindi: 3
     Odia: 3
     Sanskrit: 3
     CS: 3
-    # Total: 31  (5 free periods/week in a 6×6=36 slot week)
+    # Total: 36  (full week — CS stays at 3 because 4×6+3×3 = 33, plus CS 3 = 36)
 
   class_9_10:
     Math: 6
     Science: 6
-    English: 5
+    English: 6
     SST: 6
     Odia: 3
-    IT: 4
-    # Total: 30  (6 free periods/week)
+    IT: 6
+    # Total: 33  (3 free periods/week)
 
   class_12:
-    # Common senior subjects only — stream subjects defined per section below
     Math: 6
-    English: 5
-    IT: 4
-    # Total base: 15 — stream subjects added via section_overrides
+    English: 6
+    IT: 6
+    # Total base: 18 — stream subjects added via section_overrides
 
 
-# Per-section overrides: keys here ADD to or REPLACE the group default.
-# All 9 active sections have full entries here for transparency and
-# independent editability — change one section without affecting others.
 section_overrides:
 
   # ── Class 7 ──────────────────────────────────────────────────────────────
   7A:
-    Math: 5
-    Science: 5
-    English: 5
-    SST: 4
+    Math: 6
+    Science: 6
+    English: 6
+    SST: 6
     Hindi: 3
     Odia: 3
     Sanskrit: 3
     CS: 3
-    # Total: 31
+    # Total: 36
 
   7B:
-    Math: 5
-    Science: 5
-    English: 5
-    SST: 4
+    Math: 6
+    Science: 6
+    English: 6
+    SST: 6
     Hindi: 3
     Odia: 3
     Sanskrit: 3
     CS: 3
-    # Total: 31
+    # Total: 36
 
   # ── Class 8 ──────────────────────────────────────────────────────────────
   8A:
-    Math: 5
-    Science: 5
-    English: 5
-    SST: 4
+    Math: 6
+    Science: 6
+    English: 6
+    SST: 6
     Hindi: 3
     Odia: 3
     Sanskrit: 3
     CS: 3
-    # Total: 31
+    # Total: 36
 
   8B:
-    Math: 5
-    Science: 5
-    English: 5
-    SST: 4
+    Math: 6
+    Science: 6
+    English: 6
+    SST: 6
     Hindi: 3
     Odia: 3
     Sanskrit: 3
     CS: 3
-    # Total: 31
+    # Total: 36
 
   # ── Class 9 ──────────────────────────────────────────────────────────────
   9A:
     Math: 6
     Science: 6
-    English: 5
+    English: 6
     SST: 6
     Odia: 3
-    IT: 4
-    # Total: 30
+    IT: 6
+    # Total: 33
 
   9B:
     Math: 6
     Science: 6
-    English: 5
+    English: 6
     SST: 6
     Odia: 3
-    IT: 4
-    # Total: 30
+    IT: 6
+    # Total: 33
 
   # ── Class 10 ─────────────────────────────────────────────────────────────
   10A:
     Math: 6
     Science: 6
-    English: 5
+    English: 6
     SST: 6
     Odia: 3
-    IT: 4
-    # Total: 30
+    IT: 6
+    # Total: 33
 
   10B:
     Math: 6
     Science: 6
-    English: 5
+    English: 6
     SST: 6
     Odia: 3
-    IT: 4
-    # Total: 30
+    IT: 6
+    # Total: 33
 
   # ── Class 12 (Science stream) ─────────────────────────────────────────────
   12:
@@ -133,6 +118,6 @@ section_overrides:
     Chemistry: 6
     Biology: 6
     Math: 6
-    English: 5
-    IT: 4
-    # Total: 33  (3 free periods/week)
+    English: 6
+    IT: 6
+    # Total: 36  (full week)

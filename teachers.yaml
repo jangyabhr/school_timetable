@@ -4,59 +4,56 @@
 #
 # capacity = maximum teaching periods per week this teacher may be assigned.
 # subjects = list of subjects this teacher is qualified to teach.
-#
-# Loads shown are computed from teacher_assignments.yaml after removing
-# sections 6A, 6B, and 11.
 
 teachers:
   Nandini:
-    capacity: 22       # load: 10  (Math: 7A,7B)
+    capacity: 22       # load: 12  (Math: 7A,7B ×6)
     subjects: [Math]
   JB:
-    capacity: 26       # load: 22  (Math: 8A,8B,9A,9B)
+    capacity: 26       # load: 24  (Math: 8A,8B,9A,9B ×6)
     subjects: [Math]
   Mira:
-    capacity: 26       # load: 18  (Math: 10A,10B,12)
+    capacity: 26       # load: 18  (Math: 10A,10B,12 ×6)
     subjects: [Math]
   Pratibha:
     capacity: 20       # load:  6  (Physics: 12 only)
     subjects: [Science, Physics]
   Priyanka:
-    capacity: 24       # load: 16  (Science: 7A,7B + Chemistry: 12)
+    capacity: 24       # load: 18  (Science: 7A,7B ×6 + Chemistry: 12 ×6)
     subjects: [Science, Chemistry]
   Sunil:
-    capacity: 26       # load: 22  (Science: 8A,8B,9A,9B)
+    capacity: 26       # load: 24  (Science: 8A,8B,9A,9B ×6)
     subjects: [Science]
   Sidharth:
-    capacity: 26       # load: 18  (Science: 10A,10B + Biology: 12)
+    capacity: 26       # load: 18  (Science: 10A,10B ×6 — Sidharth also teaches Bio 12)
     subjects: [Science, Biology]
   Radheshyam:
-    capacity: 20       # load:  5  (English: 12 only)
+    capacity: 20       # load:  6  (English: 12 ×6)
     subjects: [English]
   Laxmipriya:
-    capacity: 24       # load: 20  (English: 7A,7B,10A,10B)
+    capacity: 24       # load: 24  (English: 7A,7B,10A,10B ×6)
     subjects: [English]
   Pratikshya:
-    capacity: 24       # load: 20  (English: 8A,8B,9A,9B)
+    capacity: 24       # load: 24  (English: 8A,8B,9A,9B ×6)
     subjects: [English]
   ANIL:
-    capacity: 24       # load: 14  (SST: 8A,8B,10A)
+    capacity: 24       # load: 18  (SST: 8A,8B ×6 + 10A ×6)
     subjects: [SST]
   Srikant:
-    capacity: 30       # load: 26  (SST: 7A,7B,9A,9B,10B) — highest load
+    capacity: 30       # load: 30  (SST: 7A,7B,9A,9B,10B ×6) — full capacity
     subjects: [SST]
   Snigdha:
-    capacity: 24       # load: 12  (Hindi: 7A,7B,8A,8B)
+    capacity: 24       # load: 12  (Hindi: 7A,7B,8A,8B ×3)
     subjects: [Hindi, Odia]
   Ganesh:
-    capacity: 26       # load: 24  (Sanskrit: 7A,7B,8A,8B×3 + Odia: 7A,7B×3)
+    capacity: 26       # load: 18  (Sanskrit: 7A,7B,8A,8B ×3 + Odia: 7A,7B ×3)
     subjects: [Sanskrit, Odia]
   Subhasmita:
-    capacity: 22       # load: 18  (Odia: 8A,8B,9A,9B,10A,10B)
+    capacity: 22       # load: 18  (Odia: 8A,8B,9A,9B,10A,10B ×3)
     subjects: [Odia]
   Usha:
-    capacity: 26       # load: 16  (IT: 9A,9B,10B,12)
+    capacity: 26       # load: 24  (IT: 9A,9B,10B,12 ×6)
     subjects: [CS, IT]
   Sanjukta:
-    capacity: 24       # load: 16  (CS: 7A,7B,8A,8B + IT: 10A)
+    capacity: 24       # load: 18  (CS: 7A,7B,8A,8B ×3 + IT: 10A ×6)
     subjects: [CS, IT]

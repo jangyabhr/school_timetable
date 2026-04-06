@@ -23,13 +23,13 @@ period_assignments:
   period: 4
   period_name: P5
   teacher: Radheshyam ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: '12'
   subject: IT
   period: 5
   period_name: P6
   teacher: Usha ma'am
-  weekly_load: 4
+  weekly_load: 6
 - class: '12'
   subject: Math
   period: 1
@@ -48,7 +48,7 @@ period_assignments:
   period: 5
   period_name: P6
   teacher: Laxmipriya ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 10B
   subject: Odia
   period: 2
@@ -60,7 +60,7 @@ period_assignments:
   period: 0
   period_name: P1
   teacher: Usha ma'am
-  weekly_load: 4
+  weekly_load: 6
 - class: 10B
   subject: Math
   period: 3
@@ -75,38 +75,38 @@ period_assignments:
   weekly_load: 6
 - class: 10A
   subject: SST
-  period: 4
-  period_name: P5
+  period: 5
+  period_name: P6
   teacher: ANIL sir
   weekly_load: 6
 - class: 10A
   subject: English
-  period: 2
-  period_name: P3
+  period: 0
+  period_name: P1
   teacher: Laxmipriya ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 10A
   subject: Odia
-  period: 3
-  period_name: P4
+  period: 4
+  period_name: P5
   teacher: Subhasmita ma'am
   weekly_load: 3
 - class: 10A
   subject: IT
-  period: 5
-  period_name: P6
+  period: 1
+  period_name: P2
   teacher: Sanjukta ma'am
-  weekly_load: 4
+  weekly_load: 6
 - class: 10A
   subject: Math
-  period: 0
-  period_name: P1
+  period: 2
+  period_name: P3
   teacher: Mira ma'am
   weekly_load: 6
 - class: 10A
   subject: Science
-  period: 1
-  period_name: P2
+  period: 3
+  period_name: P4
   teacher: Sidharth ma'am
   weekly_load: 6
 - class: 9B
@@ -120,7 +120,7 @@ period_assignments:
   period: 0
   period_name: P1
   teacher: Pratikshya ma'am
-  weekly_load: 5
+  weekly_load: 6
   locked: true
 - class: 9B
   subject: Odia
@@ -133,7 +133,7 @@ period_assignments:
   period: 2
   period_name: P3
   teacher: Usha ma'am
-  weekly_load: 4
+  weekly_load: 6
 - class: 9B
   subject: Math
   period: 4
@@ -154,10 +154,10 @@ period_assignments:
   weekly_load: 6
 - class: 9A
   subject: English
-  period: 4
-  period_name: P5
+  period: 3
+  period_name: P4
   teacher: Pratikshya ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 9A
   subject: Odia
   period: 5
@@ -169,7 +169,7 @@ period_assignments:
   period: 1
   period_name: P2
   teacher: Usha ma'am
-  weekly_load: 4
+  weekly_load: 6
 - class: 9A
   subject: Math
   period: 0
@@ -179,8 +179,8 @@ period_assignments:
   locked: true
 - class: 9A
   subject: Science
-  period: 3
-  period_name: P4
+  period: 4
+  period_name: P5
   teacher: Sunil sir
   weekly_load: 6
 - class: 8B
@@ -188,29 +188,29 @@ period_assignments:
   period: 5
   period_name: P6
   teacher: JB sir
-  weekly_load: 5
+  weekly_load: 6
 - class: 8B
   subject: Science
-  period: 4
-  period_name: P5
+  period: 0
+  period_name: P1
   teacher: Sunil sir
-  weekly_load: 5
+  weekly_load: 6
 - class: 8B
   subject: SST
-  period: 1
-  period_name: P2
+  period: 4
+  period_name: P5
   teacher: ANIL sir
-  weekly_load: 4
+  weekly_load: 6
 - class: 8B
   subject: English
   period: 2
   period_name: P3
   teacher: Pratikshya ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 8B
   subject: Odia
-  period: 0
-  period_name: P1
+  period: 1
+  period_name: P2
   teacher: Subhasmita ma'am
   weekly_load: 3
 - class: 8B
@@ -221,14 +221,14 @@ period_assignments:
   weekly_load: 3
 - class: 8B
   subject: Sanskrit
-  period: 3
-  period_name: P4
+  period: 1
+  period_name: P2
   teacher: Ganesh sir
   weekly_load: 3
 - class: 8B
   subject: CS
-  period: 0
-  period_name: P1
+  period: 3
+  period_name: P4
   teacher: Sanjukta ma'am
   weekly_load: 3
 - class: 8A
@@ -236,47 +236,47 @@ period_assignments:
   period: 2
   period_name: P3
   teacher: JB sir
-  weekly_load: 5
+  weekly_load: 6
 - class: 8A
   subject: Science
-  period: 0
-  period_name: P1
-  teacher: Sunil sir
-  weekly_load: 5
-- class: 8A
-  subject: SST
   period: 5
   period_name: P6
+  teacher: Sunil sir
+  weekly_load: 6
+- class: 8A
+  subject: SST
+  period: 0
+  period_name: P1
   teacher: ANIL sir
-  weekly_load: 4
+  weekly_load: 6
 - class: 8A
   subject: English
   period: 1
   period_name: P2
   teacher: Pratikshya ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 8A
   subject: Odia
-  period: 4
-  period_name: P5
+  period: 3
+  period_name: P4
   teacher: Subhasmita ma'am
   weekly_load: 3
 - class: 8A
   subject: Hindi
-  period: 3
-  period_name: P4
+  period: 4
+  period_name: P5
   teacher: Snigdha ma'am
   weekly_load: 3
 - class: 8A
   subject: Sanskrit
-  period: 4
-  period_name: P5
+  period: 3
+  period_name: P4
   teacher: Ganesh sir
   weekly_load: 3
 - class: 8A
   subject: CS
-  period: 3
-  period_name: P4
+  period: 4
+  period_name: P5
   teacher: Sanjukta ma'am
   weekly_load: 3
 - class: 7B
@@ -284,23 +284,23 @@ period_assignments:
   period: 4
   period_name: P5
   teacher: Srikant ma'am
-  weekly_load: 4
+  weekly_load: 6
 - class: 7B
   subject: English
-  period: 0
-  period_name: P1
+  period: 1
+  period_name: P2
   teacher: Laxmipriya ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 7B
   subject: Odia
-  period: 2
-  period_name: P3
+  period: 3
+  period_name: P4
   teacher: Ganesh sir
   weekly_load: 3
 - class: 7B
   subject: CS
-  period: 2
-  period_name: P3
+  period: 3
+  period_name: P4
   teacher: Sanjukta ma'am
   weekly_load: 3
 - class: 7B
@@ -317,38 +317,38 @@ period_assignments:
   weekly_load: 3
 - class: 7B
   subject: Math
-  period: 3
-  period_name: P4
+  period: 2
+  period_name: P3
   teacher: Nandini ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 7B
   subject: Science
-  period: 1
-  period_name: P2
+  period: 0
+  period_name: P1
   teacher: Priyanka ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 7A
   subject: SST
   period: 0
   period_name: P1
   teacher: Srikant ma'am
-  weekly_load: 4
+  weekly_load: 6
 - class: 7A
   subject: English
-  period: 1
-  period_name: P2
+  period: 2
+  period_name: P3
   teacher: Laxmipriya ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 7A
   subject: Odia
-  period: 3
-  period_name: P4
+  period: 4
+  period_name: P5
   teacher: Ganesh sir
   weekly_load: 3
 - class: 7A
   subject: CS
-  period: 3
-  period_name: P4
+  period: 4
+  period_name: P5
   teacher: Sanjukta ma'am
   weekly_load: 3
 - class: 7A
@@ -365,13 +365,13 @@ period_assignments:
   weekly_load: 3
 - class: 7A
   subject: Math
-  period: 4
-  period_name: P5
+  period: 3
+  period_name: P4
   teacher: Nandini ma'am
-  weekly_load: 5
+  weekly_load: 6
 - class: 7A
   subject: Science
-  period: 2
-  period_name: P3
+  period: 1
+  period_name: P2
   teacher: Priyanka ma'am
-  weekly_load: 5
+  weekly_load: 6
