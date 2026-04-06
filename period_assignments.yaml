@@ -1,1 +1,401 @@
-period_assignments: []
+period_assignments:
+- class: '12'
+  subject: Physics
+  period: 2
+  period_name: P3
+  teacher: Pratibha ma'am
+  weekly_load: 4
+- class: '12'
+  subject: Chemistry
+  period: 3
+  period_name: P4
+  teacher: Priyanka ma'am
+  weekly_load: 4
+- class: '12'
+  subject: Biology
+  period: 0
+  period_name: P1
+  teacher: Sidharth ma'am
+  weekly_load: 4
+  locked: true
+- class: '12'
+  subject: English
+  period: 0
+  period_name: P1
+  teacher: Radheshyam ma'am
+  weekly_load: 2
+- class: '12'
+  subject: IT
+  period: 1
+  period_name: P2
+  teacher: Usha ma'am
+  weekly_load: 2
+- class: '12'
+  subject: Math
+  period: 1
+  period_name: P2
+  teacher: Mira ma'am
+  weekly_load: 4
+  locked: true
+- class: 10B
+  subject: SST
+  period: 0
+  period_name: P1
+  teacher: Srikant ma'am
+  weekly_load: 4
+- class: 10B
+  subject: English
+  period: 3
+  period_name: P4
+  teacher: Laxmipriya ma'am
+  weekly_load: 4
+- class: 10B
+  subject: Odia
+  period: 2
+  period_name: P3
+  teacher: Subhasmita ma'am
+  weekly_load: 2
+- class: 10B
+  subject: Hindi
+  period: 1
+  period_name: P2
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 10B
+  subject: IT
+  period: 0
+  period_name: P1
+  teacher: Usha ma'am
+  weekly_load: 2
+- class: 10B
+  subject: Math
+  period: 2
+  period_name: P3
+  teacher: Mira ma'am
+  weekly_load: 4
+- class: 10B
+  subject: Science
+  period: 1
+  period_name: P2
+  teacher: Sidharth ma'am
+  weekly_load: 4
+- class: 10A
+  subject: SST
+  period: 2
+  period_name: P3
+  teacher: ANIL sir
+  weekly_load: 4
+- class: 10A
+  subject: English
+  period: 1
+  period_name: P2
+  teacher: Laxmipriya ma'am
+  weekly_load: 4
+- class: 10A
+  subject: Odia
+  period: 1
+  period_name: P2
+  teacher: Subhasmita ma'am
+  weekly_load: 2
+- class: 10A
+  subject: Hindi
+  period: 0
+  period_name: P1
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 10A
+  subject: IT
+  period: 2
+  period_name: P3
+  teacher: Sanjukta ma'am
+  weekly_load: 2
+- class: 10A
+  subject: Math
+  period: 0
+  period_name: P1
+  teacher: Mira ma'am
+  weekly_load: 4
+- class: 10A
+  subject: Science
+  period: 3
+  period_name: P4
+  teacher: Sidharth ma'am
+  weekly_load: 4
+- class: 9B
+  subject: SST
+  period: 2
+  period_name: P3
+  teacher: Srikant ma'am
+  weekly_load: 4
+- class: 9B
+  subject: English
+  period: 0
+  period_name: P1
+  teacher: Pratikshya ma'am
+  weekly_load: 4
+  locked: true
+- class: 9B
+  subject: Odia
+  period: 0
+  period_name: P1
+  teacher: Subhasmita ma'am
+  weekly_load: 2
+- class: 9B
+  subject: Hindi
+  period: 1
+  period_name: P2
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 9B
+  subject: IT
+  period: 2
+  period_name: P3
+  teacher: Usha ma'am
+  weekly_load: 2
+- class: 9B
+  subject: Math
+  period: 3
+  period_name: P4
+  teacher: JB sir
+  weekly_load: 4
+- class: 9B
+  subject: Science
+  period: 1
+  period_name: P2
+  teacher: Sunil sir
+  weekly_load: 4
+- class: 9A
+  subject: SST
+  period: 1
+  period_name: P2
+  teacher: Srikant ma'am
+  weekly_load: 4
+- class: 9A
+  subject: English
+  period: 2
+  period_name: P3
+  teacher: Pratikshya ma'am
+  weekly_load: 4
+- class: 9A
+  subject: Odia
+  period: 2
+  period_name: P3
+  teacher: Subhasmita ma'am
+  weekly_load: 2
+- class: 9A
+  subject: Hindi
+  period: 0
+  period_name: P1
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 9A
+  subject: IT
+  period: 1
+  period_name: P2
+  teacher: Usha ma'am
+  weekly_load: 2
+- class: 9A
+  subject: Math
+  period: 0
+  period_name: P1
+  teacher: JB sir
+  weekly_load: 4
+  locked: true
+- class: 9A
+  subject: Science
+  period: 3
+  period_name: P4
+  teacher: Sunil sir
+  weekly_load: 4
+- class: 8B
+  subject: Math
+  period: 1
+  period_name: P2
+  teacher: JB sir
+  weekly_load: 4
+- class: 8B
+  subject: Science
+  period: 2
+  period_name: P3
+  teacher: Sunil sir
+  weekly_load: 4
+- class: 8B
+  subject: SST
+  period: 0
+  period_name: P1
+  teacher: ANIL sir
+  weekly_load: 4
+- class: 8B
+  subject: English
+  period: 3
+  period_name: P4
+  teacher: Pratikshya ma'am
+  weekly_load: 4
+- class: 8B
+  subject: Odia
+  period: 1
+  period_name: P2
+  teacher: Subhasmita ma'am
+  weekly_load: 2
+- class: 8B
+  subject: Hindi
+  period: 0
+  period_name: P1
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 8B
+  subject: Sanskrit
+  period: 2
+  period_name: P3
+  teacher: Ganesh sir
+  weekly_load: 2
+- class: 8B
+  subject: CS
+  period: 3
+  period_name: P4
+  teacher: Sanjukta ma'am
+  weekly_load: 2
+- class: 8A
+  subject: Math
+  period: 2
+  period_name: P3
+  teacher: JB sir
+  weekly_load: 4
+- class: 8A
+  subject: Science
+  period: 0
+  period_name: P1
+  teacher: Sunil sir
+  weekly_load: 4
+- class: 8A
+  subject: SST
+  period: 3
+  period_name: P4
+  teacher: ANIL sir
+  weekly_load: 4
+- class: 8A
+  subject: English
+  period: 1
+  period_name: P2
+  teacher: Pratikshya ma'am
+  weekly_load: 4
+- class: 8A
+  subject: Odia
+  period: 0
+  period_name: P1
+  teacher: Subhasmita ma'am
+  weekly_load: 2
+- class: 8A
+  subject: Hindi
+  period: 1
+  period_name: P2
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 8A
+  subject: Sanskrit
+  period: 2
+  period_name: P3
+  teacher: Ganesh sir
+  weekly_load: 2
+- class: 8A
+  subject: CS
+  period: 3
+  period_name: P4
+  teacher: Sanjukta ma'am
+  weekly_load: 2
+- class: 7B
+  subject: SST
+  period: 3
+  period_name: P4
+  teacher: Srikant ma'am
+  weekly_load: 4
+- class: 7B
+  subject: English
+  period: 0
+  period_name: P1
+  teacher: Laxmipriya ma'am
+  weekly_load: 4
+- class: 7B
+  subject: Odia
+  period: 1
+  period_name: P2
+  teacher: Ganesh sir
+  weekly_load: 2
+- class: 7B
+  subject: CS
+  period: 0
+  period_name: P1
+  teacher: Sanjukta ma'am
+  weekly_load: 2
+- class: 7B
+  subject: Hindi
+  period: 2
+  period_name: P3
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 7B
+  subject: Sanskrit
+  period: 3
+  period_name: P4
+  teacher: Ganesh sir
+  weekly_load: 2
+- class: 7B
+  subject: Math
+  period: 2
+  period_name: P3
+  teacher: Nandini ma'am
+  weekly_load: 4
+- class: 7B
+  subject: Science
+  period: 1
+  period_name: P2
+  teacher: Priyanka ma'am
+  weekly_load: 4
+- class: 7A
+  subject: SST
+  period: 1
+  period_name: P2
+  teacher: ANIL sir
+  weekly_load: 4
+- class: 7A
+  subject: English
+  period: 2
+  period_name: P3
+  teacher: Laxmipriya ma'am
+  weekly_load: 4
+- class: 7A
+  subject: Odia
+  period: 0
+  period_name: P1
+  teacher: Ganesh sir
+  weekly_load: 2
+- class: 7A
+  subject: CS
+  period: 1
+  period_name: P2
+  teacher: Sanjukta ma'am
+  weekly_load: 2
+- class: 7A
+  subject: Hindi
+  period: 2
+  period_name: P3
+  teacher: Snigdha ma'am
+  weekly_load: 2
+- class: 7A
+  subject: Sanskrit
+  period: 3
+  period_name: P4
+  teacher: Ganesh sir
+  weekly_load: 2
+- class: 7A
+  subject: Math
+  period: 3
+  period_name: P4
+  teacher: Nandini ma'am
+  weekly_load: 4
+- class: 7A
+  subject: Science
+  period: 0
+  period_name: P1
+  teacher: Priyanka ma'am
+  weekly_load: 4
