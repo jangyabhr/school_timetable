@@ -266,7 +266,7 @@ def main():
     import event_generator
     event_generator.CLASS_ORDER = CLASS_ORDER
 
-    output = Path(__file__).parent / 'Timetable_Tools.html'
+    output = Path(__file__).parent / 'html_tool_from_excel.html'
     html   = hx2._build_html(*structs)
 
     # Patch the classes_json inside the generated HTML so it uses our CLASS_ORDER
