@@ -44,8 +44,8 @@ def _valid_periods(event, teacher_period_load, class_period_load):
     subject = event["subject"]
     teacher = event.get("teacher")
 
-    # Lab subjects need a consecutive second period → can't start at the last period
-    upper = PERIODS_PER_DAY - 1 if subject in LAB_BLOCK_SUBJECTS else PERIODS_PER_DAY
+    # With 4 periods/day, labs are single-period — all periods are valid starts
+    upper = PERIODS_PER_DAY
 
     valid = []
     for p in range(upper):
@@ -223,14 +223,7 @@ def validate_period_assignments(events, assignments, teacher_period_load, class_
                 f"{load} instances > {DAYS_PER_WEEK} days"
             )
 
-    for i, event in enumerate(events):
-        if event["subject"] in LAB_BLOCK_SUBJECTS:
-            p = assignments.get(i)
-            if p is not None and p >= PERIODS_PER_DAY - 1:
-                violations.append(
-                    f"Lab event {event['class']} {event['subject']} "
-                    f"assigned to P{p + 1} — must be P1–P{PERIODS_PER_DAY - 1}"
-                )
+    # Labs are treated as single periods in the 4-period schedule; no start-period restriction.
 
     return violations
 

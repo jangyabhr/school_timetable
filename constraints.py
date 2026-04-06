@@ -112,10 +112,9 @@ FLOATING_EXCLUDED_DAYS = [TUESDAY, SATURDAY]
 # (used by suitability_matrix.py and the placer)
 # ---------------------------------------------------------------------------
 
-# Lab subjects may only START on these periods so the consecutive second period
-# does not overflow the day.
-# All 4 periods are teaching periods; valid starts: 0–2 (period 3 has no period 4).
-LAB_ALLOWED_START_PERIODS = [0, 1, 2]
+# With only 4 periods/day, consecutive double-period labs are not scheduled.
+# Labs are treated as single periods — all 4 periods are valid.
+LAB_ALLOWED_START_PERIODS = [0, 1, 2, 3]
 
 # ---------------------------------------------------------------------------
 # Validation Helper  (used by the validation report step)

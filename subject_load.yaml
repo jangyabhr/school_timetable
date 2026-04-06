@@ -17,8 +17,8 @@ group_defaults:
     SST: 4
     Hindi: 2
     Odia: 2
-    IT: 4
-    # Total: 24
+    IT: 2
+    # Total: 22  (2 free periods/week — each at P4/SST slot)
 
   class_12:
     Math: 4
@@ -83,8 +83,8 @@ section_overrides:
     SST: 4
     Hindi: 2
     Odia: 2
-    IT: 4
-    # Total: 24
+    IT: 2
+    # Total: 22
 
   9B:
     Math: 4
@@ -93,8 +93,8 @@ section_overrides:
     SST: 4
     Hindi: 2
     Odia: 2
-    IT: 4
-    # Total: 24
+    IT: 2
+    # Total: 22
 
   # ── Class 10 ─────────────────────────────────────────────────────────────
   10A:
@@ -104,8 +104,8 @@ section_overrides:
     SST: 4
     Hindi: 2
     Odia: 2
-    IT: 4
-    # Total: 24
+    IT: 2
+    # Total: 22
 
   10B:
     Math: 4
@@ -114,15 +114,16 @@ section_overrides:
     SST: 4
     Hindi: 2
     Odia: 2
-    IT: 4
-    # Total: 24
+    IT: 2
+    # Total: 22
 
   # ── Class 12 (Science stream) ─────────────────────────────────────────────
+  # Period structure: P1=Bio(4)+Eng(2), P2=Math(4)+IT(2), P3=Physics(4), P4=Chemistry(4)
   12:
     Physics: 4
     Chemistry: 4
     Biology: 4
     Math: 4
-    English: 4
-    IT: 4
-    # Total: 24  (full week)
+    English: 2
+    IT: 2
+    # Total: 20  (4 free slots/week)

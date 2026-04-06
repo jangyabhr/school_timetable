@@ -30,7 +30,7 @@ teachers:
     capacity: 26       # load: 12  (Science: 10A,10B ×4 + Biology: 12 ×4)
     subjects: [Science, Biology]
   Radheshyam:
-    capacity: 20       # load:  4  (English: 12 ×4)
+    capacity: 20       # load:  2  (English: 12 ×2)
     subjects: [English]
   Laxmipriya:
     capacity: 24       # load: 16  (English: 7A,7B,10A,10B ×4)
@@ -39,10 +39,10 @@ teachers:
     capacity: 24       # load: 16  (English: 8A,8B,9A,9B ×4)
     subjects: [English]
   ANIL:
-    capacity: 24       # load: 12  (SST: 8A,8B,10A ×4)
+    capacity: 24       # load: 16  (SST: 7A,8A,8B,10A ×4)
     subjects: [SST]
   Srikant:
-    capacity: 30       # load: 20  (SST: 7A,7B,9A,9B,10B ×4)
+    capacity: 30       # load: 16  (SST: 7B,9A,9B,10B ×4)
     subjects: [SST]
   Snigdha:
     capacity: 24       # load: 16  (Hindi: 7A,7B,8A,8B,9A,9B,10A,10B ×2)
@@ -54,8 +54,8 @@ teachers:
     capacity: 22       # load: 12  (Odia: 8A,8B,9A,9B,10A,10B ×2)
     subjects: [Odia]
   Usha:
-    capacity: 26       # load: 20  (IT: 9A,9B,10B ×4 + 12 ×4)
+    capacity: 26       # load:  8  (IT: 9A,9B,10B,12 ×2)
     subjects: [CS, IT]
   Sanjukta:
-    capacity: 24       # load: 12  (CS: 7A,7B,8A,8B ×2 + IT: 10A ×4)
+    capacity: 24       # load: 10  (CS: 7A,7B,8A,8B ×2 + IT: 10A ×2)
     subjects: [CS, IT]
