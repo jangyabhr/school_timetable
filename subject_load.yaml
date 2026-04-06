@@ -76,46 +76,45 @@ section_overrides:
     # Total: 24
 
   # ── Class 9 ──────────────────────────────────────────────────────────────
+  # Science split: Sunil(4) + Sidharth(2) = 6 (load set per row in teacher_assignments.yaml)
   9A:
     Math: 4
-    Science: 4
+    Science: 6
     English: 4
     SST: 4
-    Hindi: 2
     Odia: 2
     IT: 2
-    # Total: 22
+    # Total: 22  (Hindi removed; Science +2 to compensate)
 
   9B:
     Math: 4
-    Science: 4
+    Science: 6
     English: 4
     SST: 4
-    Hindi: 2
     Odia: 2
     IT: 2
-    # Total: 22
+    # Total: 22  (Hindi removed; Science +2 to compensate)
 
   # ── Class 10 ─────────────────────────────────────────────────────────────
+  # Science split: Sidharth(4) + Sunil(2) = 6 (load set per row in teacher_assignments.yaml)
+  # SST split: ANIL(2) + Srikant(2) = 4 (load set per row in teacher_assignments.yaml)
   10A:
     Math: 4
-    Science: 4
+    Science: 6
     English: 4
     SST: 4
-    Hindi: 2
     Odia: 2
     IT: 2
-    # Total: 22
+    # Total: 22  (Hindi removed; Science +2 to compensate)
 
   10B:
     Math: 4
-    Science: 4
+    Science: 6
     English: 4
     SST: 4
-    Hindi: 2
     Odia: 2
     IT: 2
-    # Total: 22
+    # Total: 22  (Hindi removed; Science +2 to compensate)
 
   # ── Class 12 (Science stream) ─────────────────────────────────────────────
   # Period structure: P1=Bio(4)+Eng(2), P2=Math(4)+IT(2), P3=Physics(4), P4=Chemistry(4)

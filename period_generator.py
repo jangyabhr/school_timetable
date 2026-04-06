@@ -279,14 +279,14 @@ def load_period_assignments(path, events):
     with open(path, "r") as f:
         data = yaml.safe_load(f)
 
-    cs_to_idx = {(e["class"], e["subject"]): i for i, e in enumerate(events)}
+    cs_to_idx = {(e["class"], e["subject"], e.get("teacher") or ""): i for i, e in enumerate(events)}
 
     assignments         = {}
     teacher_period_load = defaultdict(int)
     class_period_load   = defaultdict(int)
 
     for rec in data.get("period_assignments", []):
-        key = (str(rec["class"]), rec["subject"])
+        key = (str(rec["class"]), rec["subject"], str(rec.get("teacher") or ""))
         idx = cs_to_idx.get(key)
         if idx is None:
             print(f"  WARNING: period_assignments.yaml entry {key} not found in events — skipped")

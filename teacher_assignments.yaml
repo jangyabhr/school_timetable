@@ -139,13 +139,6 @@ assignments:
   teacher: Subhasmita
 
 - section: 9A
-  subject: Hindi
-  teacher: Snigdha
-- section: 9B
-  subject: Hindi
-  teacher: Snigdha
-
-- section: 9A
   subject: IT
   teacher: Usha
 - section: 9B
@@ -159,21 +152,43 @@ assignments:
   subject: Math
   teacher: JB
 
+# Science 9A/9B: Sunil teaches 4 periods, Sidharth teaches 2 periods
 - section: 9A
   subject: Science
   teacher: Sunil
+  load: 4
+- section: 9A
+  subject: Science
+  teacher: Sidharth
+  load: 2
 - section: 9B
   subject: Science
   teacher: Sunil
+  load: 4
+- section: 9B
+  subject: Science
+  teacher: Sidharth
+  load: 2
 
 
 # --- Class 10 ---
+# SST 10A/10B: split equally between ANIL and Srikant (2 each)
 - section: 10A
   subject: SST
   teacher: ANIL
+  load: 2
+- section: 10A
+  subject: SST
+  teacher: Srikant
+  load: 2
+- section: 10B
+  subject: SST
+  teacher: ANIL
+  load: 2
 - section: 10B
   subject: SST
   teacher: Srikant
+  load: 2
 
 - section: 10A
   subject: English
@@ -188,13 +203,6 @@ assignments:
 - section: 10B
   subject: Odia
   teacher: Subhasmita
-
-- section: 10A
-  subject: Hindi
-  teacher: Snigdha
-- section: 10B
-  subject: Hindi
-  teacher: Snigdha
 
 - section: 10A
   subject: IT
@@ -210,12 +218,23 @@ assignments:
   subject: Math
   teacher: Mira
 
+# Science 10A/10B: Sidharth teaches 4 periods, Sunil teaches 2 periods
 - section: 10A
   subject: Science
   teacher: Sidharth
+  load: 4
+- section: 10A
+  subject: Science
+  teacher: Sunil
+  load: 2
 - section: 10B
   subject: Science
   teacher: Sidharth
+  load: 4
+- section: 10B
+  subject: Science
+  teacher: Sunil
+  load: 2
 
 
 # --- Class 12 ---

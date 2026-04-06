@@ -41,8 +41,14 @@ period_assignments:
   subject: SST
   period: 0
   period_name: P1
+  teacher: ANIL sir
+  weekly_load: 2
+- class: 10B
+  subject: SST
+  period: 0
+  period_name: P1
   teacher: Srikant ma'am
-  weekly_load: 4
+  weekly_load: 2
 - class: 10B
   subject: English
   period: 3
@@ -56,15 +62,9 @@ period_assignments:
   teacher: Subhasmita ma'am
   weekly_load: 2
 - class: 10B
-  subject: Hindi
+  subject: IT
   period: 1
   period_name: P2
-  teacher: Snigdha ma'am
-  weekly_load: 2
-- class: 10B
-  subject: IT
-  period: 0
-  period_name: P1
   teacher: Usha ma'am
   weekly_load: 2
 - class: 10B
@@ -79,12 +79,24 @@ period_assignments:
   period_name: P2
   teacher: Sidharth ma'am
   weekly_load: 4
+- class: 10B
+  subject: Science
+  period: 0
+  period_name: P1
+  teacher: Sunil sir
+  weekly_load: 2
 - class: 10A
   subject: SST
   period: 2
   period_name: P3
   teacher: ANIL sir
-  weekly_load: 4
+  weekly_load: 2
+- class: 10A
+  subject: SST
+  period: 0
+  period_name: P1
+  teacher: Srikant ma'am
+  weekly_load: 2
 - class: 10A
   subject: English
   period: 1
@@ -93,20 +105,14 @@ period_assignments:
   weekly_load: 4
 - class: 10A
   subject: Odia
-  period: 1
-  period_name: P2
+  period: 3
+  period_name: P4
   teacher: Subhasmita ma'am
   weekly_load: 2
 - class: 10A
-  subject: Hindi
-  period: 0
-  period_name: P1
-  teacher: Snigdha ma'am
-  weekly_load: 2
-- class: 10A
   subject: IT
-  period: 2
-  period_name: P3
+  period: 1
+  period_name: P2
   teacher: Sanjukta ma'am
   weekly_load: 2
 - class: 10A
@@ -117,10 +123,16 @@ period_assignments:
   weekly_load: 4
 - class: 10A
   subject: Science
-  period: 3
-  period_name: P4
+  period: 2
+  period_name: P3
   teacher: Sidharth ma'am
   weekly_load: 4
+- class: 10A
+  subject: Science
+  period: 3
+  period_name: P4
+  teacher: Sunil sir
+  weekly_load: 2
 - class: 9B
   subject: SST
   period: 2
@@ -136,15 +148,9 @@ period_assignments:
   locked: true
 - class: 9B
   subject: Odia
-  period: 0
-  period_name: P1
-  teacher: Subhasmita ma'am
-  weekly_load: 2
-- class: 9B
-  subject: Hindi
   period: 1
   period_name: P2
-  teacher: Snigdha ma'am
+  teacher: Subhasmita ma'am
   weekly_load: 2
 - class: 9B
   subject: IT
@@ -164,6 +170,12 @@ period_assignments:
   period_name: P2
   teacher: Sunil sir
   weekly_load: 4
+- class: 9B
+  subject: Science
+  period: 0
+  period_name: P1
+  teacher: Sidharth ma'am
+  weekly_load: 2
 - class: 9A
   subject: SST
   period: 1
@@ -183,15 +195,9 @@ period_assignments:
   teacher: Subhasmita ma'am
   weekly_load: 2
 - class: 9A
-  subject: Hindi
+  subject: IT
   period: 0
   period_name: P1
-  teacher: Snigdha ma'am
-  weekly_load: 2
-- class: 9A
-  subject: IT
-  period: 1
-  period_name: P2
   teacher: Usha ma'am
   weekly_load: 2
 - class: 9A
@@ -207,6 +213,12 @@ period_assignments:
   period_name: P4
   teacher: Sunil sir
   weekly_load: 4
+- class: 9A
+  subject: Science
+  period: 1
+  period_name: P2
+  teacher: Sidharth ma'am
+  weekly_load: 2
 - class: 8B
   subject: Math
   period: 1

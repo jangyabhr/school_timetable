@@ -69,7 +69,7 @@ def generate_events(assignments, section_loads):
             continue
         subject = row["subject"]
         teacher = row.get("teacher", None)
-        load    = section_loads[section].get(subject, 0)
+        load    = row.get("load") or section_loads[section].get(subject, 0)
 
         events.append({
             "class":       section,
