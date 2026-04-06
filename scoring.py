@@ -36,9 +36,9 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
 
     score = 0
 
-    # Soft: anchor subjects prefer morning teaching periods (P1–P3, indices 0–2, all 40 min)
+    # Soft: anchor subjects prefer first two periods (P1–P2, indices 0–1)
     if event["subject"] in ANCHOR_SUBJECTS:
-        if period in [0, 1, 2]:
+        if period in [0, 1]:
             score += SOFT_CONSTRAINTS["morning_anchor"]
 
     # Soft: penalise same subject appearing twice in a day for same class

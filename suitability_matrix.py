@@ -20,7 +20,7 @@ def build_suitability_matrix(events, slot_lookup):
     - Fixed-slot subjects: only their exact (day, period) slots (none currently)
     - Floating singles (Library): all periods except Tuesday and Saturday
     - Lab subjects (Physics, Chemistry, Biology): LAB_ALLOWED_START_PERIODS only
-    - All other subjects: all 6 teaching periods (all periods are teaching)
+    - All other subjects: all 4 teaching periods (all periods are teaching)
 
     Additionally, SECTION_PERIOD_LOCKS is applied as a hard filter:
     if (section, subject) appears in SECTION_PERIOD_LOCKS, only the listed
