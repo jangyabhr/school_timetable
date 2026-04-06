@@ -19,7 +19,7 @@
 
 from collections import defaultdict
 
-from constraints import DAYS_PER_WEEK, FLOATING_SINGLE_SUBJECTS, FLOATING_EXCLUDED_DAYS
+from constraints import DAYS_PER_WEEK, PERIODS_PER_DAY, FLOATING_SINGLE_SUBJECTS, FLOATING_EXCLUDED_DAYS
 
 
 def assign_days(events, period_assignments, slot_lookup):
@@ -36,6 +36,11 @@ def assign_days(events, period_assignments, slot_lookup):
     """
     timetable_state = {}
 
+    # Cross-period tracker: teacher → set of days they've been committed to.
+    # Used to prefer uncovered days when assigning later periods, so every
+    # teacher with enough load appears on all DAYS_PER_WEEK days.
+    teacher_global_days = defaultdict(set)
+
     # Group events by assigned period
     by_period = defaultdict(list)
     for event_idx, event in enumerate(events):
@@ -44,17 +49,26 @@ def assign_days(events, period_assignments, slot_lookup):
             by_period[p].append((event_idx, event))
 
     for period, ev_list in sorted(by_period.items()):
-        _assign_period(ev_list, period, timetable_state, slot_lookup)
+        committed = _assign_period(
+            ev_list, period, timetable_state, slot_lookup, teacher_global_days
+        )
+        # Accumulate committed days into the global tracker
+        for teacher, days in committed.items():
+            teacher_global_days[teacher].update(days)
 
     return timetable_state
 
 
-def _assign_period(ev_list, period, timetable_state, slot_lookup):
+def _assign_period(ev_list, period, timetable_state, slot_lookup, teacher_global_days):
     """
     Assign days for all event instances at a single period.
 
     Uses MRV-ordered backtracking so coupled teacher-class constraints
     (where greedy ordering would fail) are always resolved correctly.
+
+    teacher_global_days — read-only hint: teacher → days already committed in
+    earlier periods. Used to prefer uncovered days so every teacher (with
+    sufficient weekly load) appears on all days of the week.
     """
     # ----- Build instance list ------------------------------------------------
     # Each event's instances are independent; each needs exactly one day.
@@ -80,7 +94,7 @@ def _assign_period(ev_list, period, timetable_state, slot_lookup):
     class_days   = defaultdict(set)   # class_idx → days used at this period
     assignment   = {}                 # (event_idx, inst) → day
 
-    # ----- MRV helper ---------------------------------------------------------
+    # ----- MRV helpers --------------------------------------------------------
     def count_avail(tup):
         _, _, ci, teacher, pool = tup
         return sum(
@@ -89,19 +103,34 @@ def _assign_period(ev_list, period, timetable_state, slot_lookup):
             and d not in class_days[ci]
         )
 
+    def global_covered(tup):
+        """Number of days this teacher is already globally committed to.
+        Fewer covered → more urgent → process first."""
+        teacher = tup[3]
+        if teacher is None:
+            return DAYS_PER_WEEK          # no teacher → treat as fully covered
+        return len(teacher_global_days.get(teacher, set()))
+
     # ----- Backtracking solver ------------------------------------------------
     def backtrack(remaining):
         if not remaining:
             return True
 
-        # Pick most-constrained instance (fewest valid days)
-        remaining = sorted(remaining, key=count_avail)
+        # MRV: fewest valid days first; tie-break by teacher with lowest global
+        # coverage so coverage-needy teachers get first pick of uncovered days
+        # before class constraints can block them.
+        remaining = sorted(remaining, key=lambda t: (count_avail(t), global_covered(t)))
         tup       = remaining[0]
         rest      = remaining[1:]
 
         event_idx, inst_no, ci, teacher, pool = tup
 
-        for d in pool:
+        # Prefer days the teacher hasn't been assigned to in any earlier period
+        # (soft preference — feasibility is unchanged; backtracking handles the rest)
+        already_covered = teacher_global_days.get(teacher, set()) if teacher else set()
+        ordered_pool = sorted(pool, key=lambda d: (1 if d in already_covered else 0))
+
+        for d in ordered_pool:
             if teacher and d in teacher_days[teacher]:
                 continue
             if d in class_days[ci]:
@@ -130,6 +159,7 @@ def _assign_period(ev_list, period, timetable_state, slot_lookup):
         print(f"  WARNING day_assigner: backtracking exhausted at P{period + 1} "
               f"— some instances could not be placed")
 
+    committed_teacher_days = defaultdict(set)
     for (event_idx, inst_no), day in assignment.items():
         event = event_lookup[event_idx]
         ci    = event["class_idx"]
@@ -142,3 +172,8 @@ def _assign_period(ev_list, period, timetable_state, slot_lookup):
             "subject":   event["subject"],
             "teacher":   event.get("teacher"),
         }
+        teacher = event.get("teacher")
+        if teacher:
+            committed_teacher_days[teacher].add(day)
+
+    return committed_teacher_days
