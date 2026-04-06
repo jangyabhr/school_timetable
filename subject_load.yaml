@@ -1,123 +1,128 @@
 group_defaults:
   class_6_8:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 3
-    Odia: 3
-    Sanskrit: 3
-    CS: 3
-    # Total: 36  (full week — CS stays at 3 because 4×6+3×3 = 33, plus CS 3 = 36)
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    Sanskrit: 2
+    CS: 2
+    # Total: 24  (4 periods/day × 6 days)
 
   class_9_10:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Odia: 3
-    IT: 6
-    # Total: 33  (3 free periods/week)
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    IT: 4
+    # Total: 24
 
   class_12:
-    Math: 6
-    English: 6
-    IT: 6
-    # Total base: 18 — stream subjects added via section_overrides
+    Math: 4
+    English: 4
+    IT: 4
+    # Total base: 12 — stream subjects added via section_overrides
 
 
 section_overrides:
 
   # ── Class 7 ──────────────────────────────────────────────────────────────
   7A:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 3
-    Odia: 3
-    Sanskrit: 3
-    CS: 3
-    # Total: 36
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    Sanskrit: 2
+    CS: 2
+    # Total: 24
 
   7B:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 3
-    Odia: 3
-    Sanskrit: 3
-    CS: 3
-    # Total: 36
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    Sanskrit: 2
+    CS: 2
+    # Total: 24
 
   # ── Class 8 ──────────────────────────────────────────────────────────────
   8A:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 3
-    Odia: 3
-    Sanskrit: 3
-    CS: 3
-    # Total: 36
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    Sanskrit: 2
+    CS: 2
+    # Total: 24
 
   8B:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Hindi: 3
-    Odia: 3
-    Sanskrit: 3
-    CS: 3
-    # Total: 36
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    Sanskrit: 2
+    CS: 2
+    # Total: 24
 
   # ── Class 9 ──────────────────────────────────────────────────────────────
   9A:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Odia: 3
-    IT: 6
-    # Total: 33
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    IT: 4
+    # Total: 24
 
   9B:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Odia: 3
-    IT: 6
-    # Total: 33
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    IT: 4
+    # Total: 24
 
   # ── Class 10 ─────────────────────────────────────────────────────────────
   10A:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Odia: 3
-    IT: 6
-    # Total: 33
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    IT: 4
+    # Total: 24
 
   10B:
-    Math: 6
-    Science: 6
-    English: 6
-    SST: 6
-    Odia: 3
-    IT: 6
-    # Total: 33
+    Math: 4
+    Science: 4
+    English: 4
+    SST: 4
+    Hindi: 2
+    Odia: 2
+    IT: 4
+    # Total: 24
 
   # ── Class 12 (Science stream) ─────────────────────────────────────────────
   12:
-    Physics: 6
-    Chemistry: 6
-    Biology: 6
-    Math: 6
-    English: 6
-    IT: 6
-    # Total: 36  (full week)
+    Physics: 4
+    Chemistry: 4
+    Biology: 4
+    Math: 4
+    English: 4
+    IT: 4
+    # Total: 24  (full week)

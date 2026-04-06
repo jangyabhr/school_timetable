@@ -139,6 +139,13 @@ assignments:
   teacher: Subhasmita
 
 - section: 9A
+  subject: Hindi
+  teacher: Snigdha
+- section: 9B
+  subject: Hindi
+  teacher: Snigdha
+
+- section: 9A
   subject: IT
   teacher: Usha
 - section: 9B
@@ -181,6 +188,13 @@ assignments:
 - section: 10B
   subject: Odia
   teacher: Subhasmita
+
+- section: 10A
+  subject: Hindi
+  teacher: Snigdha
+- section: 10B
+  subject: Hindi
+  teacher: Snigdha
 
 - section: 10A
   subject: IT

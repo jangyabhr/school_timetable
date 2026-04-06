@@ -11,10 +11,9 @@ from event_generator import CLASS_ORDER
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 DAYS    = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-PERIODS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6']
+PERIODS = ['P1', 'P2', 'P3', 'P4']
 TIMES   = [
-    '6:40–7:20',  '7:20–8:00',  '8:00–8:40',
-    '8:40–9:10',  '9:10–9:40',  '9:40–10:10',
+    '7:10–7:50',  '7:50–8:30',  '8:40–9:20',  '9:20–10:00',
 ]
 SPECIALS     = {'Free', 'Library'}
 LAB_SUBJECTS = {'CS', 'IT', 'Math', 'Science', 'Biology', 'Physics', 'Chemistry'}

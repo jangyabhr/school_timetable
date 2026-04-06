@@ -3,6 +3,7 @@
 from constraints import (
     SOFT_CONSTRAINTS, ANCHOR_SUBJECTS, LAB_BLOCK_SUBJECTS, MONDAY,
     DAY_SPREAD_SUBJECTS as PERIOD_PRIORITY_SUBJECTS,
+    PERIODS_PER_DAY,
 )
 
 # Subjects for which period-repetition is enforced
@@ -66,10 +67,10 @@ def score_slot(event, slot, timetable_state, suitability, conflict_map, event_id
         if period in [0, 1]:
             score += SOFT_CONSTRAINTS["lab_morning_prefer"]
 
-    # Soft: avoid placing core subjects in last period (period 5, any day)
-    if period == 5 and event["subject"] in _REPETITION_SUBJECTS:
+    # Soft: avoid placing core subjects in last period (any day)
+    if period == PERIODS_PER_DAY - 1 and event["subject"] in _REPETITION_SUBJECTS:
         score += SOFT_CONSTRAINTS["avoid_last_period"]
-    if day == MONDAY and period == 5 and event["subject"] in ANCHOR_SUBJECTS:
+    if day == MONDAY and period == PERIODS_PER_DAY - 1 and event["subject"] in ANCHOR_SUBJECTS:
         score += SOFT_CONSTRAINTS["avoid_monday_last"]
 
     # Soft: reward placing core subjects at the same period as existing instances
