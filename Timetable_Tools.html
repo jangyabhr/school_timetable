@@ -359,6 +359,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 
 /* ── MOBILE: MASTER TIMETABLE ── */
 @media(max-width:700px){
+  /* Hide brand box so tabs get full header width */
+  .brand{display:none}
   /* Controls bar: hide verbose labels, shrink selects */
   .filter-label{display:none}
   .filter-select{min-width:85px;font-size:.74rem;padding:5px 7px}
