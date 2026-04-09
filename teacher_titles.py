@@ -13,7 +13,7 @@ TEACHER_TITLES = {
     "Pratibha":   "Pratibha ma'am",
     "Pratikshya": "Pratikshya ma'am",
     "Priyanka":   "Priyanka ma'am",
-    "Radheshyam": "Radheshyam ma'am",
+    "Radheshyam": "Radheshyam sir",
     "Sanjukta":   "Sanjukta ma'am",
     "Sidharth":   "Sidharth sir",
     "Snigdha":    "Snigdha ma'am",

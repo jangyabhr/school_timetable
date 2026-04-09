@@ -15,14 +15,14 @@ period_assignments:
   subject: Biology
   period: 0
   period_name: P1
-  teacher: Sidharth ma'am
+  teacher: Sidharth sir
   weekly_load: 4
   locked: true
 - class: '12'
   subject: English
   period: 0
   period_name: P1
-  teacher: Radheshyam ma'am
+  teacher: Radheshyam sir
   weekly_load: 2
 - class: '12'
   subject: IT
@@ -47,7 +47,7 @@ period_assignments:
   subject: SST
   period: 0
   period_name: P1
-  teacher: Srikant ma'am
+  teacher: Srikant sir
   weekly_load: 2
 - class: 10B
   subject: English
@@ -77,7 +77,7 @@ period_assignments:
   subject: Science
   period: 1
   period_name: P2
-  teacher: Sidharth ma'am
+  teacher: Sidharth sir
   weekly_load: 4
 - class: 10B
   subject: Science
@@ -95,7 +95,7 @@ period_assignments:
   subject: SST
   period: 0
   period_name: P1
-  teacher: Srikant ma'am
+  teacher: Srikant sir
   weekly_load: 2
 - class: 10A
   subject: English
@@ -125,7 +125,7 @@ period_assignments:
   subject: Science
   period: 2
   period_name: P3
-  teacher: Sidharth ma'am
+  teacher: Sidharth sir
   weekly_load: 4
 - class: 10A
   subject: Science
@@ -137,7 +137,7 @@ period_assignments:
   subject: SST
   period: 2
   period_name: P3
-  teacher: Srikant ma'am
+  teacher: Srikant sir
   weekly_load: 4
 - class: 9B
   subject: English
@@ -174,13 +174,13 @@ period_assignments:
   subject: Science
   period: 0
   period_name: P1
-  teacher: Sidharth ma'am
+  teacher: Sidharth sir
   weekly_load: 2
 - class: 9A
   subject: SST
   period: 1
   period_name: P2
-  teacher: Srikant ma'am
+  teacher: Srikant sir
   weekly_load: 4
 - class: 9A
   subject: English
@@ -217,7 +217,7 @@ period_assignments:
   subject: Science
   period: 1
   period_name: P2
-  teacher: Sidharth ma'am
+  teacher: Sidharth sir
   weekly_load: 2
 - class: 8B
   subject: Math
@@ -319,7 +319,7 @@ period_assignments:
   subject: SST
   period: 3
   period_name: P4
-  teacher: Srikant ma'am
+  teacher: Srikant sir
   weekly_load: 4
 - class: 7B
   subject: English

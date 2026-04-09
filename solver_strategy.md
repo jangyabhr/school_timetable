@@ -61,7 +61,7 @@ Events sorted into five MRV priority tiers (most constrained first):
 1. Fixed-slot subjects (currently none)
 2. Period-locked events (SECTION_PERIOD_LOCKS) — fewest allowed slots first
 3. Lab subjects — Physics > Chemistry > Biology
-4. Bottleneck teachers (≥5 sections) — Subhasmita ma'am (6), Sanjukta ma'am (6), Srikant ma'am (5)
+4. Bottleneck teachers (≥5 sections) — Subhasmita ma'am (6), Sanjukta ma'am (6), Srikant sir (5)
 5. All others — teacher load DESC, class_idx DESC, fewest suitability slots, conflict×load DESC
 
 For each event × weekly_load instances: score all candidate slots, place at best.
