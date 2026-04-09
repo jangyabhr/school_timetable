@@ -356,6 +356,56 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 ::-webkit-scrollbar-track{background:var(--paper)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--ink3)}
+
+/* ── MOBILE: MASTER TIMETABLE ── */
+@media(max-width:700px){
+  /* Controls bar: hide verbose labels, shrink selects */
+  .filter-label{display:none}
+  .filter-select{min-width:85px;font-size:.74rem;padding:5px 7px}
+  .search-wrap{max-width:160px}
+  .mode-btn{padding:5px 10px;font-size:.72rem}
+  .stats-bar{margin-left:0;font-size:.62rem;gap:8px}
+  /* More room for table since controls wrap */
+  .tt-scroll{max-height:calc(100vh - 54px - 108px)}
+  /* Narrower period cells */
+  .tt-table{min-width:0}
+  .tt-cell{min-width:78px;max-width:78px;width:78px;padding:3px 2px}
+  /* Sticky class+day column offsets */
+  .tt-table thead th:first-child{min-width:54px}
+  .tt-table thead th:nth-child(2){left:54px;min-width:38px}
+  .col-cls{min-width:54px;font-size:.73rem;padding:0 5px}
+  .col-day{left:54px;min-width:38px;font-size:.68rem;padding:0 4px}
+  /* Cell content */
+  .cell-inner{min-height:38px;padding:3px 4px}
+  .cell-subj{font-size:.68rem}
+  .cell-teacher{font-size:.58rem}
+  .tt-table thead th{padding:6px 4px;font-size:.68rem}
+  .tt-table thead th .ph-time{font-size:.56rem}
+}
+
+@media(max-width:480px){
+  .master-controls{padding:7px 8px;gap:5px}
+  .filter-select{min-width:72px;font-size:.7rem;padding:4px 5px}
+  .search-input{font-size:.7rem}
+  .search-wrap{max-width:130px}
+  .clear-btn{font-size:.64rem;padding:4px 7px}
+  .mode-btn{padding:5px 7px;font-size:.67rem}
+  .tt-scroll{max-height:calc(100vh - 54px - 135px)}
+  /* Even tighter cells for small phones */
+  .tt-cell{min-width:64px;max-width:64px;width:64px;padding:2px 2px}
+  .tt-table thead th:first-child{min-width:46px}
+  .tt-table thead th:nth-child(2){left:46px;min-width:32px}
+  .col-cls{min-width:46px;font-size:.67rem;padding:0 3px}
+  .col-day{left:46px;min-width:32px;font-size:.63rem;padding:0 3px}
+  .cell-inner{min-height:32px;padding:2px 3px}
+  .cell-subj{font-size:.62rem}
+  .cell-teacher{font-size:.54rem}
+  .tt-table thead th{padding:5px 3px;font-size:.63rem}
+  .tt-table thead th .ph-time{font-size:.52rem}
+  /* Save header space */
+  .brand-sub{display:none}
+  .tbadge{display:none}
+}
 </style>
 </head>
 <body>
@@ -655,8 +705,8 @@ function renderTable() {
   const thead = document.getElementById('tt-thead');
   const tbody = document.getElementById('tt-tbody');
   let hRow = '<tr>';
-  hRow += `<th style="min-width:70px">Class</th>`;
-  hRow += `<th style="min-width:48px;position:sticky;left:70px;z-index:110;background:var(--navy)">Day</th>`;
+  hRow += `<th>Class</th>`;
+  hRow += `<th>Day</th>`;
   PERIODS.forEach((p, i) => {
     hRow += `<th>${p}<span class="ph-time">${TIMES[i]}</span></th>`;
   });
