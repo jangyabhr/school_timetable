@@ -369,6 +369,47 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 ::-webkit-scrollbar-track{background:var(--paper)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--ink3)}
+
+/* ── CARD VIEW (mobile master timetable) ── */
+#card-view{display:none}
+.cv-section{margin-bottom:10px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--white)}
+.cv-section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:linear-gradient(90deg,var(--navy) 0%,#1f4068 100%);
+  color:#fff;cursor:pointer;user-select:none;font-weight:800;font-size:.9rem;
+}
+.cv-toggle{transition:transform .2s;display:inline-block}
+.cv-collapsed .cv-toggle{transform:rotate(-90deg)}
+.cv-body{padding:8px}
+.cv-day-row{display:grid;grid-template-columns:34px 1fr;gap:6px;margin-bottom:6px;align-items:start}
+.cv-day-lbl{font-weight:800;font-size:.72rem;color:var(--ink3);text-align:right;padding:6px 4px 0 0}
+.cv-day-lbl.cv-sat{color:#b45309}
+.cv-periods{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.cv-cell{border-radius:6px;padding:5px 7px;min-height:42px;border:1px solid var(--border);background:var(--paper);position:relative}
+.cv-cell-period{font-size:.58rem;font-weight:800;text-transform:uppercase;color:var(--ink3);opacity:.7;margin-bottom:2px}
+.cv-cell-subj{font-weight:800;font-size:.76rem;line-height:1.2;color:var(--ink)}
+.cv-cell-teacher{font-size:.63rem;color:var(--ink2);font-style:italic;margin-top:2px;line-height:1.2}
+.cv-cell-lab{position:absolute;top:3px;right:5px;font-size:.6rem;font-weight:800;color:var(--blue)}
+.cv-cell.sp-free{background:#f1f5f9}.cv-cell.sp-free .cv-cell-subj{color:#64748b;font-style:italic;font-weight:600}
+.cv-cell.sp-library{background:#e0f2fe}.cv-cell.sp-library .cv-cell-subj{color:#0369a1;font-weight:800}
+.cv-cell.sp-game{background:#dcfce7}.cv-cell.sp-game .cv-cell-subj{color:#166534;font-weight:800}
+.cv-cell.cv-empty{background:transparent;border:1px dashed var(--border)}
+.cv-cell.cv-empty .cv-cell-subj{color:#ccc}
+.cv-dimmed{opacity:.2}
+.cv-highlighted{outline:2px solid var(--amber2);outline-offset:-1px}
+@media(max-width:768px){
+  .tt-scroll{display:none!important}
+  #card-view{display:block;padding:8px;overflow-y:auto;max-height:calc(100vh - 54px - 88px)}
+  .master-controls{padding:8px 10px;gap:6px;flex-wrap:wrap}
+  .filter-label{font-size:.63rem}
+  .filter-select{font-size:.72rem;padding:5px 8px;min-width:90px}
+  .search-wrap{max-width:none;flex:1 1 100%}
+  .stats-bar{display:none}
+  .mode-btn{padding:5px 10px;font-size:.7rem}
+}
+@media(min-width:769px){
+  #card-view{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -493,6 +534,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
     </table>
   </div>
   <div class="legend-strip" id="legend-strip"></div>
+  <div id="card-view"></div>
 </div>
 
 <!-- DATA + LOGIC -->
@@ -634,6 +676,7 @@ let masterMode  = 'class';
 function buildMaster() {
   populateMasterSelects();
   renderTable();
+  buildCards();
   buildLegend();
   masterBuilt = true;
 }
@@ -654,6 +697,7 @@ function setMode(mode) {
   document.getElementById('fg-teacher-lbl').textContent = mode==='class' ? 'Highlight teacher' : 'Select teacher';
   document.getElementById('sel-teacher').value = '';
   renderTable();
+  buildCards();
   updateStats();
 }
 
@@ -761,6 +805,82 @@ function buildTeacherBody() {
   return rows;
 }
 
+function buildCards() {
+  const cv = document.getElementById('card-view');
+  if (!cv) return;
+  if (masterMode === 'teacher') {
+    cv.innerHTML = '<p style="padding:16px;color:var(--ink3);font-size:.8rem">📱 Switch to Class View for the mobile card layout.</p>';
+    return;
+  }
+  let html = '';
+  CLASSES.forEach((cls, ci) => {
+    const open = ci === 0;
+    html += `<div class="cv-section" data-cls="${cls}" id="cvsec-${cls}">`;
+    html += `<div class="cv-section-head${open ? '' : ' cv-collapsed'}" onclick="toggleCvSection('${cls}')">`;
+    html += `<span>CLASS ${cls}</span><span class="cv-toggle">▼</span></div>`;
+    html += `<div class="cv-body" style="${open ? '' : 'display:none'}">`;
+    DAYS.forEach(day => {
+      const isSat = day === 'Sat';
+      const daySlots = CLASS_TT[cls][day];
+      html += `<div class="cv-day-row" data-cls="${cls}" data-day="${day}">`;
+      html += `<div class="cv-day-lbl${isSat ? ' cv-sat' : ''}">${day}</div>`;
+      html += `<div class="cv-periods">`;
+      daySlots.forEach((slot, pi) => {
+        const subj = slot.s || '', teacher = slot.t || '', isLab = slot.l && subj;
+        const specCls = subj==='Free' ? 'sp-free' : subj==='Library' ? 'sp-library' : subj==='Games' ? 'sp-game' : '';
+        const isEmpty = !subj;
+        const bg = (!specCls && subj) ? SUBJ_COLORS[subj] || '#f8f9fa' : '';
+        const tc = (!specCls && subj) ? SUBJ_TEXT[subj] || '' : '';
+        const inlineStyle = bg ? `style="background:${bg};${tc ? 'color:'+tc+';' : ''}"` : '';
+        const subjLabel = specCls==='sp-free' ? '— Free' : specCls==='sp-library' ? '📚 Library' : subj || '—';
+        html += `<div class="cv-cell${specCls?' '+specCls:''}${isEmpty?' cv-empty':''}" data-subj="${subj}" data-teacher="${teacher}" ${inlineStyle}>`;
+        html += `<div class="cv-cell-period">P${pi+1}</div>`;
+        html += `<div class="cv-cell-subj">${subjLabel}</div>`;
+        if (teacher && !specCls && !isEmpty) html += `<div class="cv-cell-teacher">${teacher}</div>`;
+        if (isLab) html += `<span class="cv-cell-lab">★</span>`;
+        html += `</div>`;
+      });
+      html += `</div></div>`;
+    });
+    html += `</div></div>`;
+  });
+  cv.innerHTML = html;
+  applyCardFilters();
+}
+
+function toggleCvSection(cls) {
+  const sec = document.getElementById('cvsec-' + cls);
+  if (!sec) return;
+  const head = sec.querySelector('.cv-section-head');
+  const body = sec.querySelector('.cv-body');
+  const isNowCollapsed = head.classList.toggle('cv-collapsed');
+  body.style.display = isNowCollapsed ? 'none' : '';
+}
+
+function applyCardFilters() {
+  const selCls     = document.getElementById('sel-class').value;
+  const selDay     = document.getElementById('sel-day').value;
+  const selTeacher = document.getElementById('sel-teacher').value;
+  const search     = document.getElementById('search-subj').value.trim().toLowerCase();
+  document.querySelectorAll('#card-view .cv-section').forEach(sec => {
+    sec.style.display = (!selCls || sec.dataset.cls === selCls) ? '' : 'none';
+  });
+  document.querySelectorAll('#card-view .cv-day-row').forEach(row => {
+    row.style.display = (!selDay || row.dataset.day === selDay) ? '' : 'none';
+  });
+  document.querySelectorAll('#card-view .cv-cell').forEach(cell => {
+    cell.classList.remove('cv-dimmed', 'cv-highlighted');
+    if (selTeacher) {
+      if (cell.dataset.teacher === selTeacher) cell.classList.add('cv-highlighted');
+      else cell.classList.add('cv-dimmed');
+    }
+    if (search && cell.dataset.subj) {
+      if ((cell.dataset.subj).toLowerCase().includes(search)) cell.classList.add('cv-highlighted');
+      else if (!selTeacher) cell.classList.add('cv-dimmed');
+    }
+  });
+}
+
 function applyFilters() {
   const table      = document.getElementById('tt-table');
   const selCls     = document.getElementById('sel-class').value;
@@ -802,6 +922,7 @@ function applyFilters() {
     }
   });
   updateStats();
+  applyCardFilters();
 }
 
 function clearFilters() {
@@ -811,6 +932,7 @@ function clearFilters() {
   document.getElementById('search-subj').value = '';
   if (masterMode === 'teacher') renderTable();
   else applyFilters();
+  applyCardFilters();
 }
 
 function updateStats() {
