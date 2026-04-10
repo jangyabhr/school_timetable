@@ -258,19 +258,20 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
   .search-wrap{{max-width:none;flex:1 1 100%}}
   .stats-bar{{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:wrap}}
   .filter-group{{flex-wrap:wrap;gap:4px}}
-  /* ── master timetable: equal-width columns, all 6 fit in viewport ── */
+  /* ── master timetable: all 6 cols equal width, no sticky on mobile ── */
   .tt-table{{table-layout:fixed;width:100%;min-width:0}}
-  .tt-table thead th{{padding:5px 2px;font-size:.68rem;white-space:nowrap;overflow:hidden}}
-  .th-cls{{width:40px;min-width:40px;left:0}}
-  .th-day{{width:36px;min-width:36px;left:40px}}
+  .tt-table thead th{{padding:5px 1px;font-size:.68rem;white-space:nowrap;overflow:hidden}}
   .tt-table thead th .ph-time{{display:none!important}}
-  .col-cls{{width:40px;min-width:40px;max-width:40px;left:0;font-size:.65rem;padding:0 2px}}
-  .col-day{{width:36px;min-width:36px;max-width:36px;left:40px;font-size:.62rem;padding:0 2px}}
-  .tt-cell{{padding:2px;overflow:hidden}}
-  .cell-inner{{min-height:38px;padding:3px 4px;overflow:hidden;gap:1px}}
+  /* remove sticky so columns look uniform */
+  .th-cls,.th-day,.col-cls,.col-day{{position:static;width:auto;min-width:0;max-width:none;left:auto}}
+  /* kill the 102px fixed cell width from base CSS */
+  .tt-cell{{min-width:0!important;max-width:none!important;width:auto!important;padding:2px 1px;overflow:hidden}}
+  .cell-inner{{min-height:40px;padding:3px 4px;overflow:hidden;gap:1px}}
   .cell-subj{{font-size:.67rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}}
-  .cell-teacher{{display:block!important;font-size:.58rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+  .cell-teacher{{display:block!important;font-size:.57rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
   .cell-lab{{display:none!important}}
+  .col-cls{{font-size:.64rem;font-weight:800;padding:0 3px;text-align:center}}
+  .col-day{{font-size:.62rem;font-weight:700;padding:0 2px;text-align:center}}
   .cls-header-row td{{padding:4px 8px;font-size:.72rem}}
 }}
 
