@@ -258,13 +258,19 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
   .search-wrap{{max-width:none;flex:1 1 100%}}
   .stats-bar{{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:wrap}}
   .filter-group{{flex-wrap:wrap;gap:4px}}
-  .tt-table{{font-size:.69rem}}
-  .tt-table thead th{{padding:5px 3px;font-size:.69rem}}
-  .tt-table thead th:first-child{{min-width:46px}}
-  .tt-table thead th:nth-child(2){{min-width:36px;left:46px}}
-  .col-cls{{min-width:46px;font-size:.69rem;padding:0 5px}}
-  .col-day{{min-width:36px;font-size:.66rem}}
-  .tt-table td{{padding:5px 4px}}
+  /* ── master timetable: shrink table to fit mobile viewport ── */
+  .tt-table{{font-size:.69rem;min-width:0}}
+  .tt-table thead th{{padding:5px 3px;font-size:.66rem}}
+  .tt-table thead th:first-child{{min-width:40px}}
+  .tt-table thead th:nth-child(2){{min-width:32px;left:40px}}
+  .tt-table thead th .ph-time{{display:none}}
+  .col-cls{{min-width:40px;max-width:40px;width:40px;font-size:.66rem;padding:0 3px}}
+  .col-day{{left:40px;min-width:32px;max-width:32px;width:32px;font-size:.62rem;padding:0 2px}}
+  .tt-cell{{min-width:0;max-width:none;width:auto;padding:2px 3px}}
+  .cell-inner{{min-height:34px;padding:3px 4px;gap:1px}}
+  .cell-subj{{font-size:.64rem;line-height:1.15}}
+  .cell-teacher{{font-size:.56rem;line-height:1.1}}
+  .cls-header-row td{{padding:5px 8px;font-size:.72rem}}
 }}
 
 /* ── CARD ── */
