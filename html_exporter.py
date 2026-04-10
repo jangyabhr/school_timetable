@@ -201,7 +201,7 @@ def _build_html(
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Timetable Tools — School 2026</title>
+<title>Timetable Tool from Excel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -232,11 +232,6 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
   box-shadow:0 2px 20px rgba(0,0,0,.35);
   min-height:54px;
 }}
-.brand{{display:flex;align-items:center;gap:10px;padding:0 20px 0 0;
-  border-right:1px solid rgba(255,255,255,.12);margin-right:2px;white-space:nowrap}}
-.brand-icon{{font-size:1.6rem;line-height:1}}
-.brand-name{{font-size:.98rem;font-weight:800;letter-spacing:-.2px}}
-.brand-sub{{font-size:.65rem;opacity:.55;margin-top:1px}}
 .tab-nav{{display:flex;align-items:stretch;flex:1;overflow-x:auto}}
 .tab-btn{{
   display:flex;align-items:center;gap:7px;padding:0 18px;
@@ -257,7 +252,20 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
 
 /* ── SPLIT LAYOUT ── */
 .split{{display:grid;grid-template-columns:278px 1fr;gap:16px;align-items:start}}
-@media(max-width:820px){{.split{{grid-template-columns:1fr}}}}
+@media(max-width:820px){{
+  .split{{grid-template-columns:1fr}}
+  .master-controls{{padding:8px 10px;gap:6px}}
+  .search-wrap{{max-width:none;flex:1 1 100%}}
+  .stats-bar{{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:wrap}}
+  .filter-group{{flex-wrap:wrap;gap:4px}}
+  .tt-table{{font-size:.69rem}}
+  .tt-table thead th{{padding:5px 3px;font-size:.69rem}}
+  .tt-table thead th:first-child{{min-width:46px}}
+  .tt-table thead th:nth-child(2){{min-width:36px;left:46px}}
+  .col-cls{{min-width:46px;font-size:.69rem;padding:0 5px}}
+  .col-day{{min-width:36px;font-size:.66rem}}
+  .tt-table td{{padding:5px 4px}}
+}}
 
 /* ── CARD ── */
 .card{{background:var(--white);border-radius:var(--rlg);box-shadow:var(--sh);
@@ -560,13 +568,6 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
 
 <!-- ═══ HEADER ═══ -->
 <header class="site-header">
-  <div class="brand">
-    <span class="brand-icon">🏫</span>
-    <div>
-      <div class="brand-name">Timetable Tools</div>
-      <div class="brand-sub">School 2026</div>
-    </div>
-  </div>
   <nav class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('sub')" id="tab-sub">
       🔍 Substitute Finder <span class="tbadge">{n_teachers} teachers</span>
