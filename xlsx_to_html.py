@@ -22,7 +22,7 @@ import openpyxl
 from html_exporter import generate_html
 
 FNAME = 'final timetable for april 2026 (1).xlsx'
-OUT   = 'Timetable_Tools.html'
+OUT   = 'timetable tool from excel.html'
 
 # Columns in the sheet that correspond to P1, P2, P3, P4 (0-indexed)
 PERIOD_COLS = [2, 3, 5, 6]
