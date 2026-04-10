@@ -258,20 +258,20 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
   .search-wrap{{max-width:none;flex:1 1 100%}}
   .stats-bar{{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:wrap}}
   .filter-group{{flex-wrap:wrap;gap:4px}}
-  /* ── master timetable: fixed-layout so all 4 periods fit in viewport ── */
+  /* ── master timetable: fixed-layout, all 4 periods in viewport ── */
   .tt-table{{table-layout:fixed!important;width:100%!important;min-width:0!important}}
-  .tt-table thead th{{padding:5px 3px;font-size:.72rem;white-space:nowrap;overflow:hidden}}
-  .tt-table thead th:first-child{{width:44px!important;min-width:44px!important}}
-  .tt-table thead th:nth-child(2){{width:34px!important;min-width:34px!important;left:44px!important}}
+  .tt-table thead th{{padding:4px 2px;font-size:.68rem;white-space:nowrap;overflow:hidden}}
+  .tt-table thead th:first-child{{width:42px!important;min-width:42px!important}}
+  .tt-table thead th:nth-child(2){{width:32px!important;min-width:32px!important;left:42px!important}}
   .tt-table thead th .ph-time{{display:none!important}}
-  .col-cls{{width:44px!important;min-width:44px!important;max-width:44px!important;font-size:.68rem;padding:0 3px}}
-  .col-day{{left:44px!important;width:34px!important;min-width:34px!important;max-width:34px!important;font-size:.64rem;padding:0 2px}}
-  .tt-cell{{padding:3px 3px;overflow:hidden}}
-  .cell-inner{{min-height:32px;padding:3px 5px;overflow:hidden}}
-  .cell-subj{{font-size:.72rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
-  .cell-teacher{{display:none!important}}
+  .col-cls{{width:42px!important;min-width:42px!important;max-width:42px!important;font-size:.66rem;padding:0 2px}}
+  .col-day{{left:42px!important;width:32px!important;min-width:32px!important;max-width:32px!important;font-size:.62rem;padding:0 2px}}
+  .tt-cell{{padding:2px;overflow:hidden}}
+  .cell-inner{{min-height:36px;padding:3px 4px;overflow:hidden;gap:1px}}
+  .cell-subj{{font-size:.67rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}}
+  .cell-teacher{{display:block!important;font-size:.57rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}}
   .cell-lab{{display:none!important}}
-  .cls-header-row td{{padding:5px 8px;font-size:.74rem}}
+  .cls-header-row td{{padding:4px 8px;font-size:.72rem}}
 }}
 
 /* ── CARD ── */
