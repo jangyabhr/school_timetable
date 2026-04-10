@@ -62,16 +62,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
   .filter-group{flex-wrap:wrap;gap:4px}
   /* ── master timetable: fixed-layout so all 4 periods fit in viewport ── */
   .tt-table{table-layout:fixed!important;width:100%!important;min-width:0!important}
-  .tt-table thead th{padding:5px 3px;font-size:.7rem;white-space:normal;word-break:break-word}
+  .tt-table thead th{padding:5px 3px;font-size:.72rem;white-space:nowrap;overflow:hidden}
   .tt-table thead th:first-child{width:44px!important;min-width:44px!important}
   .tt-table thead th:nth-child(2){width:34px!important;min-width:34px!important;left:44px!important}
-  .tt-table thead th .ph-time{display:none}
+  .tt-table thead th .ph-time{display:none!important}
   .col-cls{width:44px!important;min-width:44px!important;max-width:44px!important;font-size:.68rem;padding:0 3px}
   .col-day{left:44px!important;width:34px!important;min-width:34px!important;max-width:34px!important;font-size:.64rem;padding:0 2px}
   .tt-cell{padding:3px 3px;overflow:hidden}
-  .cell-inner{min-height:32px;padding:3px 4px}
-  .cell-subj{font-size:.7rem;line-height:1.2}
-  .cell-teacher{display:none}
+  .cell-inner{min-height:32px;padding:3px 5px;overflow:hidden}
+  .cell-subj{font-size:.72rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cell-teacher{display:none!important}
+  .cell-lab{display:none!important}
   .cls-header-row td{padding:5px 8px;font-size:.74rem}
 }
 
@@ -504,7 +505,7 @@ const TEACHER_VIEW = {"ANIL sir":{"Mon":[{"cls":"10B","s":"SST","l":false},null,
 const COVERAGE     = {"12":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[],"Sat":[]},"10B":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[],"Sat":[]},"10A":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[],"Sat":[]},"9B":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[{"period":"P4","time":"9:20–10:00","type":"Free","free":[{"name":"Biology","day_load":0,"wk_load":2},{"name":"Pratibha maam","day_load":0,"wk_load":2},{"name":"Priyanka M'am","day_load":1,"wk_load":2},{"name":"Radheshyam sir","day_load":1,"wk_load":2},{"name":"Pratibha ma'am","day_load":1,"wk_load":5},{"name":"Ganesh sir","day_load":1,"wk_load":12},{"name":"Priyanka ma'am","day_load":2,"wk_load":12},{"name":"Subhasmita ma'am","day_load":2,"wk_load":14},{"name":"ANIL sir","day_load":2,"wk_load":16},{"name":"JB sir","day_load":2,"wk_load":16},{"name":"Laxmipriya ma'am","day_load":2,"wk_load":16}]}],"Sat":[{"period":"P4","time":"9:20–10:00","type":"Free","free":[{"name":"Pratibha maam","day_load":0,"wk_load":2},{"name":"Pratibha ma'am","day_load":0,"wk_load":5},{"name":"Priyanka M'am","day_load":1,"wk_load":2},{"name":"Radheshyam sir","day_load":1,"wk_load":2},{"name":"Ganesh sir","day_load":1,"wk_load":12},{"name":"Mira ma'am","day_load":1,"wk_load":13},{"name":"Priyanka ma'am","day_load":2,"wk_load":12},{"name":"Subhasmita ma'am","day_load":2,"wk_load":14},{"name":"ANIL sir","day_load":2,"wk_load":16},{"name":"JB sir","day_load":2,"wk_load":16},{"name":"Laxmipriya ma'am","day_load":2,"wk_load":16}]}]},"9A":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[{"period":"P4","time":"9:20–10:00","type":"Free","free":[{"name":"Biology","day_load":0,"wk_load":2},{"name":"Pratibha maam","day_load":0,"wk_load":2},{"name":"Priyanka M'am","day_load":1,"wk_load":2},{"name":"Radheshyam sir","day_load":1,"wk_load":2},{"name":"Pratibha ma'am","day_load":1,"wk_load":5},{"name":"Ganesh sir","day_load":1,"wk_load":12},{"name":"Priyanka ma'am","day_load":2,"wk_load":12},{"name":"Subhasmita ma'am","day_load":2,"wk_load":14},{"name":"ANIL sir","day_load":2,"wk_load":16},{"name":"JB sir","day_load":2,"wk_load":16},{"name":"Laxmipriya ma'am","day_load":2,"wk_load":16}]}],"Sat":[{"period":"P4","time":"9:20–10:00","type":"Free","free":[{"name":"Pratibha maam","day_load":0,"wk_load":2},{"name":"Pratibha ma'am","day_load":0,"wk_load":5},{"name":"Priyanka M'am","day_load":1,"wk_load":2},{"name":"Radheshyam sir","day_load":1,"wk_load":2},{"name":"Ganesh sir","day_load":1,"wk_load":12},{"name":"Mira ma'am","day_load":1,"wk_load":13},{"name":"Priyanka ma'am","day_load":2,"wk_load":12},{"name":"Subhasmita ma'am","day_load":2,"wk_load":14},{"name":"ANIL sir","day_load":2,"wk_load":16},{"name":"JB sir","day_load":2,"wk_load":16},{"name":"Laxmipriya ma'am","day_load":2,"wk_load":16}]}]},"8B":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[],"Sat":[]},"8A":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[],"Sat":[]},"7B":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[],"Sat":[]},"7A":{"Mon":[],"Tue":[],"Wed":[],"Thu":[],"Fri":[],"Sat":[]}};
 const WK_LOAD      = {"ANIL sir":16,"Biology":2,"Ganesh sir":12,"JB sir":16,"Laxmipriya ma'am":16,"Mira ma'am":13,"Nandini ma'am":8,"Pratibha ma'am":5,"Pratibha maam":2,"Pratikshya ma'am":16,"Priyanka M'am":2,"Priyanka ma'am":12,"Radheshyam sir":2,"Sanjukta ma'am":14,"Sidharth sir":16,"Snigdha ma'am":10,"Srikant sir":16,"Subhasmita ma'am":14,"Sunil sir":16,"Usha ma'am":8};
 const TLD          = {"ANIL sir":[],"Biology":[],"Ganesh sir":[],"JB sir":[],"Laxmipriya ma'am":[],"Mira ma'am":[],"Nandini ma'am":[],"Pratibha ma'am":[],"Pratibha maam":[],"Pratikshya ma'am":[],"Priyanka M'am":[],"Priyanka ma'am":[],"Radheshyam sir":[],"Sanjukta ma'am":[],"Sidharth sir":[],"Snigdha ma'am":[],"Srikant sir":[],"Subhasmita ma'am":[],"Sunil sir":[],"Usha ma'am":[]};
-const SPEC_COUNTS  = {"12":{"Free":0,"Library":0},"10B":{"Free":0,"Library":0},"10A":{"Free":0,"Library":0},"9B":{"Free":2,"Library":0},"9A":{"Free":2,"Library":0},"8B":{"Free":0,"Library":0},"8A":{"Free":0,"Library":0},"7B":{"Free":0,"Library":0},"7A":{"Free":0,"Library":0}};
+const SPEC_COUNTS  = {"12":{"Library":0,"Free":0},"10B":{"Library":0,"Free":0},"10A":{"Library":0,"Free":0},"9B":{"Library":0,"Free":2},"9A":{"Library":0,"Free":2},"8B":{"Library":0,"Free":0},"8A":{"Library":0,"Free":0},"7B":{"Library":0,"Free":0},"7A":{"Library":0,"Free":0}};
 const DAYS         = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const PERIODS      = ["P1", "P2", "P3", "P4"];
 const TIMES        = ["7:10\u20137:50", "7:50\u20138:30", "8:40\u20139:20", "9:20\u201310:00"];

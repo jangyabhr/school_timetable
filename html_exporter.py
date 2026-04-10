@@ -260,16 +260,17 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
   .filter-group{{flex-wrap:wrap;gap:4px}}
   /* ── master timetable: fixed-layout so all 4 periods fit in viewport ── */
   .tt-table{{table-layout:fixed!important;width:100%!important;min-width:0!important}}
-  .tt-table thead th{{padding:5px 3px;font-size:.7rem;white-space:normal;word-break:break-word}}
+  .tt-table thead th{{padding:5px 3px;font-size:.72rem;white-space:nowrap;overflow:hidden}}
   .tt-table thead th:first-child{{width:44px!important;min-width:44px!important}}
   .tt-table thead th:nth-child(2){{width:34px!important;min-width:34px!important;left:44px!important}}
-  .tt-table thead th .ph-time{{display:none}}
+  .tt-table thead th .ph-time{{display:none!important}}
   .col-cls{{width:44px!important;min-width:44px!important;max-width:44px!important;font-size:.68rem;padding:0 3px}}
   .col-day{{left:44px!important;width:34px!important;min-width:34px!important;max-width:34px!important;font-size:.64rem;padding:0 2px}}
   .tt-cell{{padding:3px 3px;overflow:hidden}}
-  .cell-inner{{min-height:32px;padding:3px 4px}}
-  .cell-subj{{font-size:.7rem;line-height:1.2}}
-  .cell-teacher{{display:none}}
+  .cell-inner{{min-height:32px;padding:3px 5px;overflow:hidden}}
+  .cell-subj{{font-size:.72rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+  .cell-teacher{{display:none!important}}
+  .cell-lab{{display:none!important}}
   .cls-header-row td{{padding:5px 8px;font-size:.74rem}}
 }}
 
