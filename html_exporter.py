@@ -258,19 +258,19 @@ body{{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);
   .search-wrap{{max-width:none;flex:1 1 100%}}
   .stats-bar{{margin-left:0;width:100%;justify-content:flex-start;flex-wrap:wrap}}
   .filter-group{{flex-wrap:wrap;gap:4px}}
-  /* ── master timetable: shrink table to fit mobile viewport ── */
-  .tt-table{{table-layout:fixed!important;width:100%!important;min-width:0!important;font-size:.69rem}}
-  .tt-table thead th{{padding:4px 2px;font-size:.64rem;white-space:normal}}
-  .tt-table thead th:first-child{{width:38px!important;min-width:38px!important}}
-  .tt-table thead th:nth-child(2){{width:30px!important;min-width:30px!important;left:38px!important}}
+  /* ── master timetable: fixed-layout so all 4 periods fit in viewport ── */
+  .tt-table{{table-layout:fixed!important;width:100%!important;min-width:0!important}}
+  .tt-table thead th{{padding:5px 3px;font-size:.7rem;white-space:normal;word-break:break-word}}
+  .tt-table thead th:first-child{{width:44px!important;min-width:44px!important}}
+  .tt-table thead th:nth-child(2){{width:34px!important;min-width:34px!important;left:44px!important}}
   .tt-table thead th .ph-time{{display:none}}
-  .col-cls{{width:38px!important;min-width:38px!important;max-width:38px!important;font-size:.64rem;padding:0 2px}}
-  .col-day{{left:38px!important;width:30px!important;min-width:30px!important;max-width:30px!important;font-size:.6rem;padding:0 2px}}
-  .tt-cell{{padding:2px 2px;overflow:hidden}}
-  .cell-inner{{min-height:30px;padding:2px 3px;gap:0;overflow:hidden}}
-  .cell-subj{{font-size:.62rem;line-height:1.15;word-break:break-word;overflow-wrap:break-word}}
-  .cell-teacher{{font-size:.54rem;line-height:1.1;word-break:break-word;overflow-wrap:break-word}}
-  .cls-header-row td{{padding:5px 8px;font-size:.72rem}}
+  .col-cls{{width:44px!important;min-width:44px!important;max-width:44px!important;font-size:.68rem;padding:0 3px}}
+  .col-day{{left:44px!important;width:34px!important;min-width:34px!important;max-width:34px!important;font-size:.64rem;padding:0 2px}}
+  .tt-cell{{padding:3px 3px;overflow:hidden}}
+  .cell-inner{{min-height:32px;padding:3px 4px}}
+  .cell-subj{{font-size:.7rem;line-height:1.2}}
+  .cell-teacher{{display:none}}
+  .cls-header-row td{{padding:5px 8px;font-size:.74rem}}
 }}
 
 /* ── CARD ── */
