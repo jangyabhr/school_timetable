@@ -555,8 +555,14 @@ function initSub() {
     const pc=wl>=30?'lp-hi':wl>=27?'lp-mid':'lp-lo';
     const el=document.createElement('label');
     el.className='t-item'; el.id='sti-'+t;
-    el.innerHTML=`<input type="checkbox" id="schk-${t}" onchange="toggleAbsent('${t}')">
-      <span class="t-name">${t}</span><span class="lpill ${pc}">${wl}/wk</span>`;
+    const cb=document.createElement('input');
+    cb.type='checkbox'; cb.id='schk-'+t;
+    cb.onchange=()=>toggleAbsent(t);
+    const nameSpan=document.createElement('span');
+    nameSpan.className='t-name'; nameSpan.textContent=t;
+    const pillSpan=document.createElement('span');
+    pillSpan.className='lpill '+pc; pillSpan.textContent=wl+'/wk';
+    el.appendChild(cb); el.appendChild(nameSpan); el.appendChild(pillSpan);
     tl.appendChild(el);
   });
 }
