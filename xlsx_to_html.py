@@ -18,6 +18,7 @@ The All Sections sheet has class blocks stacked vertically:
 Each block = 10 rows.
 """
 
+import re
 import openpyxl
 from html_exporter import generate_html
 
@@ -26,6 +27,22 @@ OUT   = 'timetable tool from excel.html'
 
 # Columns in the sheet that correspond to P1, P2, P3, P4 (0-indexed)
 PERIOD_COLS = [2, 3, 5, 6]
+
+# Subject names that should never appear as teacher names (xlsx data errors)
+_SUBJECTS = {'Biology','Math','Science','English','SST','Hindi','Odia',
+             'Sanskrit','CS','IT','Physics','Chemistry','Free','Library'}
+
+def _normalise_teacher(name: str) -> str:
+    """Normalise inconsistent teacher name spellings from the xlsx."""
+    if not name or name in _SUBJECTS:
+        return ''
+    # Normalise apostrophe variants → "ma'am"
+    # covers: maam, m'am, M'am, Ma'am, ma'am, mam
+    name = re.sub(r"\bma['']?am\b|\bm['']am\b|\bmaam\b|\bmam\b", "ma'am",
+                  name, flags=re.IGNORECASE)
+    name = re.sub(r"\bsir\b", "sir", name, flags=re.IGNORECASE)
+    # Collapse multiple spaces
+    return ' '.join(name.split())
 
 wb = openpyxl.load_workbook(FNAME)
 ws = wb['All Sections']
@@ -58,7 +75,7 @@ while i < len(rows):
                     continue
                 parts = raw.split('\n', 1)
                 subject_raw = parts[0].strip()
-                teacher     = parts[1].strip() if len(parts) > 1 else ''
+                teacher     = _normalise_teacher(parts[1].strip() if len(parts) > 1 else '')
                 is_lab      = '(Lab)' in subject_raw or '(lab)' in subject_raw
                 subject     = subject_raw.replace('(Lab)', '').replace('(lab)', '').strip()
                 if not subject:
